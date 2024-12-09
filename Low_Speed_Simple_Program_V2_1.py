@@ -84,8 +84,10 @@ class MXR:
 
     def __init__(self):
         rm = pyvisa.ResourceManager()
-        inst_name = 'MXR608A'
-        self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-MUTUU36::inst0::INSTR')
+        # inst_name = 'MXR608A'
+        # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-MUTUU36::inst0::INSTR')
+        inst_name = 'EXR604A'
+        self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-1CFVOG6::inst0::INSTR')
         idn = self.inst.query('*IDN?').strip()
         print(f'[{inst_name}] Connect successfully! / {idn}')
 
@@ -127,17 +129,23 @@ class MXR:
         #     if value == '1\n':
         #         self.inst.write(f':CHANnel{index+1}:SCALe {scale}')
         #         self.inst.write(f':CHANnel{index+1}:OFFSet {offset}')
-
+        res= self.judge_chan_wme()
         for i in range(1, 4):
-            self.inst.write(f':CHANnel{i}:SCALe {scale}')
-            self.inst.write(f':CHANnel{i}:OFFSet {offset}')
+            if res == 'CHANnel':
+                self.inst.write(f':CHANnel{i}:SCALe {scale}')
+                self.inst.write(f':CHANnel{i}:OFFSet {offset}')
+            else:
+                self.inst.write(f':WMEMory{i}:YRANge {float(scale)*8}')
+                self.inst.write(f':WMEMory{i}:YOFFset {offset}')
         # for i in range(1, 4):
         #     self.inst.write(f':WMEMory{i}:SCALe {scale}')
         #     self.inst.write(f':WMEMory{i}:YOFFset {offset}')   
 
-    def timebase_check(self, scale, position): # 科學記號
-        self.inst.write(f':TIMebase:SCALe {scale}')
+    def timebase_position_check(self, position): # 科學記號
         self.inst.write(f':TIMebase:POSition {position}')
+
+    def timebase_scale_check(self, scale): # 科學記號
+        self.inst.write(f':TIMebase:SCALe {scale}')
 
     def trig_check(self, chan, level):
         self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{chan}')
@@ -158,47 +166,47 @@ class MXR:
             self.inst.write(f':WMEMory{chan}:DISPlay ON')
             
     def freq(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:FREQuency {res}{chan}')
 
     def period(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:PERiod {res}{chan}')
    
     def dutycycle(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:DUTYcycle {res}{chan}')
 
     def slewrate(self, chan, direction):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:SLEWrate {res}{chan},{direction}')
 
     def tH(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:PWIDth {res}{chan},')
 
     def tL(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:NWIDth {res}{chan}')
 
     def tR(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:RISetime {res}{chan}')
 
     def tF(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:FALLtime {res}{chan}')
 
     def VIH(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:VTOP {res}{chan}')
 
     def VIL(self, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         self.inst.write(f':MEASure:VBASe {res}{chan}')
 
     def tSU_tHO(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         if chan == 4:
             self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
             self.inst.write(f':MEASure:DELTatime {res}1, {res}2')
@@ -245,6 +253,9 @@ class MXR:
     def autoscale(self):
         self.inst.write(':AUToscale')
 
+    def clear_diaplay(self):
+        self.inst.write(':CDISplay')
+
     def default(self):
         self.inst.write(':SYSTem:PRESet DEFault')
 
@@ -254,6 +265,13 @@ class MXR:
             self.inst.write(':TRIGger:SWEep TRIGgered')
         else:
             self.inst.write(':TRIGger:SWEep AUTO')
+
+    def trig_slope(self):
+        res= self.inst.query(f':TRIGger:EDGE:SLOPe?')
+        if res == 'POS\n':
+            self.inst.write(':TRIGger:EDGE:SLOPe NEGative')
+        else:
+            self.inst.write(':TRIGger:EDGE:SLOPe POSitive')
               
     def delete_item(self):
         tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -285,7 +303,7 @@ class MXR:
                 self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},OFF')
 
     def add_label(self, chan, label):
-        res= self.judge_chan_wme(chan= chan)
+        res= self.judge_chan_wme()
         if label == '':
             self.inst.write(f':DISPlay:LABel OFF')
         else:
@@ -319,7 +337,7 @@ class MXR:
     def save_wmemory(self, chan, folder, wme_name):
         self.inst.write(f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{wme_name}",H5,OFF')
 
-    def judge_chan_wme(self, chan):
+    def judge_chan_wme(self):
         for i in range(1, 4):
             chan_res= self.inst.query(f':CHANnel{i}:DISPlay?')
             wme_res= self.inst.query(f':WMEMory{i}:DISPlay?')
@@ -394,7 +412,7 @@ if __name__ == '__main__':
 
     window = tk.Tk()
     window.title('MXR Button')
-    window.geometry('1350x755+2+2')
+    window.geometry('1400x755+2+2')
 
 # Measurement Frame ===================================================================================================================================
 
@@ -458,8 +476,8 @@ if __name__ == '__main__':
     e_time_offset = tk.Entry(label_frame_scale, width= 7, textvariable= str_time_offset)
     # str_time_offset.set('0E-6')
 
-    b_time_check = tk.Button(label_frame_scale, text= 'Timebase Check', height= 1, command= lambda: mxr.timebase_check(scale= str_time_scale.get(), position= str_time_offset.get()))
-
+    b_time_scale_check = tk.Button(label_frame_scale, text= 'Time scale Check', height= 1, command= lambda: mxr.timebase_scale_check(scale= str_time_scale.get()))
+    b_time_position_check = tk.Button(label_frame_scale, text= 'Time posi Check', height= 1, command= lambda: mxr.timebase_position_check(position= str_time_offset.get()))
 
 # Delta Setup Frame ===================================================================================================================================
 
@@ -579,6 +597,8 @@ if __name__ == '__main__':
 
     b_single = tk.Button(label_frame_control, text='SINGLE', width= 20, height= 2, command= lambda: mxr.single())
 
+    b_clear_display = tk.Button(label_frame_control, text='Clear', width= 8, height= 2, command= lambda: mxr.clear_diaplay())
+
     b_autoscale = tk.Button(label_frame_control, text='Auto Scale', width= 20, height= 2, command= lambda: mxr.autoscale())
 
     b_default = tk.Button(label_frame_control, text='Default', width= 20, height= 2, command= lambda: mxr.default())
@@ -591,9 +611,11 @@ if __name__ == '__main__':
 
     b_del_marker = tk.Button(label_frame_control, text='Del Marker', width= 20, height= 2, command= lambda: mxr.delete_marker())
 
+    b_trig_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 8, height= 2, command= lambda: mxr.trig_slope())
+    
     boolvar_marker_1 = tk.BooleanVar()    
     cb_marker_1= tk.Checkbutton(label_frame_control, text= 'Meas1', variable= boolvar_marker_1)
-
+    
     boolvar_marker_2 = tk.BooleanVar()    
     cb_marker_2= tk.Checkbutton(label_frame_control, text= 'Meas2', variable= boolvar_marker_2)
 
@@ -761,7 +783,8 @@ if __name__ == '__main__':
     e_time_scale.grid(row= 0, column= 3, padx= 5, pady= 5)
     l_time_offset.grid(row= 1, column= 2, padx= 5, pady= 5) 
     e_time_offset.grid(row= 1, column= 3, padx= 5, pady= 5)
-    b_time_check.grid(row= 2, column= 2, padx= 5, pady= 5)
+    b_time_scale_check.grid(row= 2, column= 2, padx= 5, pady= 5)
+    b_time_position_check.grid(row= 2, column= 3, padx= 5, pady= 5)
 
 # Delta grid
     l_start.grid(row= 0, column= 0, padx= 5, pady= 5)
@@ -808,24 +831,26 @@ if __name__ == '__main__':
     b_run.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2)
     b_stop.grid(row= 0, column= 1, padx= 5, pady= 5, rowspan= 2)
     b_single.grid(row= 0, column= 2, padx= 5, pady= 5, rowspan= 2)
+    b_clear_display.grid(row= 0, column= 3, padx= 5, pady= 5, rowspan= 2)
     b_autoscale.grid(row= 2, column= 0, padx= 5, pady= 5, rowspan= 2)
     b_default.grid(row= 2, column= 1, padx= 5, pady= 5, rowspan= 2)
     b_trigger.grid(row= 2, column= 2, padx= 5, pady= 5, rowspan= 2)
     b_del.grid(row= 4, column= 0, padx= 5, pady= 5, rowspan= 2)
     b_add_marker.grid(row= 4, column= 1, padx= 5, pady= 5, rowspan= 2)
     b_del_marker.grid(row= 4, column= 2, padx= 5, pady= 5, rowspan= 2)
-    cb_marker_1.grid(row= 0, column= 3, padx= 5) 
-    cb_marker_2.grid(row= 1, column= 3, padx= 5) 
-    cb_marker_3.grid(row= 2, column= 3, padx= 5) 
-    cb_marker_4.grid(row= 3, column= 3, padx= 5) 
-    cb_marker_5.grid(row= 4, column= 3, padx= 5) 
-    cb_marker_6.grid(row= 5, column= 3, padx= 5) 
-    cb_marker_7.grid(row= 0, column= 4, sticky= 'w',) 
-    cb_marker_8.grid(row= 1, column= 4, sticky= 'w',) 
-    cb_marker_9.grid(row= 2, column= 4, sticky= 'w',) 
-    cb_marker_10.grid(row= 3, column= 4, sticky= 'w',) 
-    cb_marker_11.grid(row= 4, column= 4, sticky= 'w',) 
-    cb_marker_12.grid(row= 5, column= 4, sticky= 'w',) 
+    b_trig_slope.grid(row= 2, column= 3, padx= 5, pady= 5, rowspan= 2)
+    cb_marker_1.grid(row= 0, column= 4, padx= 5) 
+    cb_marker_2.grid(row= 1, column= 4, padx= 5) 
+    cb_marker_3.grid(row= 2, column= 4, padx= 5) 
+    cb_marker_4.grid(row= 3, column= 4, padx= 5) 
+    cb_marker_5.grid(row= 4, column= 4, padx= 5) 
+    cb_marker_6.grid(row= 5, column= 4, padx= 5) 
+    cb_marker_7.grid(row= 0, column= 5, sticky= 'w',) 
+    cb_marker_8.grid(row= 1, column= 5, sticky= 'w',) 
+    cb_marker_9.grid(row= 2, column= 5, sticky= 'w',) 
+    cb_marker_10.grid(row= 3, column= 5, sticky= 'w',) 
+    cb_marker_11.grid(row= 4, column= 5, sticky= 'w',) 
+    cb_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
 
 # Chan grid
     b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 5)
