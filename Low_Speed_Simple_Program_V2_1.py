@@ -180,6 +180,7 @@ class MXR:
     def slewrate(self, chan, direction):
         res= self.judge_chan_wme()
         self.inst.write(f':MEASure:SLEWrate {res}{chan},{direction}')
+        self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({chan})"')
 
     def tH(self, chan):
         res= self.judge_chan_wme()
