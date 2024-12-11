@@ -84,10 +84,10 @@ class MXR:
 
     def __init__(self):
         rm = pyvisa.ResourceManager()
-        # inst_name = 'MXR608A'
-        # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-MUTUU36::inst0::INSTR')
-        inst_name = 'EXR604A'
-        self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-1CFVOG6::inst0::INSTR')
+        inst_name = 'MXR608A'
+        self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-MUTUU36::inst0::INSTR')
+        # inst_name = 'EXR604A'
+        # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-1CFVOG6::inst0::INSTR')
         idn = self.inst.query('*IDN?').strip()
         print(f'[{inst_name}] Connect successfully! / {idn}')
 
@@ -180,7 +180,10 @@ class MXR:
     def slewrate(self, chan, direction):
         res= self.judge_chan_wme()
         self.inst.write(f':MEASure:SLEWrate {res}{chan},{direction}')
-        self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({chan})"')
+        if res == 'CHANnel':
+            self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({chan})"')
+        else:
+            self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate(m{chan})"')
 
     def tH(self, chan):
         res= self.judge_chan_wme()
