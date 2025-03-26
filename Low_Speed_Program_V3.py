@@ -11,7 +11,11 @@ def initialize():
     config_initial.optionxform = str
     config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='UTF-8',)
     
-    Scope_ID = config_initial['Scope_ID']['ID']
+    # Scope_ID = config_initial['Scope_ID']['ID']
+
+    scope_ids= []
+    for i in range(len(config_initial['Scope_IDs'])):
+        scope_ids.append(config_initial['Scope_IDs'][f'ID_{i}'])
 
     VoltScale = config_initial['Scale_Offset_Config']['VoltScale']
     VoltOffset = config_initial['Scale_Offset_Config']['VoltOffset']
@@ -47,7 +51,7 @@ def initialize():
     LoadWMe2 = config_initial['Load_WMemory_Setup_Config']['LoadWMe2']
     LoadWMe3 = config_initial['Load_WMemory_Setup_Config']['LoadWMe3']
 
-    str_scope_id.set(value= Scope_ID)
+    # str_scope_id.set(value= Scope_ID)
 
     str_volt_scale.set(value= VoltScale)
     str_volt_offset.set(value= VoltOffset)
@@ -84,34 +88,44 @@ def initialize():
     str_WMe2.set(value= LoadWMe2)
     str_WMe3.set(value= LoadWMe3)
 
+    return scope_ids
+
 class MXR:
 
-    def __init__(self, scope_id):
+    def __init__(self, scope_ids):
         rm = pyvisa.ResourceManager()
-        try:
-            if scope_id == 'MUTUU36':
-                inst_name = 'MXR608A' #MUTUU36
-            elif scope_id == '1CFVOG6':
-                inst_name = 'EXR604A' #1CFVOG6
-            else:
-                inst_name = 'other scope'
-            self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
-            idn = self.inst.query('*IDN?').strip()
-        except:
-            if scope_id == 'MUTUU36':
-                scope_id = '1CFVOG6'
-                inst_name = 'EXR604A' #1CFVOG6
-                str_scope_id.set('1CFVOG6')
-            elif scope_id == '1CFVOG6':
-                scope_id = 'MUTUU36'
-                inst_name = 'MXR608A' #MUTUU36
-                str_scope_id.set('MUTUU36')
-            else:
-                inst_name = 'other scope'
-            self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
-            idn = self.inst.query('*IDN?').strip()
-        print(f'[{inst_name}] Connect successfully! / {idn}')
-        # print(f'[{inst_name}] Connect successfully!')
+
+        for i in scope_ids:
+            try:
+                self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{i}::inst0::INSTR')
+                idn = self.inst.query('*IDN?').strip()
+            except:
+                continue
+
+        print(f'Connect successfully! / {idn}')
+
+        # try:
+        #     if scope_id == 'MUTUU36':
+        #         inst_name = 'MXR608A' #MUTUU36
+        #     elif scope_id == '1CFVOG6':
+        #         inst_name = 'EXR604A' #1CFVOG6
+        #     else:
+        #         inst_name = 'other scope'
+        #     self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
+        #     idn = self.inst.query('*IDN?').strip()
+        # except:
+        #     if scope_id == 'MUTUU36':
+        #         scope_id = '1CFVOG6'
+        #         inst_name = 'EXR604A' #1CFVOG6
+        #         str_scope_id.set('1CFVOG6')
+        #     elif scope_id == '1CFVOG6':
+        #         scope_id = 'MUTUU36'
+        #         inst_name = 'MXR608A' #MUTUU36
+        #         str_scope_id.set('MUTUU36')
+        #     else:
+        #         inst_name = 'other scope'
+        #     self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
+        #     idn = self.inst.query('*IDN?').strip()
 
     def RF_threshold(self, rf_top, rf_base):
         if int_rf_thres.get() == 1:
@@ -388,7 +402,7 @@ def close_window():
         config.optionxform = str
         config.read( os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='utf-8',)
         
-        config.set('Scope_ID', 'ID', str_scope_id.get())
+        # config.set('Scope_ID', 'ID', str_scope_id.get())
 
         config.set('Scale_Offset_Config', 'VoltScale', str_volt_scale.get())
         config.set('Scale_Offset_Config', 'VoltOffset', str_volt_offset.get())
@@ -672,24 +686,24 @@ b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 20, height= 2, comm
 b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 2))
 b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 3))
 
-l_scope_id = tk.Label(label_frame_chan, text= 'Scope ID')
-str_scope_id = tk.StringVar()
-cbb_scope_id = ttk.Combobox(label_frame_chan, width= 10, values= ['MUTUU36', '1CFVOG6'], textvariable= str_scope_id)
+# l_scope_id = tk.Label(label_frame_chan, text= 'Scope ID')
+# str_scope_id = tk.StringVar()
+# cbb_scope_id = ttk.Combobox(label_frame_chan, width= 10, values= ['MUTUU36', '1CFVOG6', 'U6IU16E'], textvariable= str_scope_id)
 
 int_ch = tk.IntVar()    
 rb_ch_1= tk.Radiobutton(label_frame_chan, text= 'Chan1 test', variable= int_ch, value= 1)
 rb_ch_1.select()
 rb_ch_2= tk.Radiobutton(label_frame_chan, text= 'Chan2 test', variable= int_ch, value= 2)
 rb_ch_3= tk.Radiobutton(label_frame_chan, text= 'Chan3 test', variable= int_ch, value= 3)
-rb_ch_1_2= tk.Radiobutton(label_frame_chan, text= 'Chan1-Chan2 test', variable= int_ch, value= 4)
-rb_ch_2_1= tk.Radiobutton(label_frame_chan, text= 'Chan2-Chan1 test', variable= int_ch, value= 5)
-rb_ch_1_3= tk.Radiobutton(label_frame_chan, text= 'Chan1-Chan3 test', variable= int_ch, value= 6)
-rb_ch_3_1= tk.Radiobutton(label_frame_chan, text= 'Chan3-Chan1 test', variable= int_ch, value= 7)
-rb_ch_1_1= tk.Radiobutton(label_frame_chan, text= 'Chan1-Chan1 test', variable= int_ch, value= 8)
-rb_ch_2_2= tk.Radiobutton(label_frame_chan, text= 'Chan2-Chan2 test', variable= int_ch, value= 9)
-rb_ch_3_3= tk.Radiobutton(label_frame_chan, text= 'Chan3-Chan3 test', variable= int_ch, value= 10)
-rb_ch_2_3= tk.Radiobutton(label_frame_chan, text= 'Chan2-Chan3 test', variable= int_ch, value= 11)
-rb_ch_3_2= tk.Radiobutton(label_frame_chan, text= 'Chan3-Chan2 test', variable= int_ch, value= 12)
+rb_ch_1_2= tk.Radiobutton(label_frame_chan, text= 'Chan1 -> Chan2', variable= int_ch, value= 4)
+rb_ch_2_1= tk.Radiobutton(label_frame_chan, text= 'Chan2 -> Chan1', variable= int_ch, value= 5)
+rb_ch_1_3= tk.Radiobutton(label_frame_chan, text= 'Chan1 -> Chan3', variable= int_ch, value= 6)
+rb_ch_3_1= tk.Radiobutton(label_frame_chan, text= 'Chan3 -> Chan1', variable= int_ch, value= 7)
+rb_ch_1_1= tk.Radiobutton(label_frame_chan, text= 'Chan1 -> Chan1', variable= int_ch, value= 8)
+rb_ch_2_2= tk.Radiobutton(label_frame_chan, text= 'Chan2 -> Chan2', variable= int_ch, value= 9)
+rb_ch_3_3= tk.Radiobutton(label_frame_chan, text= 'Chan3 -> Chan3', variable= int_ch, value= 10)
+rb_ch_2_3= tk.Radiobutton(label_frame_chan, text= 'Chan2 -> Chan3', variable= int_ch, value= 11)
+rb_ch_3_2= tk.Radiobutton(label_frame_chan, text= 'Chan3 -> Chan2', variable= int_ch, value= 12)
 
 # Save Frame ===================================================================================================================================
 
@@ -870,8 +884,8 @@ cb_marker_12.grid(row= 5, column= 5, sticky= 'w',)
 b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2)
 b_Chan2.grid(row= 0, column= 1, padx= 5, pady= 5, rowspan= 2)
 b_Chan3.grid(row= 0, column= 2, padx= 5, pady= 5, rowspan= 2)
-l_scope_id.grid(row= 0, column= 3, padx= 5, pady= 5)
-cbb_scope_id.grid(row= 1, column= 3, padx= 5, pady= 5)
+# l_scope_id.grid(row= 0, column= 3, padx= 5, pady= 5)
+# cbb_scope_id.grid(row= 1, column= 3, padx= 5, pady= 5)
 b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 5)
 b_WMe2.grid(row= 2, column= 1, padx= 5, pady= 5)
 b_WMe3.grid(row= 2, column= 2, padx= 5, pady= 5)
@@ -988,11 +1002,12 @@ b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 5)
 b_wme_clear3.grid(row= 2, column= 2, padx= 5, pady= 5)
 
 
-initialize()
+scope_ids= initialize()
 
 window.protocol('WM_DELETE_WINDOW', close_window)
 
-mxr= MXR(scope_id= str_scope_id.get())
+# mxr= MXR(scope_id= str_scope_id.get())
+mxr= MXR(scope_ids= scope_ids)
 
 window.mainloop()
 
