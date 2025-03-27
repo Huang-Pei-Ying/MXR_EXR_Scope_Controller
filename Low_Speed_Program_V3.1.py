@@ -130,10 +130,10 @@ def main_window(scope_id):
 
         def __init__(self, scope_id):
             rm = pyvisa.ResourceManager()
-            # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
-            # idn = self.inst.query('*IDN?').strip()
-            # print(f'Connect successfully! / {idn}')
-            print(f'scope_id= {scope_id}')
+            self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
+            idn = self.inst.query('*IDN?').strip()
+            print(f'Connect successfully! / {idn}')
+            # print(f'scope_id= {scope_id}')
             
             # for i in scope_ids:
             #     try:
