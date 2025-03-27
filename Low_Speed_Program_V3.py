@@ -41,6 +41,9 @@ def initialize():
     ChanLabel2 = config_initial['Lable_Setup_Config']['ChanLabel2']
     ChanLabel3 = config_initial['Lable_Setup_Config']['ChanLabel3']
 
+    SamplingRate = config_initial['Acquisition']['SamplingRate']
+    MemoryDepth = config_initial['Acquisition']['MemoryDepth']
+
     SaveImgFolder = config_initial['Save_Setup_Config']['SaveImgFolder']
     SaveImgPCFolder = config_initial['Save_Setup_Config']['SaveImgPCFolder']
     SaveImgName = config_initial['Save_Setup_Config']['SaveImgName']
@@ -77,6 +80,9 @@ def initialize():
     str_label_2.set(value= ChanLabel2)
     str_label_3.set(value= ChanLabel3)
 
+    str_sampling_rate.set(value= SamplingRate)
+    str_memory_depth.set(value= MemoryDepth)
+
     str_image_folder.set(value= SaveImgFolder)
     str_image_folder.set(value= SaveImgFolder)
     str_image_pc_folder.set(value= SaveImgPCFolder)
@@ -95,14 +101,14 @@ class MXR:
     def __init__(self, scope_ids):
         rm = pyvisa.ResourceManager()
 
-        for i in scope_ids:
-            try:
-                self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{i}::inst0::INSTR')
-                idn = self.inst.query('*IDN?').strip()
-            except:
-                continue
+        # for i in scope_ids:
+        #     try:
+        #         self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{i}::inst0::INSTR')
+        #         idn = self.inst.query('*IDN?').strip()
+        #     except:
+        #         continue
 
-        print(f'Connect successfully! / {idn}')
+        # print(f'Connect successfully! / {idn}')
 
         # try:
         #     if scope_id == 'MUTUU36':
@@ -127,6 +133,12 @@ class MXR:
         #     self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
         #     idn = self.inst.query('*IDN?').strip()
 
+    def sampling_rate_acquire(self, rate): # 科學記號
+        self.inst.write(f':ACQuire:SRATe:DIGital {rate}')
+
+    def memory_depth_acquire(self, points_value: int):
+        self.inst.write(f':ACQuire:POINts[:ANALog] {points_value}')
+    
     def RF_threshold(self, rf_top, rf_base):
         if int_rf_thres.get() == 1:
             self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,T1090')
@@ -428,6 +440,9 @@ def close_window():
         config.set('Lable_Setup_Config', 'ChanLabel2', str_label_2.get())
         config.set('Lable_Setup_Config', 'ChanLabel3', str_label_3.get())
 
+        config.set('Acquisition', 'SamplingRate', str_sampling_rate.get())
+        config.set('Acquisition', 'MemoryDepth', str_memory_depth.get())
+
         config.set('Save_Setup_Config', 'SaveImgFolder', str_image_folder.get())
         config.set('Save_Setup_Config', 'SaveImgPCFolder', str_image_pc_folder.get())
         config.set('Save_Setup_Config', 'SaveImgName', str_image.get())
@@ -690,6 +705,16 @@ b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 20, height= 2, comm
 # str_scope_id = tk.StringVar()
 # cbb_scope_id = ttk.Combobox(label_frame_chan, width= 10, values= ['MUTUU36', '1CFVOG6', 'U6IU16E'], textvariable= str_scope_id)
 
+l_sampling_rate = tk.Label(label_frame_chan, text= 'Sampling Rate')
+str_sampling_rate = tk.StringVar()
+e_sampling_rate = tk.Entry(label_frame_chan, width= 10, textvariable= str_sampling_rate)
+b_sampling_rate_check = tk.Button(label_frame_chan, text= 'Sampling Rate Check', width= 20, height= 1, command= lambda: mxr.sampling_rate_acquire(rate= str_sampling_rate.get()))
+
+l_memory_depth = tk.Label(label_frame_chan, text= 'Memory Depth')
+str_memory_depth = tk.StringVar()
+e_memory_depth = tk.Entry(label_frame_chan, width= 10, textvariable= str_memory_depth)
+b_memory_depth_check = tk.Button(label_frame_chan, text= 'Memory Depth Check', width= 20, height= 1, command= lambda: mxr.memory_depth_acquire(points_value= str_memory_depth.get()))
+
 int_ch = tk.IntVar()    
 rb_ch_1= tk.Radiobutton(label_frame_chan, text= 'Chan1 test', variable= int_ch, value= 1)
 rb_ch_1.select()
@@ -886,43 +911,61 @@ b_Chan2.grid(row= 0, column= 1, padx= 5, pady= 5, rowspan= 2)
 b_Chan3.grid(row= 0, column= 2, padx= 5, pady= 5, rowspan= 2)
 # l_scope_id.grid(row= 0, column= 3, padx= 5, pady= 5)
 # cbb_scope_id.grid(row= 1, column= 3, padx= 5, pady= 5)
-b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 5)
-b_WMe2.grid(row= 2, column= 1, padx= 5, pady= 5)
-b_WMe3.grid(row= 2, column= 2, padx= 5, pady= 5)
-rb_ch_1.grid(row= 3, column= 0, 
+l_sampling_rate.grid(row= 0, column= 3, 
+                    #  padx= 5, pady= 5
+                     )
+e_sampling_rate.grid(row= 0, column= 4, 
+                    #  padx= 5, pady= 5
+                     )
+b_sampling_rate_check.grid(row= 1, column= 3, columnspan= 2, sticky= 'e',
+                        #    padx= 5, pady= 5
+                           )
+b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 5, rowspan= 2)
+b_WMe2.grid(row= 2, column= 1, padx= 5, pady= 5, rowspan= 2)
+b_WMe3.grid(row= 2, column= 2, padx= 5, pady= 5, rowspan= 2)
+l_memory_depth.grid(row= 2, column= 3, 
+                    # padx= 5, pady= 5
+                    )
+e_memory_depth.grid(row= 2, column= 4, 
+                    # padx= 5, pady= 5
+                    )
+b_memory_depth_check.grid(row= 3, column= 3, columnspan= 2, sticky= 'e',
+                        #   padx= 5, pady= 5
+                          )
+rb_ch_1.grid(row= 4, column= 0, 
             #  padx= 5, pady= 5
                 )
-rb_ch_2.grid(row= 4, column= 0, 
+rb_ch_2.grid(row= 5, column= 0, 
             #  padx= 5, pady= 5
                 ) 
-rb_ch_3.grid(row= 5, column= 0, 
+rb_ch_3.grid(row= 6, column= 0, 
             #  padx= 5, pady= 5
                 ) 
-rb_ch_1_2.grid(row= 3, column= 1, sticky= 'w',
+rb_ch_1_2.grid(row= 4, column= 1, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_2_1.grid(row= 4, column= 1, sticky= 'w',
+rb_ch_2_1.grid(row= 5, column= 1, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_1_3.grid(row= 5, column= 1, sticky= 'w',
+rb_ch_1_3.grid(row= 6, column= 1, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_3_1.grid(row= 6, column= 1, sticky= 'w',
+rb_ch_3_1.grid(row= 7, column= 1, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_1_1.grid(row= 3, column= 2, sticky= 'w',
+rb_ch_1_1.grid(row= 4, column= 2, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_2_2.grid(row= 4, column= 2, sticky= 'w',
+rb_ch_2_2.grid(row= 5, column= 2, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_3_3.grid(row= 5, column= 2, sticky= 'w',
+rb_ch_3_3.grid(row= 6, column= 2, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_2_3.grid(row= 3, column= 3, sticky= 'w',
+rb_ch_2_3.grid(row= 4, column= 3, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
-rb_ch_3_2.grid(row= 4, column= 3, sticky= 'w',
+rb_ch_3_2.grid(row= 5, column= 3, sticky= 'w',
             #    padx= 5, pady= 5
                 ) 
 
