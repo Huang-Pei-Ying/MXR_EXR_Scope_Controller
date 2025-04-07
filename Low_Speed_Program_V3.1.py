@@ -133,45 +133,12 @@ def main_window(scope_id):
             self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
             idn = self.inst.query('*IDN?').strip()
             print(f'Connect successfully! / {idn}')
-            # print(f'scope_id= {scope_id}')
-            
-            # for i in scope_ids:
-            #     try:
-            #         self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{i}::inst0::INSTR')
-            #         idn = self.inst.query('*IDN?').strip()
-            #     except:
-            #         continue
-
-            # print(f'Connect successfully! / {idn}')
-
-            # try:
-            #     if scope_id == 'MUTUU36':
-            #         inst_name = 'MXR608A' #MUTUU36
-            #     elif scope_id == '1CFVOG6':
-            #         inst_name = 'EXR604A' #1CFVOG6
-            #     else:
-            #         inst_name = 'other scope'
-            #     self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
-            #     idn = self.inst.query('*IDN?').strip()
-            # except:
-            #     if scope_id == 'MUTUU36':
-            #         scope_id = '1CFVOG6'
-            #         inst_name = 'EXR604A' #1CFVOG6
-            #         str_scope_id.set('1CFVOG6')
-            #     elif scope_id == '1CFVOG6':
-            #         scope_id = 'MUTUU36'
-            #         inst_name = 'MXR608A' #MUTUU36
-            #         str_scope_id.set('MUTUU36')
-            #     else:
-            #         inst_name = 'other scope'
-            #     self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
-            #     idn = self.inst.query('*IDN?').strip()
 
         def sampling_rate_acquire(self, rate): # 科學記號
-            self.inst.write(f':ACQuire:SRATe:DIGital {rate}')
+            self.inst.write(f':ACQuire:SRATe:ANALog {rate}')
 
         def memory_depth_acquire(self, points_value: int):
-            self.inst.write(f':ACQuire:POINts[:ANALog] {points_value}')
+            self.inst.write(f':ACQuire:POINts:ANALog {points_value}')
         
         def RF_threshold(self, rf_top, rf_base):
             if int_rf_thres.get() == 1:
@@ -416,6 +383,17 @@ def main_window(scope_id):
                 directory_path= ensure_directory_exists(directory_path= f"{pc_folder}")
             else:
                 directory_path= ensure_directory_exists(directory_path= f"{pc_folder}/wfm")
+
+            if os.path.exists(f"{directory_path}/{file_name}.{ext}"):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗，其實我們不需要完整的視窗
+                ask_result = messagebox.askyesno("檔案已存在", f"檔案已經存在，是否覆蓋？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    # print("檔案未保存。")
+                    return     
+           
             with open(f"{directory_path}/{file_name}.{ext}", 'wb') as f:
                 f.write(data)
 
