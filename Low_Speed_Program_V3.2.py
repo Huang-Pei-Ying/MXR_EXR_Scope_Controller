@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 import configparser
 import os
+from decimal import Decimal
 
 
 # 第一個視窗取得scope id並開啟主視窗
@@ -165,6 +166,13 @@ def main_window(scope_id):
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
                 self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,70,50,30')
             elif int_gen_thres.get() == 4:
+                if float(g_top) <= float(g_middle):
+                    g_top= Decimal(g_middle) + Decimal('0.01')
+                    str_gen_top.set(f'{g_top}')
+                if float(g_middle) <= float(g_base):
+                    g_base= Decimal(g_middle) - Decimal('0.01')
+                    str_gen_base.set(f'{g_base}')
+
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
                 self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
 
