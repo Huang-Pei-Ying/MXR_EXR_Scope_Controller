@@ -168,10 +168,10 @@ def main_window(scope_id):
             elif int_gen_thres.get() == 4:
                 if float(g_top) <= float(g_middle):
                     g_top= Decimal(g_middle) + Decimal('0.01')
-                    str_gen_top.set(f'{g_top}')
+                    # str_gen_top.set(f'{g_top}')
                 if float(g_middle) <= float(g_base):
                     g_base= Decimal(g_middle) - Decimal('0.01')
-                    str_gen_base.set(f'{g_base}')
+                    # str_gen_base.set(f'{g_base}')
 
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
                 self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
@@ -1082,11 +1082,13 @@ scope_ids.append('')
 
 id_window = tk.Tk()
 id_window.title('[Keysight] Low-Speed Oscilloscope Controller')
+id_window.resizable(width= False, height= False)
+id_window.geometry('300x150+500+150')
 
 l_scope_id = tk.Label(id_window, text= 'Enter Scope ID')
 str_scope_id = tk.StringVar()
 cb_scope_id = ttk.Combobox(id_window, textvariable= str_scope_id, values= scope_ids)
-b_scope_id = tk.Button(id_window, text= 'Check', command= lambda: show_main_window(old_scope_ids= scope_ids))
+b_scope_id = tk.Button(id_window, text= 'OK', width= 10, height= 2, command= lambda: show_main_window(old_scope_ids= scope_ids))
 
 l_ip = tk.Label(id_window, text= '### 確認電腦IP與Scope在同一網域 ###')
 
