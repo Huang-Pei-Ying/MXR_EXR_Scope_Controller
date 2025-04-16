@@ -166,12 +166,23 @@ def main_window(scope_id):
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
                 self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,70,50,30')
             elif int_gen_thres.get() == 4:
+                do_the_judge= False
                 if float(g_top) <= float(g_middle):
                     g_top= Decimal(g_middle) + Decimal('0.01')
+                    e_gen_top.config(fg= 'red')
+                    e_gen_mid.config(fg= 'red')
+                    do_the_judge= True
                     # str_gen_top.set(f'{g_top}')
                 if float(g_middle) <= float(g_base):
                     g_base= Decimal(g_middle) - Decimal('0.01')
+                    e_gen_base.config(fg= 'red')
+                    e_gen_mid.config(fg= 'red')
+                    do_the_judge= True
                     # str_gen_base.set(f'{g_base}')
+                if not do_the_judge:
+                    e_gen_top.config(fg= 'black')
+                    e_gen_mid.config(fg= 'black')
+                    e_gen_base.config(fg= 'black')
 
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
                 self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
