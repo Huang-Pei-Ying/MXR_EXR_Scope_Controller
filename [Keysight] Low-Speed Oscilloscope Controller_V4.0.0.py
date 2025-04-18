@@ -4,6 +4,7 @@ from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 import configparser
 import os
 from decimal import Decimal
+import re
 
 
 # 第一個視窗取得scope id並開啟主視窗
@@ -142,11 +143,6 @@ def main_window(scope_id):
         str_WMe4.set(value= LoadWMe4)
 
         # return scope_ids
-
-    # def ensure_directory_exists(directory_path):
-    #     if not os.path.exists(directory_path):
-    #         os.makedirs(directory_path)
-    #     return directory_path
 
     class MXR:
 
@@ -495,6 +491,164 @@ def main_window(scope_id):
                 # else:
                 #     continue
 
+        def get_results(self):
+            meas_name= ['', '', '']
+            mean= ['', '', '']
+            all_results= self.inst.query(f':MEASure:RESults?')
+            for index, value in enumerate(all_results.split(',')):
+                if divmod(index, 7)[1] == 0:
+                    try:
+                        meas_name[divmod(index, 7)[0]]= value
+                    except:
+                        # l_meas_name_1.config(text=f'484超過3個??')
+                        continue
+                    if value[0] == 'V':  # 0: Voltage, 1: Time, 2: Slew Rate, 3: Frequency, 4: Duty cycle
+                        measurement_type = 0 
+                    elif 'Slew Rate' in value:
+                        measurement_type = 2
+                    elif 'Freq' in value:
+                        measurement_type = 3
+                    elif 'Duty cycle' in value:
+                        measurement_type = 4
+                    elif value == '\n':
+                        meas_name[divmod(index, 7)[0]] = ''
+                        continue
+                    else:
+                        measurement_type = 1
+                if divmod(index, 7)[1] == 2:
+                    if measurement_type == 0:
+                        final_result= self.judge_volt_unit(value= value)
+                    elif measurement_type == 1:
+                        slew= False
+                        final_result= self.judge_time_unit(value= value, slew= slew)
+                    elif measurement_type == 2:
+                        slew= True
+                        final_result= self.judge_time_unit(value= value, slew= slew)
+                    elif measurement_type == 3:
+                        final_result= self.judge_freq_unit(value= value)
+                    elif measurement_type == 4:
+                        final_result = f"{float(value):.2f}"+' %'
+
+                    try:
+                        mean[divmod(index, 7)[0]]= final_result
+                    except:
+                        continue
+
+            l_meas_name_1.config(text=f'{meas_name[0]}')
+            text_mean_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_1.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_1.insert(tk.END, f"{mean[0]}")
+            text_mean_1.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_2.config(text=f'{meas_name[1]}')
+            text_mean_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_2.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_2.insert(tk.END, f"{mean[1]}")
+            text_mean_2.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_3.config(text=f'{meas_name[2]}')
+            text_mean_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_3.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_3.insert(tk.END, f"{mean[2]}")
+            text_mean_3.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+        def judge_time_unit(self, value, slew):
+            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
+            match = re.search(pattern, value)
+            # 提取基數和指數
+            base = float(match.group(1))
+            exponent = int(match.group(2))
+            if slew:
+                if exponent == 3:
+                    return f"{base} V/ms"
+                elif exponent == 4:
+                    return f"{base * 10} V/ms"
+                elif exponent == 5:
+                    return f"{base * 100} V/ms"
+                elif exponent == 6:
+                    return f"{base} V/us"
+                elif exponent == 7:
+                    return f"{base * 10} V/us"
+                elif exponent == 8:
+                    return f"{base * 100} V/us"
+                elif exponent == 9:
+                    return f"{base} V/ns"
+                elif exponent == 10:
+                    return f"{base * 10} V/ns"
+                elif exponent == 11:
+                    return f"{base * 100} V/ns"
+                else:
+                    # 如果指數不在指定的範圍内，返回原始字串
+                    return f"{base} V/s"
+            else:
+                if exponent == -9:
+                    return f"{base} ns"
+                elif exponent == -8:
+                    return f"{base * 10} ns"
+                elif exponent == -7:
+                    return f"{base * 100} ns"
+                elif exponent == -6:
+                    return f"{base} us"
+                elif exponent == -5:
+                    return f"{base * 10} us"
+                elif exponent == -4:
+                    return f"{base * 100} us"
+                elif exponent == -3:
+                    return f"{base} ms"
+                elif exponent == -2:
+                    return f"{base * 10} ms"
+                elif exponent == -1:
+                    return f"{base * 100} ms"
+                else:
+                    # 如果指數不在指定的範圍内，返回原始字串
+                    return f'{base} s'
+                
+        def judge_volt_unit(self, value):
+            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
+            match = re.search(pattern, value)
+            # 提取基數和指數
+            base = float(match.group(1))
+            exponent = int(match.group(2))
+            # 基于不同的指数值进行不同的转换
+            if exponent == -3:
+                return f"{base} mV"
+            elif exponent == -2:
+                return f"{base * 10} mV"
+            elif exponent == -1:
+                return f"{base * 100} mV"
+            else:
+                # 如果指数不在指定的范围内，返回原始文本
+                return f"{base} V"
+
+        def judge_freq_unit(self, value):
+            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
+            match = re.search(pattern, value)
+            # 提取基數和指數
+            base = float(match.group(1))
+            exponent = int(match.group(2))
+            # 基于不同的指数值进行不同的转换
+            if exponent == 9:
+                return f"{base} GHz"
+            elif exponent == 8:
+                return f"{base * 100} MHz"
+            elif exponent == 7:
+                return f"{base * 10} MHz"
+            elif exponent == 6:
+                return f"{base} MHz"
+            elif exponent == 5:
+                return f"{base * 100} kHz"
+            elif exponent == 4:
+                return f"{base * 10} kHz"
+            elif exponent == 3:
+                return f"{base} kHz"
+            elif exponent == 2:
+                return f"{base * 100} Hz"
+            elif exponent == 1:
+                return f"{base * 10} Hz"
+            else:
+                # 如果指数不在指定的范围内，返回原始文本
+                return f"{base} Hz"
+
     def clear(string):
         string.set('')
 
@@ -563,17 +717,10 @@ def main_window(scope_id):
     
     window = tk.Tk()
     window.title('[Keysight] Low-Speed Oscilloscope Controller')
-    window.geometry('1405x760+2+2')
+    # window.geometry('1500x760+2+2')
+    window.geometry('+2+2')
     window.configure(bg= '#E9F4FF')
 
-    # # Style
-    # button_style= ttk.Style()
-    # button_style.theme_use('alt')
-    # button_style.configure('TButton', relief= 'raised', font= ('Candara', 10, 'bold'))
-    # button_style.map("TButton",
-    #           foreground=[('!active', '#506376'),('pressed', '#193F6B'), ('active', '#506376')],
-    #           background=[ ('!active','#ECF4FC'),('pressed', '#ECF4FC'), ('active', '#ECF4FC')],
-    # )
     bg_color_1= '#c4cdd8'
     bg_color_2= '#b0c8db'
 
@@ -856,8 +1003,6 @@ def main_window(scope_id):
     rb_ch_single.select()
     int_ch_single = tk.IntVar()
     cb_ch_single = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_single, values= [1, 2, 3, 4])
-    # rb_ch_2 = tk.Radiobutton(label_frame_chan, text= 'Chan2 test', variable= int_ch, value= 2)
-    # rb_ch_3 = tk.Radiobutton(label_frame_chan, text= 'Chan3 test', variable= int_ch, value= 3)
     rb_ch_delta = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_start = tk.IntVar()
     cb_ch_delta_start = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_start, values= [1, 2, 3, 4])
@@ -866,19 +1011,28 @@ def main_window(scope_id):
     int_ch_delta_stop = tk.IntVar()
     cb_ch_delta_stop = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_stop, values= [1, 2, 3, 4])
 
+    b_get_results = tk.Button(label_frame_chan, text= 'Get Results\n(只能取3個)', width= 10, command= lambda: mxr.get_results())
+    l_meas_name_1 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_1 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Candara', 11, 'bold'),)
+    text_mean_1.config(state=tk.DISABLED)
+    l_meas_name_2 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_2 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Candara', 11, 'bold'),)
+    text_mean_2.config(state=tk.DISABLED)
+    l_meas_name_3 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_3 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Candara', 11, 'bold'),)
+    text_mean_3.config(state=tk.DISABLED)
+
     # Save Frame ===================================================================================================================================
 
     label_frame_save= tk.LabelFrame(window, text= 'Save', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     str_image_folder = tk.StringVar()
     e_image_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_image_folder)
-    # str_image_folder.set(f'{folder_name}')
 
     l_image_folder = tk.Label(label_frame_save, text= 'Waveform Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_image_pc_folder = tk.StringVar()
     e_image_pc_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_image_pc_folder)
-    # str_image_pc_folder.set(r"C:\Users\11102230\Desktop")
 
     l_image_pc_folder = tk.Label(label_frame_save, text= 'Waveform PC folder [填存在筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
@@ -892,7 +1046,6 @@ def main_window(scope_id):
 
     str_WMe_folder = tk.StringVar()
     e_WMe_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_WMe_folder)
-    # str_WMe_folder.set(f'{folder_name}/waveform_files')
 
     l_WMe_folder = tk.Label(label_frame_save, text= 'WMemory Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
@@ -1067,14 +1220,14 @@ def main_window(scope_id):
     # cb_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
 
     # Chan grid
-    b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    b_Chan2.grid(row= 0, column= 2, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    b_Chan3.grid(row= 0, column= 4, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    b_Chan4.grid(row= 0, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    b_WMe2.grid(row= 2, column= 2, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    b_WMe3.grid(row= 2, column= 4, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
+    b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_Chan2.grid(row= 0, column= 2, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_Chan3.grid(row= 0, column= 4, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_Chan4.grid(row= 0, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe2.grid(row= 2, column= 2, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe3.grid(row= 2, column= 4, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
     rb_ch_single.grid(row= 4, column= 0, sticky= 'e')
     cb_ch_single.grid(row= 4, column= 1, sticky= 'w')
     rb_ch_delta.grid(row= 4, column= 2, sticky= 'e')
@@ -1082,6 +1235,13 @@ def main_window(scope_id):
     l_arrow.grid(row= 5, column= 2, sticky= 'e')
     l_ch_delta_stop.grid(row= 6, column= 2, sticky= 'e')
     cb_ch_delta_stop.grid(row= 6, column= 3, sticky= 'w')
+    b_get_results.grid(row= 4, column= 4, rowspan= 2)
+    l_meas_name_1.grid(row= 4, column= 5, sticky= 'w')
+    text_mean_1.grid(row= 4, column= 6, sticky= 'w')
+    l_meas_name_2.grid(row= 5, column= 5, sticky= 'w')
+    text_mean_2.grid(row= 5, column= 6, sticky= 'w')
+    l_meas_name_3.grid(row= 6, column= 5, sticky= 'w')
+    text_mean_3.grid(row= 6, column= 6, sticky= 'w')
 
     # Save grid
     e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 3)
@@ -1115,12 +1275,10 @@ def main_window(scope_id):
     b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 3)
     b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 3)
 
-    # scope_ids= initialize()
     initialize()
 
     window.protocol('WM_DELETE_WINDOW', close_window)
 
-    # mxr= MXR(scope_id= str_scope_id.get())
     mxr= MXR(scope_id= scope_id)
 
     window.mainloop()
