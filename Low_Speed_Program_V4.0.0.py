@@ -563,11 +563,23 @@ def main_window(scope_id):
     
     window = tk.Tk()
     window.title('[Keysight] Low-Speed Oscilloscope Controller')
-    window.geometry('1400x790+2+2')
+    window.geometry('1405x760+2+2')
+    window.configure(bg= '#E9F4FF')
+
+    # # Style
+    # button_style= ttk.Style()
+    # button_style.theme_use('alt')
+    # button_style.configure('TButton', relief= 'raised', font= ('Candara', 10, 'bold'))
+    # button_style.map("TButton",
+    #           foreground=[('!active', '#506376'),('pressed', '#193F6B'), ('active', '#506376')],
+    #           background=[ ('!active','#ECF4FC'),('pressed', '#ECF4FC'), ('active', '#ECF4FC')],
+    # )
+    bg_color_1= '#c4cdd8'
+    bg_color_2= '#b0c8db'
 
     # Measurement Frame ===================================================================================================================================
 
-    label_frame_meas_item= tk.LabelFrame(window, text= 'Measurement')
+    label_frame_meas_item= tk.LabelFrame(window, text= 'Measurement', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     b_freq = tk.Button(label_frame_meas_item, text='Frequency', width= 20, height= 2, command= lambda: mxr.freq(chan= int_ch_single.get()))
     b_period = tk.Button(label_frame_meas_item, text='Period', width= 20, height= 2, command= lambda: mxr.period(chan= int_ch_single.get()))
@@ -584,38 +596,38 @@ def main_window(scope_id):
 
     # Scale / Offset Frame ===================================================================================================================================
 
-    label_frame_scale= tk.LabelFrame(window, text= 'Scale / Offset')
+    label_frame_scale= tk.LabelFrame(window, text= 'Scale / Offset', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    l_volt_scale = tk.Label(label_frame_scale, text= 'Voltage Scale (V)')
+    l_volt_scale = tk.Label(label_frame_scale, text= 'Voltage Scale (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_volt_scale = tk.StringVar()
     e_volt_scale = tk.Entry(label_frame_scale, width= 7, textvariable= str_volt_scale)
 
-    l_volt_offset = tk.Label(label_frame_scale, text= 'Voltage Offset (V)')
+    l_volt_offset = tk.Label(label_frame_scale, text= 'Voltage Offset (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_volt_offset = tk.StringVar()
     e_volt_offset = tk.Entry(label_frame_scale, width= 7, textvariable= str_volt_offset)
 
     b_volt_scale = tk.Button(label_frame_scale, text= 'Volt Check', width= 10, height= 1, command= lambda: mxr.volt_check(scale= str_volt_scale.get(), offset= str_volt_offset.get()))
 
-    l_trigger_level = tk.Label(label_frame_scale, text= 'Trigger level (V)')
+    l_trigger_level = tk.Label(label_frame_scale, text= 'Trigger level (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_trigger_level = tk.StringVar()
     e_trigger_level = tk.Entry(label_frame_scale, width= 7, textvariable= str_trigger_level)
 
-    l_trigger_chan = tk.Label(label_frame_scale, text= 'Trigger Chan')
+    l_trigger_chan = tk.Label(label_frame_scale, text= 'Trigger Channel', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_trigger_chan = tk.StringVar()
     e_trigger_chan = tk.Entry(label_frame_scale, width= 7, textvariable= str_trigger_chan)
 
     b_str_trigger_check = tk.Button(label_frame_scale, text= 'Trig Check', width= 10, height= 1, command= lambda: mxr.trig_check(chan= str_trigger_chan.get(), level= str_trigger_level.get()))
 
-    l_time_scale = tk.Label(label_frame_scale, text= 'Timebase Scale (sec)')
+    l_time_scale = tk.Label(label_frame_scale, text= 'Timebase Scale (sec)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_time_scale = tk.StringVar()
     e_time_scale = tk.Entry(label_frame_scale, width= 7, textvariable= str_time_scale)
 
-    l_time_offset = tk.Label(label_frame_scale, text= 'Timebase Offset (sec)')
+    l_time_offset = tk.Label(label_frame_scale, text= 'Timebase Offset (sec)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_time_offset = tk.StringVar()
     e_time_offset = tk.Entry(label_frame_scale, width= 7, textvariable= str_time_offset)
@@ -625,9 +637,9 @@ def main_window(scope_id):
 
     # Delta Setup Frame ===================================================================================================================================
 
-    label_frame_delta= tk.LabelFrame(window, text= 'Delta Setup')
+    label_frame_delta= tk.LabelFrame(window, text= 'Delta Setup', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    l_start = tk.Label(label_frame_delta, text= 'Delta Start', background= 'yellow')
+    l_start = tk.Label(label_frame_delta, text= 'Delta Start', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
 
     start_rf = tk.StringVar()
     cb_start_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_rf, values= ['RISING', 'FALLING'])
@@ -638,7 +650,7 @@ def main_window(scope_id):
     start_pos = tk.StringVar()
     cb_start_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
 
-    l_stop = tk.Label(label_frame_delta, text= 'Delta Stop', background= 'yellow')
+    l_stop = tk.Label(label_frame_delta, text= 'Delta Stop', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
 
     stop_rf = tk.StringVar()
     cb_stop_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_rf, values= ['RISING', 'FALLING'])
@@ -652,43 +664,36 @@ def main_window(scope_id):
 
     # Threshold Frame ===================================================================================================================================
 
-    label_frame_thres= tk.LabelFrame(window, text= 'Threshold')
+    label_frame_thres= tk.LabelFrame(window, text= 'Threshold', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     int_gen_thres = tk.IntVar()    
-    # rb_gen_threshold_1= tk.Radiobutton(label_frame_thres, text= 'Gen Thres 10%~90%', variable= int_gen_thres, value= 1)
-
-    # rb_gen_threshold_2= tk.Radiobutton(label_frame_thres, text= 'Gen Thres 20%~80%', variable= int_gen_thres, value= 2)
-
-    # rb_gen_threshold_3= tk.Radiobutton(label_frame_thres, text= 'Gen Thres 30%~70%', variable= int_gen_thres, value= 3)
-
-    # rb_gen_threshold_4= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (V)', variable= int_gen_thres, value= 4)
-    rb_gen_threshold_1= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (%)', variable= int_gen_thres, value= 1)
+    rb_gen_threshold_1= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (%)', variable= int_gen_thres, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
 
     str_gen_top_percent = tk.StringVar()
     e_gen_top_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_top_percent)
 
-    l_gen_threshold_1= tk.Label(label_frame_thres, text= '            Gen Thres Middle (%)')
+    l_gen_threshold_1= tk.Label(label_frame_thres, text= '            Gen Thres Middle (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_mid_percent = tk.StringVar()
     e_gen_mid_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_mid_percent)
 
-    l_gen_threshold_2= tk.Label(label_frame_thres, text= '        Gen Thres Base (%)')
+    l_gen_threshold_2= tk.Label(label_frame_thres, text= '        Gen Thres Base (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_base_percent = tk.StringVar()
     e_gen_base_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_base_percent)
     
-    rb_gen_threshold_2= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (V)', variable= int_gen_thres, value= 2)
+    rb_gen_threshold_2= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (V)', variable= int_gen_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     rb_gen_threshold_2.select()
 
     str_gen_top = tk.StringVar()
     e_gen_top = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_top)
 
-    l_gen_threshold_4= tk.Label(label_frame_thres, text= '            Gen Thres Middle (V)')
+    l_gen_threshold_4= tk.Label(label_frame_thres, text= '            Gen Thres Middle (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_mid = tk.StringVar()
     e_gen_mid = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_mid)
 
-    l_gen_threshold_5= tk.Label(label_frame_thres, text= '        Gen Thres Base (V)')
+    l_gen_threshold_5= tk.Label(label_frame_thres, text= '        Gen Thres Base (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_base = tk.StringVar()
     e_gen_base = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_base)
@@ -700,14 +705,9 @@ def main_window(scope_id):
         )
 
     int_rf_thres = tk.IntVar()    
-    # rb_rf_threshold_1= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres 10%~90%', variable= int_rf_thres, value= 1)
+    rb_rf_threshold_1= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (%)', variable= int_rf_thres, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
 
-    # rb_rf_threshold_2= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres 20%~80%', variable= int_rf_thres, value= 2)
-
-    # rb_rf_threshold_3= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres 30%~70%', variable= int_rf_thres, value= 3)
-    rb_rf_threshold_1= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (%)', variable= int_rf_thres, value= 1)
-
-    l_rf_threshold_1= tk.Label(label_frame_thres, text= '       tRtF Thres Base (%)')
+    l_rf_threshold_1= tk.Label(label_frame_thres, text= '       tRtF Thres Base (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_rf_top_percent = tk.StringVar()
     e_rf_top_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_rf_top_percent)
@@ -715,10 +715,10 @@ def main_window(scope_id):
     str_rf_base_percent = tk.StringVar()
     e_rf_base_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_rf_base_percent)
 
-    rb_rf_threshold_2= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (V)', variable= int_rf_thres, value= 2)
+    rb_rf_threshold_2= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (V)', variable= int_rf_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     rb_rf_threshold_2.select()
 
-    l_rf_threshold_2= tk.Label(label_frame_thres, text= '       tRtF Thres Base (V)')
+    l_rf_threshold_2= tk.Label(label_frame_thres, text= '       tRtF Thres Base (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_rf_top = tk.StringVar()
     e_rf_top = tk.Entry(label_frame_thres, width= 8, textvariable= str_rf_top)
@@ -732,12 +732,12 @@ def main_window(scope_id):
         )
         )
 
-    l_sampling_rate = tk.Label(label_frame_thres, text= '※ Sampling Rate')
+    l_sampling_rate = tk.Label(label_frame_thres, text= '※ Sampling Rate', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     str_sampling_rate = tk.StringVar()
     e_sampling_rate = tk.Entry(label_frame_thres, width= 10, textvariable= str_sampling_rate)
     b_sampling_rate_check = tk.Button(label_frame_thres, text= 'Check', height= 1, command= lambda: mxr.sampling_rate_acquire(rate= str_sampling_rate.get()))
 
-    l_memory_depth = tk.Label(label_frame_thres, text= '※ Memory Depth')
+    l_memory_depth = tk.Label(label_frame_thres, text= '※ Memory Depth', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
     str_memory_depth = tk.StringVar()
     e_memory_depth = tk.Entry(label_frame_thres, width= 10, textvariable= str_memory_depth)
     b_memory_depth_check = tk.Button(label_frame_thres, text= 'Check', height= 1, command= lambda: mxr.memory_depth_acquire(points_value= str_memory_depth.get()))
@@ -745,7 +745,7 @@ def main_window(scope_id):
 
     # Label Frame ===================================================================================================================================
 
-    label_frame_label= tk.LabelFrame(window, text= 'Label')
+    label_frame_label= tk.LabelFrame(window, text= 'Label', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     str_label_1 = tk.StringVar()
     e_label_1 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_1)
@@ -777,7 +777,7 @@ def main_window(scope_id):
 
     # Control Frame ===================================================================================================================================
 
-    label_frame_control= tk.LabelFrame(window, text= 'Control')
+    label_frame_control= tk.LabelFrame(window, text= 'Control', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     b_run = tk.Button(label_frame_control, text='RUN', width= 20, height= 2, command= lambda: mxr.run())
 
@@ -802,22 +802,22 @@ def main_window(scope_id):
     b_trig_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 8, height= 2, command= lambda: mxr.trig_slope())
 
     boolvar_marker_1 = tk.BooleanVar()    
-    cb_marker_1= tk.Checkbutton(label_frame_control, text= 'Meas1', variable= boolvar_marker_1)
+    cb_marker_1= tk.Checkbutton(label_frame_control, text= 'Meas 1', variable= boolvar_marker_1, background= bg_color_2, fg= '#0D325C')
 
     boolvar_marker_2 = tk.BooleanVar()    
-    cb_marker_2= tk.Checkbutton(label_frame_control, text= 'Meas2', variable= boolvar_marker_2)
+    cb_marker_2= tk.Checkbutton(label_frame_control, text= 'Meas 2', variable= boolvar_marker_2, background= bg_color_2, fg= '#0D325C')
 
     boolvar_marker_3 = tk.BooleanVar()    
-    cb_marker_3= tk.Checkbutton(label_frame_control, text= 'Meas3', variable= boolvar_marker_3)
+    cb_marker_3= tk.Checkbutton(label_frame_control, text= 'Meas 3', variable= boolvar_marker_3, background= bg_color_2, fg= '#0D325C')
 
     boolvar_marker_4 = tk.BooleanVar()    
-    cb_marker_4= tk.Checkbutton(label_frame_control, text= 'Meas4', variable= boolvar_marker_4)
+    cb_marker_4= tk.Checkbutton(label_frame_control, text= 'Meas 4', variable= boolvar_marker_4, background= bg_color_2, fg= '#0D325C')
 
     boolvar_marker_5 = tk.BooleanVar()    
-    cb_marker_5= tk.Checkbutton(label_frame_control, text= 'Meas5', variable= boolvar_marker_5)
+    cb_marker_5= tk.Checkbutton(label_frame_control, text= 'Meas 5', variable= boolvar_marker_5, background= bg_color_2, fg= '#0D325C')
 
     boolvar_marker_6 = tk.BooleanVar()    
-    cb_marker_6= tk.Checkbutton(label_frame_control, text= 'Meas6', variable= boolvar_marker_6)
+    cb_marker_6= tk.Checkbutton(label_frame_control, text= 'Meas 6', variable= boolvar_marker_6, background= bg_color_2, fg= '#0D325C')
 
     # boolvar_marker_7 = tk.BooleanVar()    
     # cb_marker_7= tk.Checkbutton(label_frame_control, text= 'Meas7', variable= boolvar_marker_7)
@@ -840,7 +840,7 @@ def main_window(scope_id):
 
     # Channel Frame ===================================================================================================================================
 
-    label_frame_chan= tk.LabelFrame(window, text= 'Channel')
+    label_frame_chan= tk.LabelFrame(window, text= 'Channel', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 1))
     b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 2))
@@ -852,40 +852,40 @@ def main_window(scope_id):
     b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 4))
 
     int_ch = tk.IntVar()    
-    rb_ch_single = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 1)
+    rb_ch_single = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     rb_ch_single.select()
     int_ch_single = tk.IntVar()
     cb_ch_single = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_single, values= [1, 2, 3, 4])
     # rb_ch_2 = tk.Radiobutton(label_frame_chan, text= 'Chan2 test', variable= int_ch, value= 2)
     # rb_ch_3 = tk.Radiobutton(label_frame_chan, text= 'Chan3 test', variable= int_ch, value= 3)
-    rb_ch_delta = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 2)
+    rb_ch_delta = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_start = tk.IntVar()
     cb_ch_delta_start = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_start, values= [1, 2, 3, 4])
-    l_arrow = tk.Label(label_frame_chan, text= '      ↓')
-    l_ch_delta_stop = tk.Label(label_frame_chan, text= 'Chan')
+    l_arrow = tk.Label(label_frame_chan, text= '      ↓', background= bg_color_1, fg= '#0D325C', font= ('Calibri', 11, 'bold'),)
+    l_ch_delta_stop = tk.Label(label_frame_chan, text= 'Chan', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_stop = tk.IntVar()
     cb_ch_delta_stop = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_stop, values= [1, 2, 3, 4])
 
     # Save Frame ===================================================================================================================================
 
-    label_frame_save= tk.LabelFrame(window, text= 'Save')
+    label_frame_save= tk.LabelFrame(window, text= 'Save', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     str_image_folder = tk.StringVar()
     e_image_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_image_folder)
     # str_image_folder.set(f'{folder_name}')
 
-    l_image_folder = tk.Label(label_frame_save, text= 'Waveform Scope folder [填Desktop之後的資料夾路徑]')
+    l_image_folder = tk.Label(label_frame_save, text= 'Waveform Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_image_pc_folder = tk.StringVar()
     e_image_pc_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_image_pc_folder)
     # str_image_pc_folder.set(r"C:\Users\11102230\Desktop")
 
-    l_image_pc_folder = tk.Label(label_frame_save, text= 'Waveform PC folder [填存在筆電的資料夾路徑]')
+    l_image_pc_folder = tk.Label(label_frame_save, text= 'Waveform PC folder [填存在筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_image = tk.StringVar()
     e_image = tk.Entry(label_frame_save, width= 50, textvariable= str_image)
 
-    l_imagename = tk.Label(label_frame_save, text= '(填 圖檔名)')
+    l_imagename = tk.Label(label_frame_save, text= '(填 圖檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     b_image_save_scope = tk.Button(label_frame_save, text= 'Save Image-Scope', command= lambda: mxr.save_waveform_scope(folder= str_image_folder.get(), image_name= str_image.get()))
     b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_waveform_pc(folder= str_image_folder.get(), file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
@@ -894,24 +894,24 @@ def main_window(scope_id):
     e_WMe_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_WMe_folder)
     # str_WMe_folder.set(f'{folder_name}/waveform_files')
 
-    l_WMe_folder = tk.Label(label_frame_save, text= 'WMemory Scope folder [填Desktop之後的資料夾路徑]')
+    l_WMe_folder = tk.Label(label_frame_save, text= 'WMemory Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_WMe_pc_folder = tk.StringVar()
     e_WMe_pc_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_WMe_pc_folder)
 
-    l_WMe_pc_folder = tk.Label(label_frame_save, text= 'WMemory PC folder [填存在筆電的資料夾路徑]')
+    l_WMe_pc_folder = tk.Label(label_frame_save, text= 'WMemory PC folder [填存在筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_WMe = tk.StringVar()
     e_WMe = tk.Entry(label_frame_save, width= 50, textvariable= str_WMe)
 
-    l_WMename = tk.Label(label_frame_save, text= '(填 WMe檔名)')
+    l_WMename = tk.Label(label_frame_save, text= '(填 WMe檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     b_WMe_save_scpoe = tk.Button(label_frame_save, text= 'Save WMe-Scope', command= lambda: mxr.save_wmemory_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), wme_name= str_WMe.get()))
     b_WMe_save_pc = tk.Button(label_frame_save, text= 'Save WMe-PC', command= lambda: mxr.save_wmemory_pc(folder= str_WMe_folder.get(), file_name= str_WMe.get(), pc_folder= str_WMe_pc_folder.get()))
 
     # Load WMemory Frame ===================================================================================================================================
 
-    label_frame_load_wme= tk.LabelFrame(window, text= 'Load WMemory')
+    label_frame_load_wme= tk.LabelFrame(window, text= 'Load WMemory', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     str_WMe1 = tk.StringVar()
     e_WMe1 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe1)
@@ -943,16 +943,16 @@ def main_window(scope_id):
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
-    label_frame_meas_item.grid(row= 0, column= 0, padx= 5, pady= 5, columnspan= 2, sticky= 'nsew')
-    label_frame_scale.grid(row= 1, column= 0, padx= 5, pady= 5, sticky= 'nsew')
-    label_frame_delta.grid(row= 1, column= 1, padx= 5, pady= 5, sticky= 'nsew')
-    label_frame_thres.grid(row= 2, column= 0, padx= 5, pady= 5, columnspan= 2, rowspan= 3, sticky= 'nsew')
-    label_frame_label.grid(row= 5, column= 0, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'nsew')
+    label_frame_meas_item.grid(row= 0, column= 0, padx= 5, pady= 3, columnspan= 2, sticky= 'nsew')
+    label_frame_scale.grid(row= 1, column= 0, padx= 5, pady= 3, sticky= 'nsew')
+    label_frame_delta.grid(row= 1, column= 1, padx= 5, pady= 3, sticky= 'nsew')
+    label_frame_thres.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'nsew')
+    label_frame_label.grid(row= 4, column= 0, padx= 5, pady= 3, columnspan= 2, sticky= 'nsew')
 
-    label_frame_control.grid(row= 0, column= 2, padx= 5, pady= 5, sticky= 'nsew')
-    label_frame_chan.grid(row= 1, column= 2, padx= 5, pady= 5, rowspan= 2, sticky= 'nsew')
-    label_frame_save.grid(row= 3, column= 2, padx= 5, pady= 5, sticky= 'nsew', rowspan= 2)
-    label_frame_load_wme.grid(row= 6, column= 2, padx= 5, pady= 5, sticky= 'nsew')
+    label_frame_control.grid(row= 0, column= 2, padx= 5, pady= 3, sticky= 'nsew')
+    label_frame_chan.grid(row= 1, column= 2, padx= 5, pady= 3, sticky= 'nsew')
+    label_frame_save.grid(row= 2, column= 2, padx= 5, pady= 3, sticky= 'nsew')
+    label_frame_load_wme.grid(row= 3, column= 2, padx= 5, pady= 3, rowspan= 2, sticky= 'nsew')
 
     # Meas grid
     b_freq.grid(row= 0, column= 0, padx= 5, pady= 5)
@@ -969,22 +969,22 @@ def main_window(scope_id):
     b_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 5)
 
     # Scale grid
-    l_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 5) 
-    e_volt_scale.grid(row= 0, column= 1, padx= 5, pady= 5)
-    l_volt_offset.grid(row= 1, column= 0, padx= 5, pady= 5) 
-    e_volt_offset.grid(row= 1, column= 1, padx= 5, pady= 5)
-    b_volt_scale.grid(row= 2, column= 0, padx= 5, pady= 5, sticky= 'e')
-    l_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 5) 
-    e_trigger_level.grid(row= 3, column= 1, padx= 5, pady= 5)
-    l_trigger_chan.grid(row= 4, column= 0, padx= 5, pady= 5) 
-    e_trigger_chan.grid(row= 4, column= 1, padx= 5, pady= 5)
-    b_str_trigger_check.grid(row= 4, column= 2, padx= 5, pady= 5)
-    l_time_scale.grid(row= 0, column= 2, padx= 5, pady= 5) 
-    e_time_scale.grid(row= 0, column= 3, padx= 5, pady= 5)
-    l_time_offset.grid(row= 1, column= 2, padx= 5, pady= 5) 
-    e_time_offset.grid(row= 1, column= 3, padx= 5, pady= 5)
-    b_time_scale_check.grid(row= 2, column= 2, padx= 5, pady= 5)
-    b_time_position_check.grid(row= 2, column= 3, padx= 5, pady= 5)
+    l_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    e_volt_scale.grid(row= 0, column= 1, padx= 5, pady= 4)
+    l_volt_offset.grid(row= 1, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    e_volt_offset.grid(row= 1, column= 1, padx= 5, pady= 4)
+    b_volt_scale.grid(row= 2, column= 0, padx= 5, pady= 4, sticky= 'e')
+    l_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    e_trigger_level.grid(row= 3, column= 1, padx= 5, pady= 4)
+    l_trigger_chan.grid(row= 4, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    e_trigger_chan.grid(row= 4, column= 1, padx= 5, pady= 4)
+    b_str_trigger_check.grid(row= 4, column= 2, padx= 5, pady= 4)
+    l_time_scale.grid(row= 0, column= 2, padx= 5, pady= 4, sticky= 'w') 
+    e_time_scale.grid(row= 0, column= 3, padx= 5, pady= 4)
+    l_time_offset.grid(row= 1, column= 2, padx= 5, pady= 4, sticky= 'w') 
+    e_time_offset.grid(row= 1, column= 3, padx= 5, pady= 4)
+    b_time_scale_check.grid(row= 2, column= 2, padx= 5, pady= 4)
+    b_time_position_check.grid(row= 2, column= 3, padx= 5, pady= 4)
 
     # Delta grid
     l_start.grid(row= 0, column= 0, padx= 5, pady= 5)
@@ -997,32 +997,28 @@ def main_window(scope_id):
     cb_stop_pos.grid(row= 3, column= 1, padx=5, pady= 5)
 
     # Thres grid
-    rb_gen_threshold_1.grid(row= 0, column= 0, padx= 5, pady= 5)
+    rb_gen_threshold_1.grid(row= 0, column= 0, padx= 5, pady= 3)
     e_gen_top_percent.grid(row= 0, column= 1, sticky= 'w')
-    l_gen_threshold_1.grid(row= 1, column= 0, padx= 5, pady= 5)
+    l_gen_threshold_1.grid(row= 1, column= 0, padx= 5, pady= 3)
     e_gen_mid_percent.grid(row= 1, column= 1, sticky= 'w')
-    l_gen_threshold_2.grid(row= 2, column= 0, padx= 5, pady= 5)
+    l_gen_threshold_2.grid(row= 2, column= 0, padx= 5, pady= 3)
     e_gen_base_percent.grid(row= 2, column= 1, sticky= 'w')
-    # rb_gen_threshold_3.grid(row= 2, column= 0, padx= 5, pady= 5) 
-    # rb_gen_threshold_4.grid(row= 3, column= 0, padx= 5, pady= 5) 
-    rb_gen_threshold_2.grid(row= 3, column= 0, padx= 5, pady= 5) 
+    rb_gen_threshold_2.grid(row= 3, column= 0, padx= 5, pady= 3) 
     e_gen_top.grid(row= 3, column= 1, sticky= 'w')
-    l_gen_threshold_4.grid(row= 4, column= 0, padx= 5, pady= 5) 
+    l_gen_threshold_4.grid(row= 4, column= 0, padx= 5, pady= 3) 
     e_gen_mid.grid(row= 4, column= 1, sticky= 'w')
-    l_gen_threshold_5.grid(row= 5, column= 0, padx= 5, pady= 5) 
+    l_gen_threshold_5.grid(row= 5, column= 0, padx= 5, pady= 3) 
     e_gen_base.grid(row= 5, column= 1, sticky= 'w')
-    b_gen_check.grid(row= 0, column= 2, padx= 5, pady= 5, sticky= 'e')
-    rb_rf_threshold_1.grid(row= 0, column= 3, padx= 5, pady= 5)
-    l_rf_threshold_1.grid(row= 1, column= 3, padx= 5, pady= 5) 
+    b_gen_check.grid(row= 0, column= 2, padx= 5, pady= 3, sticky= 'e')
+    rb_rf_threshold_1.grid(row= 0, column= 3, padx= 5, pady= 3)
+    l_rf_threshold_1.grid(row= 1, column= 3, padx= 5, pady= 3) 
     e_rf_top_percent.grid(row= 0, column= 4, sticky= 'w')
     e_rf_base_percent.grid(row= 1, column= 4, sticky= 'w')
-    # rb_rf_threshold_3.grid(row= 2, column= 3, padx= 5, pady= 5) 
-    # rb_rf_threshold_4.grid(row= 3, column= 3, padx= 5, pady= 5) 
-    rb_rf_threshold_2.grid(row= 2, column= 3, padx= 5, pady= 5) 
-    l_rf_threshold_2.grid(row= 3, column= 3, padx= 5, pady= 5) 
+    rb_rf_threshold_2.grid(row= 2, column= 3, padx= 5, pady= 3) 
+    l_rf_threshold_2.grid(row= 3, column= 3, padx= 5, pady= 3) 
     e_rf_top.grid(row= 2, column= 4, sticky= 'w')
     e_rf_base.grid(row= 3, column= 4, sticky= 'w')
-    b_rf_check.grid(row= 0, column= 5, padx= 5, pady= 5, sticky= 'e')
+    b_rf_check.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e')
 
     l_sampling_rate.grid(row= 4, column= 3)
     e_sampling_rate.grid(row= 4, column= 4)
@@ -1032,18 +1028,18 @@ def main_window(scope_id):
     b_memory_depth_check.grid(row= 5, column= 5)
 
     # Label grid
-    e_label_1.grid(row= 0, column= 0, padx= 5, pady= 5, columnspan= 2, sticky= 'nsew')
-    b_lable1.grid(row= 0, column= 2, padx= 5, pady= 5)
-    b_clear1.grid(row= 0, column= 3, padx= 5, pady= 5)
-    e_label_2.grid(row= 1, column= 0, padx= 5, pady= 5, columnspan= 2)
-    b_lable2.grid(row= 1, column= 2, padx= 5, pady= 5)
-    b_clear2.grid(row= 1, column= 3, padx= 5, pady= 5)
-    e_label_3.grid(row= 2, column= 0, padx= 5, pady= 5, columnspan= 2)
-    b_lable3.grid(row= 2, column= 2, padx= 5, pady= 5)
-    b_clear3.grid(row= 2, column= 3, padx= 5, pady= 5)
-    e_label_4.grid(row= 3, column= 0, padx= 5, pady= 5, columnspan= 2)
-    b_lable4.grid(row= 3, column= 2, padx= 5, pady= 5)
-    b_clear4.grid(row= 3, column= 3, padx= 5, pady= 5)
+    e_label_1.grid(row= 0, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable1.grid(row= 0, column= 2, padx= 5, pady= 3)
+    b_clear1.grid(row= 0, column= 3, padx= 5, pady= 3)
+    e_label_2.grid(row= 1, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable2.grid(row= 1, column= 2, padx= 5, pady= 3)
+    b_clear2.grid(row= 1, column= 3, padx= 5, pady= 3)
+    e_label_3.grid(row= 2, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable3.grid(row= 2, column= 2, padx= 5, pady= 3)
+    b_clear3.grid(row= 2, column= 3, padx= 5, pady= 3)
+    e_label_4.grid(row= 3, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable4.grid(row= 3, column= 2, padx= 5, pady= 3)
+    b_clear4.grid(row= 3, column= 3, padx= 5, pady= 3)
 
     # Control grid
     b_run.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2)
@@ -1079,98 +1075,45 @@ def main_window(scope_id):
     b_WMe2.grid(row= 2, column= 2, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
     b_WMe3.grid(row= 2, column= 4, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
     b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2)
-    rb_ch_single.grid(row= 4, column= 0)
-    cb_ch_single.grid(row= 4, column= 1)
-    # rb_ch_2.grid(row= 5, column= 0) 
-    # rb_ch_3.grid(row= 6, column= 0) 
+    rb_ch_single.grid(row= 4, column= 0, sticky= 'e')
+    cb_ch_single.grid(row= 4, column= 1, sticky= 'w')
     rb_ch_delta.grid(row= 4, column= 2, sticky= 'e')
-    cb_ch_delta_start.grid(row= 4, column= 3, sticky= 'e')
+    cb_ch_delta_start.grid(row= 4, column= 3, sticky= 'w')
     l_arrow.grid(row= 5, column= 2, sticky= 'e')
     l_ch_delta_stop.grid(row= 6, column= 2, sticky= 'e')
-    cb_ch_delta_stop.grid(row= 6, column= 3, sticky= 'e')
+    cb_ch_delta_stop.grid(row= 6, column= 3, sticky= 'w')
 
     # Save grid
-    e_image_folder.grid(row= 0, column= 0, 
-                        padx= 5, 
-                        pady= 5, 
-                        # columnspan= 3
-                        )
-    l_image_folder.grid(row=0, column= 1,
-                        columnspan= 3, 
-                        sticky= 'w',
-                        padx= 5, pady= 5
-                        )
-    e_image_pc_folder.grid(row= 1, column= 0, 
-                            padx= 5, 
-                            pady= 5, 
-                            # columnspan= 3
-                            )
-    l_image_pc_folder.grid(row= 1, column= 1, 
-                            columnspan= 3, 
-                            sticky= 'w',
-                            padx= 5, pady= 5
-                            )
-    e_image.grid(row= 2, column= 0, 
-                    padx= 5, 
-                pady= 5, 
-                #  columnspan= 3
-                    )
+    e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 3)
+    l_image_folder.grid(row=0, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
+    e_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 3)
+    l_image_pc_folder.grid(row= 1, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
+    e_image.grid(row= 2, column= 0, padx= 5, pady= 3)
     l_imagename.grid(row= 2, column= 1, sticky= 'w')
-    b_image_save_scope.grid(row=2, column= 2,
-                        padx= 5, pady= 5,
-                    sticky= 'w',
-                        )
-    b_image_save_pc.grid(row= 2, column= 3,
-                            sticky= 'w',
-                            padx= 5, 
-                            pady= 5,
-                            )
-    e_WMe_folder.grid(row= 3, column= 0, 
-                        padx= 5, 
-                    pady= 5, 
-                    #   columnspan= 3
-                        )
-    l_WMe_folder.grid(row=3, column= 1, 
-                        columnspan= 3,
-                        sticky= 'w',
-                        padx= 5, pady= 5
-                        )
-    e_WMe_pc_folder.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 5, columnspan= 3, )
-    l_WMe_pc_folder.grid(row= 4, column= 1, sticky= 'w', padx= 5, pady= 5, columnspan= 3, )
+    b_image_save_scope.grid(row=2, column= 2, padx= 5, pady= 3, sticky= 'w')
+    b_image_save_pc.grid(row= 2, column= 3, sticky= 'w', padx= 5, pady= 3)
+    e_WMe_folder.grid(row= 3, column= 0, padx= 5, pady= 3)
+    l_WMe_folder.grid(row=3, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
+    e_WMe_pc_folder.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 3, columnspan= 3, )
+    l_WMe_pc_folder.grid(row= 4, column= 1, sticky= 'w', padx= 5, pady= 3, columnspan= 3, )
 
-    e_WMe.grid(row= 5, column= 0, sticky= 'w',
-                padx= 5, 
-            pady= 5, 
-            #    columnspan= 3
-                )
+    e_WMe.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady= 3)
     l_WMename.grid(row= 5, column= 1, sticky= 'w')
-    b_WMe_save_scpoe.grid(row= 5, column= 2,
-                    padx= 5, pady= 5
-                    )
-    b_WMe_save_pc.grid(row= 5, column= 3,
-                    padx= 5, pady= 5
-                    )
+    b_WMe_save_scpoe.grid(row= 5, column= 2, padx= 5, pady= 3)
+    b_WMe_save_pc.grid(row= 5, column= 3, padx= 5, pady= 3)
     #LoadWMe grid
-    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 5, 
-            #    columnspan= 3
-                )
-    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 5)
-    b_wme_clear1.grid(row= 0, column= 2, padx= 5, pady= 5)
-    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 5, 
-            #    columnspan= 3
-                )
-    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 5)
-    b_wme_clear2.grid(row= 1, column= 2, padx= 5, pady= 5)
-    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 5, 
-            #    columnspan= 3
-                )
-    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 5)
-    b_wme_clear3.grid(row= 2, column= 2, padx= 5, pady= 5)
-    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 5, 
-            #    columnspan= 3
-                )
-    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 5)
-    b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 5)
+    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 3)
+    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 3)
+    b_wme_clear1.grid(row= 0, column= 2, padx= 5, pady= 3)
+    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 3)
+    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 3)
+    b_wme_clear2.grid(row= 1, column= 2, padx= 5, pady= 3)
+    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 3)
+    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 3)
+    b_wme_clear3.grid(row= 2, column= 2, padx= 5, pady= 3)
+    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 3)
+    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 3)
+    b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 3)
 
     # scope_ids= initialize()
     initialize()
@@ -1197,14 +1140,15 @@ scope_ids.append('')
 id_window = tk.Tk()
 id_window.title('[Keysight] Low-Speed Oscilloscope Controller')
 id_window.resizable(width= False, height= False)
-id_window.geometry('300x150+500+150')
+id_window.geometry('390x160+500+150')
+id_window.configure(background= '#91B6E1')
 
-l_scope_id = tk.Label(id_window, text= 'Enter Scope ID')
+l_scope_id = tk.Label(id_window, text= 'Enter Scope ID', background= '#91B6E1', fg= '#091E87', font= ('Candara', 12, 'bold'),)
 str_scope_id = tk.StringVar()
 cb_scope_id = ttk.Combobox(id_window, textvariable= str_scope_id, values= scope_ids)
-b_scope_id = tk.Button(id_window, text= 'OK', width= 10, height= 2, command= lambda: show_main_window(old_scope_ids= scope_ids))
+b_scope_id = tk.Button(id_window, text= 'OK', width= 10, height= 2, command= lambda: show_main_window(old_scope_ids= scope_ids), )
 
-l_ip = tk.Label(id_window, text= '### 確認電腦IP與Scope在同一網域 ###')
+l_ip = tk.Label(id_window, text= '★★★ 確認電腦IP與Scope在同一網域 ★★★', background= '#91B6E1', fg= '#F6044D', font= ('Candara', 14, 'bold'),)
 
 l_scope_id.pack(padx= 5, pady= 5)
 cb_scope_id.pack(padx= 5, pady= 5)
