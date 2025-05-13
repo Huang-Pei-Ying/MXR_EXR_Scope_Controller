@@ -16,7 +16,7 @@ def show_main_window(old_scope_ids):
     if selected_value and selected_value not in old_scope_ids:
         config = configparser.ConfigParser()
         config.optionxform = str
-        config.read( os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='utf-8',)
+        config.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='utf-8',)
         config.set('Scope_IDs', f'ID_{len(old_scope_ids)-1}', selected_value)
 
         # 寫回ini
@@ -37,18 +37,12 @@ def main_window(scope_id):
         config_initial = configparser.ConfigParser()
         config_initial.optionxform = str
         config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='UTF-8',)
-        
-        # Scope_ID = config_initial['Scope_ID']['ID']
 
-        # scope_ids= []
-        # for i in range(len(config_initial['Scope_IDs'])):
-        #     scope_ids.append(config_initial['Scope_IDs'][f'ID_{i}'])
-
-        VoltScale = config_initial['Scale_Offset_Config']['VoltScale']
-        VoltOffset = config_initial['Scale_Offset_Config']['VoltOffset']
+        select_VoltScale = config_initial['Scale_Offset_Selected_Values']['VoltScale']
+        select_VoltOffset = config_initial['Scale_Offset_Selected_Values']['VoltOffset']
         TimebaseScale = config_initial['Scale_Offset_Config']['TimebaseScale']
         TimebaseOffset = config_initial['Scale_Offset_Config']['TimebaseOffset']
-        TriggerLevel = config_initial['Scale_Offset_Config']['TriggerLevel']
+        select_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
         TriggerChan = config_initial['Scale_Offset_Config']['TriggerChan']
 
         DeltaStartEdge = config_initial['Delta_Setup_Config']['DeltaStartEdge']
@@ -58,16 +52,16 @@ def main_window(scope_id):
         DeltaStopNum = config_initial['Delta_Setup_Config']['DeltaStopNum']
         DeltaStopPosition = config_initial['Delta_Setup_Config']['DeltaStopPosition']
 
-        GeneralTopPercent = config_initial['Threshold_Setup_Config']['GeneralTopPercent']
-        GeneralMiddlePercent = config_initial['Threshold_Setup_Config']['GeneralMiddlePercent']
-        GeneralBasePercent = config_initial['Threshold_Setup_Config']['GeneralBasePercent']
-        GeneralTop = config_initial['Threshold_Setup_Config']['GeneralTop']
-        GeneralMiddle = config_initial['Threshold_Setup_Config']['GeneralMiddle']
-        GeneralBase = config_initial['Threshold_Setup_Config']['GeneralBase']
-        RFTopPercent = config_initial['Threshold_Setup_Config']['RFTopPercent']
-        RFBasePercent = config_initial['Threshold_Setup_Config']['RFBasePercent']
-        RFTop = config_initial['Threshold_Setup_Config']['RFTop']
-        RFBase = config_initial['Threshold_Setup_Config']['RFBase']
+        select_GeneralTopPercent = config_initial['Threshold_Selected_Values']['GeneralTopPercent']
+        select_GeneralMiddlePercent = config_initial['Threshold_Selected_Values']['GeneralMiddlePercent']
+        select_GeneralBasePercent = config_initial['Threshold_Selected_Values']['GeneralBasePercent']
+        select_GeneralTop = config_initial['Threshold_Selected_Values']['GeneralTop']
+        select_GeneralMiddle = config_initial['Threshold_Selected_Values']['GeneralMiddle']
+        select_GeneralBase = config_initial['Threshold_Selected_Values']['GeneralBase']
+        select_RFTopPercent = config_initial['Threshold_Selected_Values']['RFTopPercent']
+        select_RFBasePercent = config_initial['Threshold_Selected_Values']['RFBasePercent']
+        select_RFTop = config_initial['Threshold_Selected_Values']['RFTop']
+        select_RFBase = config_initial['Threshold_Selected_Values']['RFBase']
         SamplingRate = config_initial['Acquisition']['SamplingRate']
         MemoryDepth = config_initial['Acquisition']['MemoryDepth']
 
@@ -91,13 +85,12 @@ def main_window(scope_id):
         LoadWMe2 = config_initial['Load_WMemory_Setup_Config']['LoadWMe2']
         LoadWMe3 = config_initial['Load_WMemory_Setup_Config']['LoadWMe3']
         LoadWMe4 = config_initial['Load_WMemory_Setup_Config']['LoadWMe4']
-        # str_scope_id.set(value= Scope_ID)
 
-        str_volt_scale.set(value= VoltScale)
-        str_volt_offset.set(value= VoltOffset)
+        str_volt_scale.set(value= select_VoltScale)
+        str_volt_offset.set(value= select_VoltOffset)
         str_time_scale.set(value= TimebaseScale)
         str_time_offset.set(value= TimebaseOffset)
-        str_trigger_level.set(value= TriggerLevel)
+        str_trigger_level.set(value= select_TriggerLevel)
         str_trigger_chan.set(value= TriggerChan)
 
         start_rf.set(value= DeltaStartEdge)
@@ -107,16 +100,16 @@ def main_window(scope_id):
         stop_num.set(value= DeltaStopNum)
         stop_pos.set(value= DeltaStopPosition)
 
-        str_gen_top_percent.set(value= GeneralTopPercent)
-        str_gen_mid_percent.set(value= GeneralMiddlePercent)
-        str_gen_base_percent.set(value= GeneralBasePercent)
-        str_gen_top.set(value= GeneralTop)
-        str_gen_mid.set(value= GeneralMiddle)
-        str_gen_base.set(value= GeneralBase)
-        str_rf_top_percent.set(value= RFTopPercent)
-        str_rf_base_percent.set(value= RFBasePercent)
-        str_rf_top.set(value= RFTop)
-        str_rf_base.set(value= RFBase)
+        str_gen_top_percent.set(value= select_GeneralTopPercent)
+        str_gen_mid_percent.set(value= select_GeneralMiddlePercent)
+        str_gen_base_percent.set(value= select_GeneralBasePercent)
+        str_gen_top.set(value= select_GeneralTop)
+        str_gen_mid.set(value= select_GeneralMiddle)
+        str_gen_base.set(value= select_GeneralBase)
+        str_rf_top_percent.set(value= select_RFTopPercent)
+        str_rf_base_percent.set(value= select_RFBasePercent)
+        str_rf_top.set(value= select_RFTop)
+        str_rf_base.set(value= select_RFBase)
         str_sampling_rate.set(value= SamplingRate)
         str_memory_depth.set(value= MemoryDepth)
 
@@ -177,47 +170,37 @@ def main_window(scope_id):
                 do_the_judge= False
                 if float(g_top_percent) <= float(g_middle_percent):
                     g_top_percent= Decimal(g_middle_percent) + Decimal('0.1')
-                    e_gen_top_percent.config(fg= 'red')
-                    e_gen_mid_percent.config(fg= 'red')
+                    cbb_gen_top_percent.config(foreground= 'red')
+                    cbb_gen_mid_percent.config(foreground= 'red')
                     do_the_judge= True
-                    # str_gen_top.set(f'{g_top}')
                 if float(g_middle_percent) <= float(g_base_percent):
                     g_base_percent= Decimal(g_middle_percent) - Decimal('0.1')
-                    e_gen_base_percent.config(fg= 'red')
-                    e_gen_mid_percent.config(fg= 'red')
+                    cbb_gen_base_percent.config(foreground= 'red')
+                    cbb_gen_mid_percent.config(foreground= 'red')
                     do_the_judge= True
-                    # str_gen_base.set(f'{g_base}')
                 if not do_the_judge:
-                    e_gen_top_percent.config(fg= 'black')
-                    e_gen_mid_percent.config(fg= 'black')
-                    e_gen_base_percent.config(fg= 'black')
+                    cbb_gen_top_percent.config(foreground= 'black')
+                    cbb_gen_mid_percent.config(foreground= 'black')
+                    cbb_gen_base_percent.config(foreground= 'black')
 
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
                 self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{g_top_percent},{g_middle_percent},{g_base_percent}')
-            # elif int_gen_thres.get() == 2:
-            #     self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
-            #     self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,80,50,20')
-            # elif int_gen_thres.get() == 3:
-            #     self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
-            #     self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,70,50,30')
             elif int_gen_thres.get() == 2:
                 do_the_judge= False
                 if float(g_top) <= float(g_middle):
                     g_top= Decimal(g_middle) + Decimal('0.01')
-                    e_gen_top.config(fg= 'red')
-                    e_gen_mid.config(fg= 'red')
+                    cbb_gen_top.config(foreground= 'red')
+                    cbb_gen_mid.config(foreground= 'red')
                     do_the_judge= True
-                    # str_gen_top.set(f'{g_top}')
                 if float(g_middle) <= float(g_base):
                     g_base= Decimal(g_middle) - Decimal('0.01')
-                    e_gen_base.config(fg= 'red')
-                    e_gen_mid.config(fg= 'red')
+                    cbb_gen_base.config(foreground= 'red')
+                    cbb_gen_mid.config(foreground= 'red')
                     do_the_judge= True
-                    # str_gen_base.set(f'{g_base}')
                 if not do_the_judge:
-                    e_gen_top.config(fg= 'black')
-                    e_gen_mid.config(fg= 'black')
-                    e_gen_base.config(fg= 'black')
+                    cbb_gen_top.config(foreground= 'black')
+                    cbb_gen_mid.config(foreground= 'black')
+                    cbb_gen_base.config(foreground= 'black')
 
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
                 self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
@@ -409,8 +392,12 @@ def main_window(scope_id):
             res= self.judge_chan_wme()
             if label == '':
                 self.inst.write(f':DISPlay:LABel OFF')
+                # self.inst.write(f':DISPlay:BOOKmark:DELete:ALL')
             else:
                 self.inst.write(f':DISPlay:LABel ON')
+                # self.inst.write(f':DISPlay:BOOKmark{chan}:SET {res}{chan},"{label}"')
+                # self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition 0')
+                # self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {0.12*(int(chan)-1)}')
                 self.inst.write(f':{res}{chan}:LABel "{label}"')
 
         def load_wmemory(self, chan, folder, wme_name):
@@ -599,6 +586,12 @@ def main_window(scope_id):
                     return f"{base * 10} ms"
                 elif exponent == -1:
                     return f"{base * 100} ms"
+                elif exponent == -12:
+                    return f"{base} ps"
+                elif exponent == -11:
+                    return f"{base * 10} ps"
+                elif exponent == -10:
+                    return f"{base * 100} ps"
                 else:
                     # 如果指數不在指定的範圍内，返回原始字串
                     return f'{base} s'
@@ -660,11 +653,11 @@ def main_window(scope_id):
             
             # config.set('Scope_ID', 'ID', str_scope_id.get())
 
-            config.set('Scale_Offset_Config', 'VoltScale', str_volt_scale.get())
-            config.set('Scale_Offset_Config', 'VoltOffset', str_volt_offset.get())
+            config.set('Scale_Offset_Selected_Values', 'VoltScale', str_volt_scale.get())
+            config.set('Scale_Offset_Selected_Values', 'VoltOffset', str_volt_offset.get())
             config.set('Scale_Offset_Config', 'TimebaseScale', str_time_scale.get())
             config.set('Scale_Offset_Config', 'TimebaseOffset', str_time_offset.get())
-            config.set('Scale_Offset_Config', 'TriggerLevel', str_trigger_level.get())
+            config.set('Scale_Offset_Selected_Values', 'TriggerLevel', str_trigger_level.get())
             config.set('Scale_Offset_Config', 'TriggerChan', str_trigger_chan.get())
             
             config.set('Delta_Setup_Config', 'DeltaStartEdge', start_rf.get())
@@ -674,16 +667,16 @@ def main_window(scope_id):
             config.set('Delta_Setup_Config', 'DeltaStopNum', stop_num.get())
             config.set('Delta_Setup_Config', 'DeltaStopPosition', stop_pos.get())
 
-            config.set('Threshold_Setup_Config', 'GeneralTopPercent', str_gen_top_percent.get())
-            config.set('Threshold_Setup_Config', 'GeneralMiddlePercent', str_gen_mid_percent.get())
-            config.set('Threshold_Setup_Config', 'GeneralBasePercent', str_gen_base_percent.get())
-            config.set('Threshold_Setup_Config', 'GeneralTop', str_gen_top.get())
-            config.set('Threshold_Setup_Config', 'GeneralMiddle', str_gen_mid.get())
-            config.set('Threshold_Setup_Config', 'GeneralBase', str_gen_base.get())
-            config.set('Threshold_Setup_Config', 'RFTopPercent', str_rf_top_percent.get())
-            config.set('Threshold_Setup_Config', 'RFBasePercent', str_rf_base_percent.get())
-            config.set('Threshold_Setup_Config', 'RFTop', str_rf_top.get())
-            config.set('Threshold_Setup_Config', 'RFBase', str_rf_base.get())
+            config.set('Threshold_Selected_Values', 'GeneralTopPercent', str_gen_top_percent.get())
+            config.set('Threshold_Selected_Values', 'GeneralMiddlePercent', str_gen_mid_percent.get())
+            config.set('Threshold_Selected_Values', 'GeneralBasePercent', str_gen_base_percent.get())
+            config.set('Threshold_Selected_Values', 'GeneralTop', str_gen_top.get())
+            config.set('Threshold_Selected_Values', 'GeneralMiddle', str_gen_mid.get())
+            config.set('Threshold_Selected_Values', 'GeneralBase', str_gen_base.get())
+            config.set('Threshold_Selected_Values', 'RFTopPercent', str_rf_top_percent.get())
+            config.set('Threshold_Selected_Values', 'RFBasePercent', str_rf_base_percent.get())
+            config.set('Threshold_Selected_Values', 'RFTop', str_rf_top.get())
+            config.set('Threshold_Selected_Values', 'RFBase', str_rf_base.get())
             config.set('Acquisition', 'SamplingRate', str_sampling_rate.get())
             config.set('Acquisition', 'MemoryDepth', str_memory_depth.get())
 
@@ -707,7 +700,7 @@ def main_window(scope_id):
             config.set('Load_WMemory_Setup_Config', 'LoadWMe2', str_WMe2.get())
             config.set('Load_WMemory_Setup_Config', 'LoadWMe3', str_WMe3.get())
             config.set('Load_WMemory_Setup_Config', 'LoadWMe4', str_WMe4.get())
-            
+
             config.write(open(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), 'w'))
 
             # formatted_time= self.current_time()
@@ -715,6 +708,133 @@ def main_window(scope_id):
             window.destroy()
 
     
+    def combo_ini():
+        config_initial = configparser.ConfigParser()
+        config_initial.optionxform = str
+        config_file = os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini')
+        config_initial.read(config_file, encoding='UTF-8')
+        
+        # Scale
+        VoltScale_options = config_initial['Scale_Offset_Config'].get('VoltScale', '').split(',')
+        VoltOffset_options = config_initial['Scale_Offset_Config'].get('VoltOffset', '').split(',')
+        TriggerLevel_options = config_initial['Scale_Offset_Config'].get('TriggerLevel', '').split(',')
+
+        # Threshold
+        GeneralTopPercent_options = config_initial['Threshold_Setup_Config'].get('GeneralTopPercent', '').split(',')
+        GeneralMiddlePercent_options = config_initial['Threshold_Setup_Config'].get('GeneralMiddlePercent', '').split(',')
+        GeneralBasePercent_options = config_initial['Threshold_Setup_Config'].get('GeneralBasePercent', '').split(',')
+        GeneralTop_options = config_initial['Threshold_Setup_Config'].get('GeneralTop', '').split(',')
+        GeneralMiddle_options = config_initial['Threshold_Setup_Config'].get('GeneralMiddle', '').split(',')
+        GeneralBase_options = config_initial['Threshold_Setup_Config'].get('GeneralBase', '').split(',')
+        RFTopPercent_options = config_initial['Threshold_Setup_Config'].get('RFTopPercent', '').split(',')
+        RFBasePercent_options = config_initial['Threshold_Setup_Config'].get('RFBasePercent', '').split(',')
+        RFTop_options = config_initial['Threshold_Setup_Config'].get('RFTop', '').split(',')
+        RFBase_options = config_initial['Threshold_Setup_Config'].get('RFBase', '').split(',')
+        # 從這裡返回值供其他部分調用
+        return {
+            'VoltScale': VoltScale_options, 
+            'VoltOffset': VoltOffset_options, 
+            'TriggerLevel': TriggerLevel_options, 
+            'GeneralTopPercent': GeneralTopPercent_options,
+            'GeneralMiddlePercent': GeneralMiddlePercent_options, 
+            'GeneralBasePercent': GeneralBasePercent_options, 
+            'GeneralTop': GeneralTop_options, 
+            'GeneralMiddle': GeneralMiddle_options, 
+            'GeneralBase': GeneralBase_options, 
+            'RFTopPercent': RFTopPercent_options, 
+            'RFBasePercent': RFBasePercent_options, 
+            'RFTop': RFTop_options, 
+            'RFBase': RFBase_options, 
+            
+            'config_file': config_file,  # 儲存config文件路徑以便後續使用
+
+            'selected_values': {
+                'VoltScale': config_initial['Scale_Offset_Selected_Values'].get('VoltScale', ''),
+                'VoltOffset': config_initial['Scale_Offset_Selected_Values'].get('VoltOffset', ''),
+                'TriggerLevel': config_initial['Scale_Offset_Selected_Values'].get('TriggerLevel', ''),
+                'GeneralTopPercent': config_initial['Threshold_Selected_Values'].get('GeneralTopPercent', ''),
+                'GeneralMiddlePercent': config_initial['Threshold_Selected_Values'].get('GeneralMiddlePercent', ''),
+                'GeneralBasePercent': config_initial['Threshold_Selected_Values'].get('GeneralBasePercent', ''),
+                'GeneralTop': config_initial['Threshold_Selected_Values'].get('GeneralTop', ''),
+                'GeneralMiddle': config_initial['Threshold_Selected_Values'].get('GeneralMiddle', ''),
+                'GeneralBase': config_initial['Threshold_Selected_Values'].get('GeneralBase', ''),
+                'RFTopPercent': config_initial['Threshold_Selected_Values'].get('RFTopPercent', ''),
+                'RFBasePercent': config_initial['Threshold_Selected_Values'].get('RFBasePercent', ''),
+                'RFTop': config_initial['Threshold_Selected_Values'].get('RFTop', ''),
+                'RFBase': config_initial['Threshold_Selected_Values'].get('RFBase', ''),
+                }        
+        }
+
+    def add_option(combobox, combobox_value, options, config_file, section, key, selected_section):
+        new_option = combobox_value.get().strip()
+        if new_option and new_option not in options:
+            options.append(new_option)
+            combobox['values'] = options
+            save_to_ini(config_file, section, key, options, selected_section, combobox.get())
+
+    def delete_option(combobox, combobox_value, options, config_file, section, key, selected_section):
+        selected_option = combobox_value.get().strip()
+        if selected_option in options:
+            options.remove(selected_option)
+            combobox['values'] = options
+            combobox_value.set('')  # 清空當前選擇
+            save_to_ini(config_file, section, key, options, selected_section, combobox.get())
+
+    def save_to_ini(config_file, section, key, updated_options, selected_section, selected_value):
+        config = configparser.ConfigParser()
+        config.optionxform = str  # 保持大小寫
+        config.read(config_file)
+        if section not in config:
+            config.add_section(section)
+        
+        # 更新指定的選項值
+        config[section][key] = ','.join(updated_options)
+
+        if selected_section not in config:
+            config.add_section(selected_section)
+        
+        config[selected_section][key] = selected_value
+        
+        # 寫回INI文件
+        with open(config_file, 'w') as configfile:
+            config.write(configfile)
+
+
+    class ToolTip:
+        def __init__(self, widget, text):
+            self.widget = widget
+            self.text = text
+            self.tip_window = None
+            self.widget.bind("<Enter>", self.show_tip)
+            self.widget.bind("<Leave>", self.hide_tip)
+
+        def show_tip(self, event=None):
+            "Display text in tooltip window"
+            if self.tip_window or not self.text:
+                return
+            x, y, cx, cy = self.widget.bbox("insert")
+            x += self.widget.winfo_rootx() + 57
+            y += self.widget.winfo_rooty() + 21
+            self.tip_window = tw = tk.Toplevel(self.widget)
+            tw.wm_overrideredirect(True)
+            tw.wm_geometry("+%d+%d" % (x, y))
+            label = tk.Label(tw, text=self.text, justify=tk.LEFT,
+                            background="#ffffe0", relief=tk.SOLID, borderwidth=1,
+                            font=("tahoma", "8", "normal"))
+            label.pack(ipadx=1)
+
+        def hide_tip(self, event=None):
+            if self.tip_window:
+                self.tip_window.destroy()
+                self.tip_window = None
+
+
+    # 獲取ini數據
+    config_data = combo_ini()
+    # general_top_percent_options = config_data['GeneralTopPercent']
+    config_file_path = config_data['config_file']
+
+
     window = tk.Tk()
     window.title('[Keysight] Low-Speed Oscilloscope Controller')
     # window.geometry('1500x760+2+2')
@@ -748,24 +868,39 @@ def main_window(scope_id):
     l_volt_scale = tk.Label(label_frame_scale, text= 'Voltage Scale (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_volt_scale = tk.StringVar()
-    e_volt_scale = tk.Entry(label_frame_scale, width= 7, textvariable= str_volt_scale)
+    cbb_volt_scale = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_volt_scale)
+    cbb_volt_scale['values'] = config_data['VoltScale']  # 設置初始選項
+    cbb_volt_scale.bind('<Return>', lambda event: add_option(cbb_volt_scale, str_volt_scale, config_data['VoltScale'], config_file_path, 'Scale_Offset_Config', 'VoltScale', 'Scale_Offset_Selected_Values'))
+    cbb_volt_scale.bind('<Delete>', lambda event: delete_option(cbb_volt_scale, str_volt_scale, config_data['VoltScale'], config_file_path, 'Scale_Offset_Config', 'VoltScale', 'Scale_Offset_Selected_Values'))
+
+    ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     l_volt_offset = tk.Label(label_frame_scale, text= 'Voltage Offset (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_volt_offset = tk.StringVar()
-    e_volt_offset = tk.Entry(label_frame_scale, width= 7, textvariable= str_volt_offset)
+    cbb_volt_offset = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_volt_offset)
+    cbb_volt_offset['values'] = config_data['VoltOffset']  # 設置初始選項
+    cbb_volt_offset.bind('<Return>', lambda event: add_option(cbb_volt_offset, str_volt_offset, config_data['VoltOffset'], config_file_path, 'Scale_Offset_Config', 'VoltOffset', 'Scale_Offset_Selected_Values'))
+    cbb_volt_offset.bind('<Delete>', lambda event: delete_option(cbb_volt_offset, str_volt_offset, config_data['VoltOffset'], config_file_path, 'Scale_Offset_Config', 'VoltOffset', 'Scale_Offset_Selected_Values'))
+
+    ToolTip(cbb_volt_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     b_volt_scale = tk.Button(label_frame_scale, text= 'Volt Check', width= 10, height= 1, command= lambda: mxr.volt_check(scale= str_volt_scale.get(), offset= str_volt_offset.get()))
 
     l_trigger_level = tk.Label(label_frame_scale, text= 'Trigger level (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_trigger_level = tk.StringVar()
-    e_trigger_level = tk.Entry(label_frame_scale, width= 7, textvariable= str_trigger_level)
+    cbb_trigger_level = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_trigger_level)
+    cbb_trigger_level['values'] = config_data['TriggerLevel']  # 設置初始選項
+    cbb_trigger_level.bind('<Return>', lambda event: add_option(cbb_trigger_level, str_trigger_level, config_data['TriggerLevel'], config_file_path, 'Scale_Offset_Config', 'TriggerLevel', 'Scale_Offset_Selected_Values'))
+    cbb_trigger_level.bind('<Delete>', lambda event: delete_option(cbb_trigger_level, str_trigger_level, config_data['TriggerLevel'], config_file_path, 'Scale_Offset_Config', 'TriggerLevel', 'Scale_Offset_Selected_Values'))
+
+    ToolTip(cbb_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     l_trigger_chan = tk.Label(label_frame_scale, text= 'Trigger Channel', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_trigger_chan = tk.StringVar()
-    e_trigger_chan = tk.Entry(label_frame_scale, width= 7, textvariable= str_trigger_chan)
+    cb_trigger_chan = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_trigger_chan, values= [1, 2, 3, 4])
 
     b_str_trigger_check = tk.Button(label_frame_scale, text= 'Trig Check', width= 10, height= 1, command= lambda: mxr.trig_check(chan= str_trigger_chan.get(), level= str_trigger_level.get()))
 
@@ -817,37 +952,67 @@ def main_window(scope_id):
     rb_gen_threshold_1= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (%)', variable= int_gen_thres, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
 
     str_gen_top_percent = tk.StringVar()
-    e_gen_top_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_top_percent)
+    cbb_gen_top_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_top_percent)
+    cbb_gen_top_percent['values'] = config_data['GeneralTopPercent']  # 設置初始選項
+    cbb_gen_top_percent.bind('<Return>', lambda event: add_option(cbb_gen_top_percent, str_gen_top_percent, config_data['GeneralTopPercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralTopPercent', 'Threshold_Selected_Values'))
+    cbb_gen_top_percent.bind('<Delete>', lambda event: delete_option(cbb_gen_top_percent, str_gen_top_percent, config_data['GeneralTopPercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralTopPercent', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_gen_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     l_gen_threshold_1= tk.Label(label_frame_thres, text= '            Gen Thres Middle (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_mid_percent = tk.StringVar()
-    e_gen_mid_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_mid_percent)
+    cbb_gen_mid_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_mid_percent)
+    cbb_gen_mid_percent['values'] = config_data['GeneralMiddlePercent']  # 設置初始選項
+    cbb_gen_mid_percent.bind('<Return>', lambda event: add_option(cbb_gen_mid_percent, str_gen_mid_percent, config_data['GeneralMiddlePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddlePercent', 'Threshold_Selected_Values'))
+    cbb_gen_mid_percent.bind('<Delete>', lambda event: delete_option(cbb_gen_mid_percent, str_gen_mid_percent, config_data['GeneralMiddlePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddlePercent', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_gen_mid_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     l_gen_threshold_2= tk.Label(label_frame_thres, text= '        Gen Thres Base (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_base_percent = tk.StringVar()
-    e_gen_base_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_base_percent)
-    
+    cbb_gen_base_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_base_percent)
+    cbb_gen_base_percent['values'] = config_data['GeneralBasePercent']  # 設置初始選項
+    cbb_gen_base_percent.bind('<Return>', lambda event: add_option(cbb_gen_base_percent, str_gen_base_percent, config_data['GeneralBasePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralBasePercent', 'Threshold_Selected_Values'))
+    cbb_gen_base_percent.bind('<Delete>', lambda event: delete_option(cbb_gen_base_percent, str_gen_base_percent, config_data['GeneralBasePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralBasePercent', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_gen_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+
     rb_gen_threshold_2= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (V)', variable= int_gen_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     rb_gen_threshold_2.select()
 
     str_gen_top = tk.StringVar()
-    e_gen_top = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_top)
+    cbb_gen_top = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_top)
+    cbb_gen_top['values'] = config_data['GeneralTop']  # 設置初始選項
+    cbb_gen_top.bind('<Return>', lambda event: add_option(cbb_gen_top, str_gen_top, config_data['GeneralTop'], config_file_path, 'Threshold_Setup_Config', 'GeneralTop', 'Threshold_Selected_Values'))
+    cbb_gen_top.bind('<Delete>', lambda event: delete_option(cbb_gen_top, str_gen_top, config_data['GeneralTop'], config_file_path, 'Threshold_Setup_Config', 'GeneralTop', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_gen_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     l_gen_threshold_4= tk.Label(label_frame_thres, text= '            Gen Thres Middle (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_mid = tk.StringVar()
-    e_gen_mid = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_mid)
+    cbb_gen_mid = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_mid)
+    cbb_gen_mid['values'] = config_data['GeneralMiddle']  # 設置初始選項
+    cbb_gen_mid.bind('<Return>', lambda event: add_option(cbb_gen_mid, str_gen_mid, config_data['GeneralMiddle'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddle', 'Threshold_Selected_Values'))
+    cbb_gen_mid.bind('<Delete>', lambda event: delete_option(cbb_gen_mid, str_gen_mid, config_data['GeneralMiddle'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddle', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_gen_mid, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     l_gen_threshold_5= tk.Label(label_frame_thres, text= '        Gen Thres Base (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_base = tk.StringVar()
-    e_gen_base = tk.Entry(label_frame_thres, width= 8, textvariable= str_gen_base)
+    cbb_gen_base = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_base)
+    cbb_gen_base['values'] = config_data['GeneralBase']  # 設置初始選項
+    cbb_gen_base.bind('<Return>', lambda event: add_option(cbb_gen_base, str_gen_base, config_data['GeneralBase'], config_file_path, 'Threshold_Setup_Config', 'GeneralBase', 'Threshold_Selected_Values'))
+    cbb_gen_base.bind('<Delete>', lambda event: delete_option(cbb_gen_base, str_gen_base, config_data['GeneralBase'], config_file_path, 'Threshold_Setup_Config', 'GeneralBase', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_gen_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     b_gen_check = tk.Button(label_frame_thres, text= 'Gen Thres Check', command= lambda: mxr.gen_threshold(
-        g_top= e_gen_top.get(), g_middle= e_gen_mid.get(), g_base= e_gen_base.get(), 
-        g_top_percent= e_gen_top_percent.get(), g_middle_percent= e_gen_mid_percent.get(), g_base_percent= e_gen_base_percent.get(), 
+        g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), 
+        g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
         )
         )
 
@@ -857,10 +1022,20 @@ def main_window(scope_id):
     l_rf_threshold_1= tk.Label(label_frame_thres, text= '       tRtF Thres Base (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_rf_top_percent = tk.StringVar()
-    e_rf_top_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_rf_top_percent)
+    cbb_rf_top_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_top_percent)
+    cbb_rf_top_percent['values'] = config_data['RFTopPercent']  # 設置初始選項
+    cbb_rf_top_percent.bind('<Return>', lambda event: add_option(cbb_rf_top_percent, str_rf_top_percent, config_data['RFTopPercent'], config_file_path, 'Threshold_Setup_Config', 'RFTopPercent', 'Threshold_Selected_Values'))
+    cbb_rf_top_percent.bind('<Delete>', lambda event: delete_option(cbb_rf_top_percent, str_rf_top_percent, config_data['RFTopPercent'], config_file_path, 'Threshold_Setup_Config', 'RFTopPercent', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_rf_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     str_rf_base_percent = tk.StringVar()
-    e_rf_base_percent = tk.Entry(label_frame_thres, width= 8, textvariable= str_rf_base_percent)
+    cbb_rf_base_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_base_percent)
+    cbb_rf_base_percent['values'] = config_data['RFBasePercent']  # 設置初始選項
+    cbb_rf_base_percent.bind('<Return>', lambda event: add_option(cbb_rf_base_percent, str_rf_base_percent, config_data['RFBasePercent'], config_file_path, 'Threshold_Setup_Config', 'RFBasePercent', 'Threshold_Selected_Values'))
+    cbb_rf_base_percent.bind('<Delete>', lambda event: delete_option(cbb_rf_base_percent, str_rf_base_percent, config_data['RFBasePercent'], config_file_path, 'Threshold_Setup_Config', 'RFBasePercent', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_rf_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     rb_rf_threshold_2= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (V)', variable= int_rf_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     rb_rf_threshold_2.select()
@@ -868,14 +1043,24 @@ def main_window(scope_id):
     l_rf_threshold_2= tk.Label(label_frame_thres, text= '       tRtF Thres Base (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_rf_top = tk.StringVar()
-    e_rf_top = tk.Entry(label_frame_thres, width= 8, textvariable= str_rf_top)
+    cbb_rf_top = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_top)
+    cbb_rf_top['values'] = config_data['RFTop']  # 設置初始選項
+    cbb_rf_top.bind('<Return>', lambda event: add_option(cbb_rf_top, str_rf_top, config_data['RFTop'], config_file_path, 'Threshold_Setup_Config', 'RFTop', 'Threshold_Selected_Values'))
+    cbb_rf_top.bind('<Delete>', lambda event: delete_option(cbb_rf_top, str_rf_top, config_data['RFTop'], config_file_path, 'Threshold_Setup_Config', 'RFTop', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_rf_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     str_rf_base = tk.StringVar()
-    e_rf_base = tk.Entry(label_frame_thres, width= 8, textvariable= str_rf_base)
+    cbb_rf_base = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_base)
+    cbb_rf_base['values'] = config_data['RFBase']  # 設置初始選項
+    cbb_rf_base.bind('<Return>', lambda event: add_option(cbb_rf_base, str_rf_base, config_data['RFBase'], config_file_path, 'Threshold_Setup_Config', 'RFBase', 'Threshold_Selected_Values'))
+    cbb_rf_base.bind('<Delete>', lambda event: delete_option(cbb_rf_base, str_rf_base, config_data['RFBase'], config_file_path, 'Threshold_Setup_Config', 'RFBase', 'Threshold_Selected_Values'))
+
+    ToolTip(cbb_rf_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
 
     b_rf_check = tk.Button(label_frame_thres, text= 'RF Thres Check', command= lambda: mxr.RF_threshold(
-        rf_top= e_rf_top.get(), rf_base= e_rf_base.get(),
-        rf_top_percent= e_rf_top_percent.get(), rf_base_percent= e_rf_base_percent.get(),
+        rf_top= cbb_rf_top.get(), rf_base= cbb_rf_base.get(),
+        rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get(),
         )
         )
 
@@ -1013,13 +1198,13 @@ def main_window(scope_id):
 
     b_get_results = tk.Button(label_frame_chan, text= 'Get Results\n(只能取3個)', width= 10, command= lambda: mxr.get_results())
     l_meas_name_1 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_1 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Candara', 11, 'bold'),)
+    text_mean_1 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
     text_mean_1.config(state=tk.DISABLED)
     l_meas_name_2 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_2 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Candara', 11, 'bold'),)
+    text_mean_2 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
     text_mean_2.config(state=tk.DISABLED)
     l_meas_name_3 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_3 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Candara', 11, 'bold'),)
+    text_mean_3 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
     text_mean_3.config(state=tk.DISABLED)
 
     # Save Frame ===================================================================================================================================
@@ -1123,14 +1308,14 @@ def main_window(scope_id):
 
     # Scale grid
     l_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    e_volt_scale.grid(row= 0, column= 1, padx= 5, pady= 4)
+    cbb_volt_scale.grid(row= 0, column= 1, padx= 5, pady= 4)
     l_volt_offset.grid(row= 1, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    e_volt_offset.grid(row= 1, column= 1, padx= 5, pady= 4)
+    cbb_volt_offset.grid(row= 1, column= 1, padx= 5, pady= 4)
     b_volt_scale.grid(row= 2, column= 0, padx= 5, pady= 4, sticky= 'e')
     l_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    e_trigger_level.grid(row= 3, column= 1, padx= 5, pady= 4)
+    cbb_trigger_level.grid(row= 3, column= 1, padx= 5, pady= 4)
     l_trigger_chan.grid(row= 4, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    e_trigger_chan.grid(row= 4, column= 1, padx= 5, pady= 4)
+    cb_trigger_chan.grid(row= 4, column= 1, padx= 5, pady= 4)
     b_str_trigger_check.grid(row= 4, column= 2, padx= 5, pady= 4)
     l_time_scale.grid(row= 0, column= 2, padx= 5, pady= 4, sticky= 'w') 
     e_time_scale.grid(row= 0, column= 3, padx= 5, pady= 4)
@@ -1151,26 +1336,26 @@ def main_window(scope_id):
 
     # Thres grid
     rb_gen_threshold_1.grid(row= 0, column= 0, padx= 5, pady= 3)
-    e_gen_top_percent.grid(row= 0, column= 1, sticky= 'w')
+    cbb_gen_top_percent.grid(row= 0, column= 1, sticky= 'w')
     l_gen_threshold_1.grid(row= 1, column= 0, padx= 5, pady= 3)
-    e_gen_mid_percent.grid(row= 1, column= 1, sticky= 'w')
+    cbb_gen_mid_percent.grid(row= 1, column= 1, sticky= 'w')
     l_gen_threshold_2.grid(row= 2, column= 0, padx= 5, pady= 3)
-    e_gen_base_percent.grid(row= 2, column= 1, sticky= 'w')
+    cbb_gen_base_percent.grid(row= 2, column= 1, sticky= 'w')
     rb_gen_threshold_2.grid(row= 3, column= 0, padx= 5, pady= 3) 
-    e_gen_top.grid(row= 3, column= 1, sticky= 'w')
+    cbb_gen_top.grid(row= 3, column= 1, sticky= 'w')
     l_gen_threshold_4.grid(row= 4, column= 0, padx= 5, pady= 3) 
-    e_gen_mid.grid(row= 4, column= 1, sticky= 'w')
+    cbb_gen_mid.grid(row= 4, column= 1, sticky= 'w')
     l_gen_threshold_5.grid(row= 5, column= 0, padx= 5, pady= 3) 
-    e_gen_base.grid(row= 5, column= 1, sticky= 'w')
+    cbb_gen_base.grid(row= 5, column= 1, sticky= 'w')
     b_gen_check.grid(row= 0, column= 2, padx= 5, pady= 3, sticky= 'e')
     rb_rf_threshold_1.grid(row= 0, column= 3, padx= 5, pady= 3)
     l_rf_threshold_1.grid(row= 1, column= 3, padx= 5, pady= 3) 
-    e_rf_top_percent.grid(row= 0, column= 4, sticky= 'w')
-    e_rf_base_percent.grid(row= 1, column= 4, sticky= 'w')
+    cbb_rf_top_percent.grid(row= 0, column= 4, sticky= 'w')
+    cbb_rf_base_percent.grid(row= 1, column= 4, sticky= 'w')
     rb_rf_threshold_2.grid(row= 2, column= 3, padx= 5, pady= 3) 
     l_rf_threshold_2.grid(row= 3, column= 3, padx= 5, pady= 3) 
-    e_rf_top.grid(row= 2, column= 4, sticky= 'w')
-    e_rf_base.grid(row= 3, column= 4, sticky= 'w')
+    cbb_rf_top.grid(row= 2, column= 4, sticky= 'w')
+    cbb_rf_base.grid(row= 3, column= 4, sticky= 'w')
     b_rf_check.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e')
 
     l_sampling_rate.grid(row= 4, column= 3)
