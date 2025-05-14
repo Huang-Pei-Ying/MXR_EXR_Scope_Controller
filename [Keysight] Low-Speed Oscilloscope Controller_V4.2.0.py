@@ -5,6 +5,7 @@ import configparser
 import os
 from decimal import Decimal
 import re
+import time
 
 
 # 第一個視窗取得scope id並開啟主視窗
@@ -147,14 +148,18 @@ def main_window(scope_id):
 
         def sampling_rate_acquire(self, rate): # 科學記號
             self.inst.write(f':ACQuire:SRATe:ANALog {rate}')
+            time.sleep(0.05)
 
         def memory_depth_acquire(self, points_value: int):
             self.inst.write(f':ACQuire:POINts:ANALog {points_value}')
+            time.sleep(0.05)
         
         def RF_threshold(self, rf_top, rf_base, rf_top_percent, rf_base_percent):
             if int_rf_thres.get() == 1:
                 self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
+                time.sleep(0.05)
                 self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{rf_top_percent},{(float(rf_top_percent)+float(rf_base_percent))/2},{rf_base_percent}')
+                time.sleep(0.05)
             # elif int_rf_thres.get() == 2:
             #     self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,T2080')
             #     # self.inst.write(f':MEASure:THResholds:RFALl:TOPBase:PERCent ALL,80,20')
@@ -163,7 +168,9 @@ def main_window(scope_id):
             #     self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,70,50,30')
             elif int_rf_thres.get() == 2:
                 self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,ABSolute')
+                time.sleep(0.05)
                 self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{rf_top},{(float(rf_top)+float(rf_base))/2},{rf_base}')
+                time.sleep(0.05)
 
         def gen_threshold(self, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent):
             if int_gen_thres.get() == 1:
@@ -184,7 +191,9 @@ def main_window(scope_id):
                     cbb_gen_base_percent.config(foreground= 'black')
 
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
+                time.sleep(0.05)
                 self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{g_top_percent},{g_middle_percent},{g_base_percent}')
+                time.sleep(0.05)
             elif int_gen_thres.get() == 2:
                 do_the_judge= False
                 if float(g_top) <= float(g_middle):
@@ -203,7 +212,9 @@ def main_window(scope_id):
                     cbb_gen_base.config(foreground= 'black')
 
                 self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
+                time.sleep(0.05)
                 self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
+                time.sleep(0.05)
 
         def volt_check(self, scale, offset): # 科學記號
             # res_ch1= self.inst.query(f':CHANnel1:DISPlay?')
@@ -219,145 +230,161 @@ def main_window(scope_id):
             for i in range(1, 5):
                 if res == 'CHANnel':
                     self.inst.write(f':CHANnel{i}:SCALe {scale}')
+                    time.sleep(0.05)
                     self.inst.write(f':CHANnel{i}:OFFSet {offset}')
+                    time.sleep(0.05)
                 else:
                     self.inst.write(f':WMEMory{i}:YRANge {float(scale)*8}')
+                    time.sleep(0.05)
                     self.inst.write(f':WMEMory{i}:YOFFset {offset}')
+                    time.sleep(0.05)
             # for i in range(1, 4):
             #     self.inst.write(f':WMEMory{i}:SCALe {scale}')
             #     self.inst.write(f':WMEMory{i}:YOFFset {offset}')   
 
         def timebase_position_check(self, position): # 科學記號
             self.inst.write(f':TIMebase:POSition {position}')
+            time.sleep(0.05)
 
         def timebase_scale_check(self, scale): # 科學記號
             self.inst.write(f':TIMebase:SCALe {scale}')
+            time.sleep(0.05)
 
         def trig_check(self, chan, level):
             self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{chan}')
+            time.sleep(0.05)
             self.inst.write(f':TRIGger:LEVel CHANnel{chan},{level}')
+            time.sleep(0.05)
 
         def display_Chan(self, chan):
             res= self.inst.query(f':CHANnel{chan}:DISPlay?')
+            time.sleep(0.05)
             if res == '1\n':
                 self.inst.write(f':CHANnel{chan}:DISPlay OFF')
+                time.sleep(0.05)
             else:
                 self.inst.write(f':CHANnel{chan}:DISPlay ON')
+                time.sleep(0.05)
 
         def display_WMemory(self, chan):
             res= self.inst.query(f':WMEMory{chan}:DISPlay?')
+            time.sleep(0.05)
             if res == '1\n':
                 self.inst.write(f':WMEMory{chan}:DISPlay OFF')
+                time.sleep(0.05)
             else:
                 self.inst.write(f':WMEMory{chan}:DISPlay ON')
+                time.sleep(0.05)
                 
         def freq(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:FREQuency {res}{chan}')
+            time.sleep(0.05)
 
         def period(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:PERiod {res}{chan}')
+            time.sleep(0.05)
     
         def dutycycle(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:DUTYcycle {res}{chan}')
+            time.sleep(0.05)
 
         def slewrate(self, chan, direction):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:SLEWrate {res}{chan},{direction}')
+            time.sleep(0.05)
             if res == 'CHANnel':
                 self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({chan})"')
+                time.sleep(0.05)
             else:
                 self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate(m{chan})"')
+                time.sleep(0.05)
 
         def tH(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:PWIDth {res}{chan},')
+            time.sleep(0.05)
 
         def tL(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:NWIDth {res}{chan}')
+            time.sleep(0.05)
 
         def tR(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:RISetime {res}{chan}')
+            time.sleep(0.05)
 
         def tF(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:FALLtime {res}{chan}')
+            time.sleep(0.05)
 
         def VIH(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:VTOP {res}{chan}')
+            time.sleep(0.05)
 
         def VIL(self, chan):
             res= self.judge_chan_wme()
             self.inst.write(f':MEASure:VBASe {res}{chan}')
+            time.sleep(0.05)
 
         def tSU_tHO(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop):
             res= self.judge_chan_wme()
             if chan == 2:
                 self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
+                time.sleep(0.05)
                 self.inst.write(f':MEASure:DELTatime {res}{chan_start}, {res}{chan_stop}')
-            # elif chan == 5:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}2, {res}1')
-            # elif chan == 6:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}1, {res}3')
-            # elif chan == 7:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}3, {res}1')
-            # elif chan == 8:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}1, {res}1')
-            # elif chan == 9:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}2, {res}2')
-            # elif chan == 10:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}3, {res}3')
-            # elif chan == 11:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}2, {res}3')
-            # elif chan == 12:
-            #     self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-            #     self.inst.write(f':MEASure:DELTatime {res}3, {res}2')
+                time.sleep(0.05)
             else:
                 pass
 
         def run(self):
             self.inst.write(':RUN')
+            time.sleep(0.05)
 
         def stop(self):
             self.inst.write(':STOP')
+            time.sleep(0.05)
 
         def single(self):
             self.inst.write(':SINGLE')
+            time.sleep(0.05)
 
         def autoscale(self):
             self.inst.write(':AUToscale')
+            time.sleep(0.05)
 
         def clear_diaplay(self):
             self.inst.write(':CDISplay')
+            time.sleep(0.05)
 
         def default(self):
             self.inst.write(':SYSTem:PRESet DEFault')
+            time.sleep(0.05)
 
         def trig_type(self):
             res= self.inst.query(f':TRIGger:SWEep?')
+            time.sleep(0.05)
             if res == 'AUTO\n':
                 self.inst.write(':TRIGger:SWEep TRIGgered')
+                time.sleep(0.05)
             else:
                 self.inst.write(':TRIGger:SWEep AUTO')
+                time.sleep(0.05)
 
         def trig_slope(self):
             res= self.inst.query(f':TRIGger:EDGE:SLOPe?')
+            time.sleep(0.05)
             if res == 'POS\n':
                 self.inst.write(':TRIGger:EDGE:SLOPe NEGative')
+                time.sleep(0.05)
             else:
                 self.inst.write(':TRIGger:EDGE:SLOPe POSitive')
+                time.sleep(0.05)
                 
         def delete_item(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -366,6 +393,7 @@ def main_window(scope_id):
             for i, boolvar in enumerate(tuple_marker):
                 if boolvar.get():
                     self.inst.write(f'MEASurement{i+1}:CLEar')
+                    time.sleep(0.05)
 
         def add_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -374,10 +402,12 @@ def main_window(scope_id):
         
             for i, boolvar in enumerate(tuple_marker):
                 self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},OFF')
+                time.sleep(0.05)
 
             for i, boolvar in enumerate(tuple_marker):
                 if boolvar.get():
                     self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},ON')
+                    time.sleep(0.05)
         
         def delete_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -387,34 +417,42 @@ def main_window(scope_id):
             for i, boolvar in enumerate(tuple_marker):
                 if boolvar.get():
                     self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},OFF')
+                    time.sleep(0.05)
 
         def add_label(self, chan, label):
             res= self.judge_chan_wme()
             if label == '':
                 self.inst.write(f':DISPlay:LABel OFF')
-                # self.inst.write(f':DISPlay:BOOKmark:DELete:ALL')
+                time.sleep(0.05)
             else:
                 self.inst.write(f':DISPlay:LABel ON')
-                # self.inst.write(f':DISPlay:BOOKmark{chan}:SET {res}{chan},"{label}"')
-                # self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition 0')
-                # self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {0.12*(int(chan)-1)}')
+                time.sleep(0.05)
                 self.inst.write(f':{res}{chan}:LABel "{label}"')
+                time.sleep(0.05)
 
         def load_wmemory(self, chan, folder, wme_name):
             self.inst.write(f':WMEMory:TIETimebase 1')
+            time.sleep(0.05)
             self.inst.write(f':DISPlay:SCOLor WMEMory1,17,100,100')
+            time.sleep(0.05)
             self.inst.write(f':DISPlay:SCOLor WMEMory2,38,100,84')
+            time.sleep(0.05)
             self.inst.write(f':DISPlay:SCOLor WMEMory3,60,80,100')
+            time.sleep(0.05)
             self.inst.write(f':DISPlay:SCOLor WMEMory4,94,100,100')
+            time.sleep(0.05)
             self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{wme_name}.h5",WMEMory{chan},OFF')
+            time.sleep(0.05)
         
         def clear_wmemory(self, chan, string):
             self.inst.write(f':WMEMory{chan}:CLEar')
+            time.sleep(0.05)
             string.set('')
 
         def save_waveform_scope(self, folder, image_name):
             # 清空狀態
             cls = self.inst.write('*CLS')
+            time.sleep(0.05)
 
             # error messenge
                 # 113 This directory is not valid.
@@ -426,9 +464,11 @@ def main_window(scope_id):
 
             # 資料夾是否存在
             self.inst.write(f':DISK:CDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+            time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
+            time.sleep(0.05)
             # print(error_messenge)
-            if error_messenge == '-256\n':
+            if error_messenge == '-256\n' or error_messenge == '113\n' or error_messenge == '-257\n':
                 ask_scp_root = tk.Tk()
                 ask_scp_root.withdraw()  # 隱藏主視窗
                 ask_scp_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
@@ -441,7 +481,14 @@ def main_window(scope_id):
                     # print("檔案未保存。")
                     return     
                 # 新建資料夾
-                self.inst.write(f':DISK:MDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+                folder= folder.replace("/", "\\")
+                # print(folder)
+                temp_list= folder.split('\\')
+                path= 'C:/Users/Administrator/Desktop'
+                for i in temp_list:
+                    path= f'{path}/{i}'
+                    self.inst.write(f':DISK:MDIRectory "{path}"')
+                    time.sleep(0.05)
         
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
@@ -463,6 +510,7 @@ def main_window(scope_id):
                         return     
 
             self.inst.write(f':DISK:SAVE:IMAGe "C:/Users/Administrator/Desktop/{folder}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
+            time.sleep(0.05)
 
         def save_waveform_pc(self, folder, pc_folder, file_name):
             full_path = f"C:/Users/Administrator/Desktop/{folder}/{file_name}.png"
@@ -503,7 +551,7 @@ def main_window(scope_id):
         def save_wmemory_scope(self, chan, folder, wme_name):
             # 清空狀態
             self.inst.write('*CLS')
-
+            time.sleep(0.05)
             # error messenge
                 # 113 This directory is not valid.
                 # -256 File name not found
@@ -514,9 +562,11 @@ def main_window(scope_id):
 
             # 資料夾是否存在
             self.inst.write(f':DISK:CDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+            time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
+            time.sleep(0.05)
             # print(error_messenge)
-            if error_messenge == '-256\n':
+            if error_messenge == '-256\n' or error_messenge == '113\n' or error_messenge == '-257\n':
                 ask_scp_root = tk.Tk()
                 ask_scp_root.withdraw()  # 隱藏主視窗
                 ask_scp_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
@@ -529,14 +579,21 @@ def main_window(scope_id):
                     # print("檔案未保存。")
                     return     
                 # 新建資料夾
-                self.inst.write(f':DISK:MDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+                folder= folder.replace("/", "\\")
+                # print(folder)
+                temp_list= folder.split('\\')
+                path= 'C:/Users/Administrator/Desktop'
+                for i in temp_list:
+                    path= f'{path}/{i}'
+                    self.inst.write(f':DISK:MDIRectory "{path}"')
+                    time.sleep(0.05)
         
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
             # 使用正則表達式來匹配所有 .png 檔案名稱
-            png_files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
+            h5_files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
 
-            for file_name in png_files:
+            for file_name in h5_files:
                 if f'{wme_name}.h5' == file_name:
                     ask_scp_root = tk.Tk()
                     ask_scp_root.withdraw()  # 隱藏主視窗
@@ -551,6 +608,7 @@ def main_window(scope_id):
                         return     
 
             self.inst.write(f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{wme_name}",H5,OFF')
+            time.sleep(0.05)
 
         def save_wmemory_pc(self, folder, pc_folder, file_name):
             full_path = f"C:/Users/Administrator/Desktop/{folder}/{file_name}.h5"
@@ -591,7 +649,9 @@ def main_window(scope_id):
         def judge_chan_wme(self):
             for i in range(1, 5):
                 chan_res= self.inst.query(f':CHANnel{i}:DISPlay?')
+                time.sleep(0.05)
                 wme_res= self.inst.query(f':WMEMory{i}:DISPlay?')
+                time.sleep(0.05)
 
                 if chan_res == '1\n' and not wme_res == '1\n':
                     return 'CHANnel'
@@ -604,6 +664,7 @@ def main_window(scope_id):
             meas_name= ['', '', '']
             mean= ['', '', '']
             all_results= self.inst.query(f':MEASure:RESults?')
+            time.sleep(0.05)
             for index, value in enumerate(all_results.split(',')):
                 if divmod(index, 7)[1] == 0:
                     try:
