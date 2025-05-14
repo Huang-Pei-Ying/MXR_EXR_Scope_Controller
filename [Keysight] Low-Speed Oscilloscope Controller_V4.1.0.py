@@ -925,23 +925,35 @@ def main_window(scope_id):
 
     start_rf = tk.StringVar()
     cb_start_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_rf, values= ['RISING', 'FALLING'])
+    
+    ToolTip(cb_start_rf, '嗚啦!')
 
     start_num = tk.StringVar()
     cb_start_num = tk.Entry(label_frame_delta, width= 11, textvariable= start_num)
+    
+    ToolTip(cb_start_num, '呀哈!')
 
     start_pos = tk.StringVar()
     cb_start_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
+    
+    ToolTip(cb_start_pos, '噗嚕!')
 
     l_stop = tk.Label(label_frame_delta, text= 'Delta Stop', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
 
     stop_rf = tk.StringVar()
     cb_stop_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_rf, values= ['RISING', 'FALLING'])
+    
+    ToolTip(cb_stop_rf, '噗嚕!')
 
     stop_num = tk.StringVar()
     cb_stop_num = tk.Entry(label_frame_delta, width= 11, textvariable= stop_num)
+    
+    ToolTip(cb_stop_num, '嗚啦!')
 
     stop_pos = tk.StringVar()
     cb_stop_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
+    
+    ToolTip(cb_stop_pos, '呀哈!')
 
 
     # Threshold Frame ===================================================================================================================================
@@ -1103,6 +1115,8 @@ def main_window(scope_id):
     str_label_4 = tk.StringVar()
     e_label_4 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_4)
 
+    ToolTip(e_label_4, '133 221 333 123 111')
+
     b_lable4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_label(chan= 4, label= (str_label_4.get().rstrip('\n'))))
 
     b_clear4 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_4))
@@ -1139,6 +1153,8 @@ def main_window(scope_id):
     boolvar_marker_2 = tk.BooleanVar()    
     cb_marker_2= tk.Checkbutton(label_frame_control, text= 'Meas 2', variable= boolvar_marker_2, background= bg_color_2, fg= '#0D325C')
 
+    ToolTip(cb_marker_2, '防塵套不要亂丟!')
+
     boolvar_marker_3 = tk.BooleanVar()    
     cb_marker_3= tk.Checkbutton(label_frame_control, text= 'Meas 3', variable= boolvar_marker_3, background= bg_color_2, fg= '#0D325C')
 
@@ -1147,6 +1163,8 @@ def main_window(scope_id):
 
     boolvar_marker_5 = tk.BooleanVar()    
     cb_marker_5= tk.Checkbutton(label_frame_control, text= 'Meas 5', variable= boolvar_marker_5, background= bg_color_2, fg= '#0D325C')
+
+    ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
 
     boolvar_marker_6 = tk.BooleanVar()    
     cb_marker_6= tk.Checkbutton(label_frame_control, text= 'Meas 6', variable= boolvar_marker_6, background= bg_color_2, fg= '#0D325C')
@@ -1188,14 +1206,22 @@ def main_window(scope_id):
     rb_ch_single.select()
     int_ch_single = tk.IntVar()
     cb_ch_single = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_single, values= [1, 2, 3, 4])
+
+    ToolTip(cb_ch_single, '累')
+    
     rb_ch_delta = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_start = tk.IntVar()
     cb_ch_delta_start = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_start, values= [1, 2, 3, 4])
+
+    ToolTip(cb_ch_delta_start, '隨波逐流的')
+    
     l_arrow = tk.Label(label_frame_chan, text= '      ↓', background= bg_color_1, fg= '#0D325C', font= ('Calibri', 11, 'bold'),)
     l_ch_delta_stop = tk.Label(label_frame_chan, text= 'Chan', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_stop = tk.IntVar()
     cb_ch_delta_stop = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_stop, values= [1, 2, 3, 4])
 
+    ToolTip(cb_ch_delta_stop, '人生')
+    
     b_get_results = tk.Button(label_frame_chan, text= 'Get Results\n(只能取3個)', width= 10, command= lambda: mxr.get_results())
     l_meas_name_1 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
     text_mean_1 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
@@ -1223,6 +1249,8 @@ def main_window(scope_id):
 
     str_image = tk.StringVar()
     e_image = tk.Entry(label_frame_save, width= 50, textvariable= str_image)
+
+    ToolTip(e_image, '蛤~~~!')
 
     l_imagename = tk.Label(label_frame_save, text= '(填 圖檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
@@ -1253,6 +1281,8 @@ def main_window(scope_id):
 
     str_WMe1 = tk.StringVar()
     e_WMe1 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe1)
+    
+    ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
 
     b_WMe1_load = tk.Button(label_frame_load_wme, text= 'load WMemory1', command= lambda: mxr.load_wmemory(chan= 1, folder= str_WMe_folder.get(), wme_name= str_WMe1.get()))
 
@@ -1260,6 +1290,8 @@ def main_window(scope_id):
 
     str_WMe2 = tk.StringVar()
     e_WMe2 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe2)
+    
+    ToolTip(e_WMe2, '嗚啦啦一呀哈呀哈!')
 
     b_WMe2_load = tk.Button(label_frame_load_wme, text= 'load WMemory2', command= lambda: mxr.load_wmemory(chan= 2, folder= str_WMe_folder.get(), wme_name= str_WMe2.get()))
 
@@ -1274,6 +1306,8 @@ def main_window(scope_id):
 
     str_WMe4 = tk.StringVar()
     e_WMe4 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe4)
+    
+    ToolTip(e_WMe4, '噗嚕!')
 
     b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get()))
 
