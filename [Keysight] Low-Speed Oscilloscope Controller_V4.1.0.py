@@ -413,6 +413,55 @@ def main_window(scope_id):
             string.set('')
 
         def save_waveform_scope(self, folder, image_name):
+            # 清空狀態
+            cls = self.inst.write('*CLS')
+
+            # error messenge
+                # 113 This directory is not valid.
+                # -256 File name not found
+                # -257 File name error
+                # -410 Query INTERRUPTED
+                # -420 Query UNTERMINATED
+                # 0 No error
+
+            # 資料夾是否存在
+            self.inst.write(f':DISK:CDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+            error_messenge=self.inst.query(f':SYSTem:ERRor?')
+            # print(error_messenge)
+            if error_messenge == '-256\n':
+                ask_scp_root = tk.Tk()
+                ask_scp_root.withdraw()  # 隱藏主視窗
+                ask_scp_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_scp_root.destroy()
+                
+                if not ask_scp_result:
+                    ask_scp_root = tk.Tk()
+                    ask_scp_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    # print("檔案未保存。")
+                    return     
+                # 新建資料夾
+                self.inst.write(f':DISK:MDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+        
+            # 資料夾全部內容
+            folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            # 使用正則表達式來匹配所有 .png 檔案名稱
+            png_files = re.findall(r'\b[\w-]+\.(?:png)\b', folder_content)
+
+            for file_name in png_files:
+                if f'{image_name}.png' == file_name:
+                    ask_scp_root = tk.Tk()
+                    ask_scp_root.withdraw()  # 隱藏主視窗
+                    ask_scp_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
+                    ask_scp_root.destroy()
+                    
+                    if not ask_scp_result:
+                        # print("檔案未保存。")
+                        ask_scp_root = tk.Tk()
+                        ask_scp_root.withdraw()  # 隱藏主視窗
+                        messagebox.showinfo("Warning", f'檔案未儲存')
+                        return     
+
             self.inst.write(f':DISK:SAVE:IMAGe "C:/Users/Administrator/Desktop/{folder}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
 
         def save_waveform_pc(self, folder, pc_folder, file_name):
@@ -421,25 +470,86 @@ def main_window(scope_id):
             message = ':DISK:GETFILE? "' + full_path + '"'
             data = self.inst.query_binary_values(message= message, datatype= 'B', header_fmt= 'ieee', container= bytes)
             
-            # if ext == 'png':
-            #     directory_path= ensure_directory_exists(directory_path= f"{pc_folder}")
-            # else:
-            #     directory_path= ensure_directory_exists(directory_path= f"{pc_folder}/wfm")
+            if not os.path.exists(pc_folder):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    # print("檔案未保存。")
+                    return     
+                os.mkdir(pc_folder) 
 
             if os.path.exists(f"{pc_folder}/{file_name}.png"):
                 ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗，其實我們不需要完整的視窗
-                ask_result = messagebox.askyesno("檔案已存在", f"檔案已經存在，是否覆蓋？")
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
                 ask_root.destroy()
                 
                 if not ask_result:
                     # print("檔案未保存。")
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
                     return     
            
             with open(f"{pc_folder}/{file_name}.png", 'wb') as f:
                 f.write(data)
 
         def save_wmemory_scope(self, chan, folder, wme_name):
+            # 清空狀態
+            self.inst.write('*CLS')
+
+            # error messenge
+                # 113 This directory is not valid.
+                # -256 File name not found
+                # -257 File name error
+                # -410 Query INTERRUPTED
+                # -420 Query UNTERMINATED
+                # 0 No error
+
+            # 資料夾是否存在
+            self.inst.write(f':DISK:CDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+            error_messenge=self.inst.query(f':SYSTem:ERRor?')
+            # print(error_messenge)
+            if error_messenge == '-256\n':
+                ask_scp_root = tk.Tk()
+                ask_scp_root.withdraw()  # 隱藏主視窗
+                ask_scp_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_scp_root.destroy()
+                
+                if not ask_scp_result:
+                    ask_scp_root = tk.Tk()
+                    ask_scp_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    # print("檔案未保存。")
+                    return     
+                # 新建資料夾
+                self.inst.write(f':DISK:MDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+        
+            # 資料夾全部內容
+            folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            # 使用正則表達式來匹配所有 .png 檔案名稱
+            png_files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
+
+            for file_name in png_files:
+                if f'{wme_name}.h5' == file_name:
+                    ask_scp_root = tk.Tk()
+                    ask_scp_root.withdraw()  # 隱藏主視窗
+                    ask_scp_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
+                    ask_scp_root.destroy()
+                    
+                    if not ask_scp_result:
+                        # print("檔案未保存。")
+                        ask_scp_root = tk.Tk()
+                        ask_scp_root.withdraw()  # 隱藏主視窗
+                        messagebox.showinfo("Warning", f'檔案未儲存')
+                        return     
+
             self.inst.write(f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{wme_name}",H5,OFF')
 
         def save_wmemory_pc(self, folder, pc_folder, file_name):
@@ -448,19 +558,31 @@ def main_window(scope_id):
             message = ':DISK:GETFILE? "' + full_path + '"'
             data = self.inst.query_binary_values(message= message, datatype= 'B', header_fmt= 'ieee', container= bytes)
             
-            # if ext == 'png':
-            #     directory_path= ensure_directory_exists(directory_path= f"{pc_folder}")
-            # else:
-            #     directory_path= ensure_directory_exists(directory_path= f"{pc_folder}/wfm")
+            if not os.path.exists(pc_folder):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    # print("檔案未保存。")
+                    return     
+                os.mkdir(pc_folder) 
 
             if os.path.exists(f"{pc_folder}/{file_name}.h5"):
                 ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗，其實我們不需要完整的視窗
-                ask_result = messagebox.askyesno("檔案已存在", f"檔案已經存在，是否覆蓋？")
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
                 ask_root.destroy()
                 
                 if not ask_result:
                     # print("檔案未保存。")
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
                     return     
            
             with open(f"{pc_folder}/{file_name}.h5", 'wb') as f:
@@ -835,6 +957,19 @@ def main_window(scope_id):
     config_file_path = config_data['config_file']
 
 
+    def commbobox_function(combobox, combobox_var, ini_dict_key, ini_option_section, ini_option_key, ini_selected_section):
+        combobox['values'] = config_data[ini_dict_key]  # 設置初始選項
+        combobox.bind('<Return>', lambda event: add_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
+        combobox.bind('<Delete>', lambda event: delete_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
+
+    def select_folder(entry_var):
+        # 打開檔案瀏覽器以選擇資料夾
+        folder_selected = filedialog.askdirectory()
+        # 將選擇的資料夾路徑填入 Entry
+        entry_var.set(folder_selected)
+
+
+
     window = tk.Tk()
     window.title('[Keysight] Low-Speed Oscilloscope Controller')
     # window.geometry('1500x760+2+2')
@@ -861,6 +996,7 @@ def main_window(scope_id):
     b_slewrate_tR = tk.Button(label_frame_meas_item, text='Slew Rate tR', width= 20, height= 2, command= lambda: mxr.slewrate(chan= int_ch_single.get(), direction= 'RISing'))
     b_slewrate_tF = tk.Button(label_frame_meas_item, text='Slew Rate tF', width= 20, height= 2, command= lambda: mxr.slewrate(chan= int_ch_single.get(), direction= 'FALLing'))
 
+
     # Scale / Offset Frame ===================================================================================================================================
 
     label_frame_scale= tk.LabelFrame(window, text= 'Scale / Offset', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
@@ -869,21 +1005,13 @@ def main_window(scope_id):
 
     str_volt_scale = tk.StringVar()
     cbb_volt_scale = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_volt_scale)
-    cbb_volt_scale['values'] = config_data['VoltScale']  # 設置初始選項
-    cbb_volt_scale.bind('<Return>', lambda event: add_option(cbb_volt_scale, str_volt_scale, config_data['VoltScale'], config_file_path, 'Scale_Offset_Config', 'VoltScale', 'Scale_Offset_Selected_Values'))
-    cbb_volt_scale.bind('<Delete>', lambda event: delete_option(cbb_volt_scale, str_volt_scale, config_data['VoltScale'], config_file_path, 'Scale_Offset_Config', 'VoltScale', 'Scale_Offset_Selected_Values'))
-
-    ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_volt_scale, combobox_var= str_volt_scale, ini_dict_key= 'VoltScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltScale', ini_selected_section= 'Scale_Offset_Selected_Values')
 
     l_volt_offset = tk.Label(label_frame_scale, text= 'Voltage Offset (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_volt_offset = tk.StringVar()
     cbb_volt_offset = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_volt_offset)
-    cbb_volt_offset['values'] = config_data['VoltOffset']  # 設置初始選項
-    cbb_volt_offset.bind('<Return>', lambda event: add_option(cbb_volt_offset, str_volt_offset, config_data['VoltOffset'], config_file_path, 'Scale_Offset_Config', 'VoltOffset', 'Scale_Offset_Selected_Values'))
-    cbb_volt_offset.bind('<Delete>', lambda event: delete_option(cbb_volt_offset, str_volt_offset, config_data['VoltOffset'], config_file_path, 'Scale_Offset_Config', 'VoltOffset', 'Scale_Offset_Selected_Values'))
-
-    ToolTip(cbb_volt_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_volt_offset, combobox_var= str_volt_offset, ini_dict_key= 'VoltOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
 
     b_volt_scale = tk.Button(label_frame_scale, text= 'Volt Check', width= 10, height= 1, command= lambda: mxr.volt_check(scale= str_volt_scale.get(), offset= str_volt_offset.get()))
 
@@ -891,11 +1019,7 @@ def main_window(scope_id):
 
     str_trigger_level = tk.StringVar()
     cbb_trigger_level = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_trigger_level)
-    cbb_trigger_level['values'] = config_data['TriggerLevel']  # 設置初始選項
-    cbb_trigger_level.bind('<Return>', lambda event: add_option(cbb_trigger_level, str_trigger_level, config_data['TriggerLevel'], config_file_path, 'Scale_Offset_Config', 'TriggerLevel', 'Scale_Offset_Selected_Values'))
-    cbb_trigger_level.bind('<Delete>', lambda event: delete_option(cbb_trigger_level, str_trigger_level, config_data['TriggerLevel'], config_file_path, 'Scale_Offset_Config', 'TriggerLevel', 'Scale_Offset_Selected_Values'))
-
-    ToolTip(cbb_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_trigger_level, combobox_var= str_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
 
     l_trigger_chan = tk.Label(label_frame_scale, text= 'Trigger Channel', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
@@ -925,36 +1049,24 @@ def main_window(scope_id):
 
     start_rf = tk.StringVar()
     cb_start_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_rf, values= ['RISING', 'FALLING'])
-    
-    ToolTip(cb_start_rf, '嗚啦!')
 
     start_num = tk.StringVar()
     cb_start_num = tk.Entry(label_frame_delta, width= 11, textvariable= start_num)
     
-    ToolTip(cb_start_num, '呀哈!')
-
     start_pos = tk.StringVar()
     cb_start_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
     
-    ToolTip(cb_start_pos, '噗嚕!')
-
     l_stop = tk.Label(label_frame_delta, text= 'Delta Stop', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
 
     stop_rf = tk.StringVar()
     cb_stop_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_rf, values= ['RISING', 'FALLING'])
     
-    ToolTip(cb_stop_rf, '噗嚕!')
-
     stop_num = tk.StringVar()
     cb_stop_num = tk.Entry(label_frame_delta, width= 11, textvariable= stop_num)
     
-    ToolTip(cb_stop_num, '嗚啦!')
-
     stop_pos = tk.StringVar()
     cb_stop_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
     
-    ToolTip(cb_stop_pos, '呀哈!')
-
 
     # Threshold Frame ===================================================================================================================================
 
@@ -965,67 +1077,42 @@ def main_window(scope_id):
 
     str_gen_top_percent = tk.StringVar()
     cbb_gen_top_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_top_percent)
-    cbb_gen_top_percent['values'] = config_data['GeneralTopPercent']  # 設置初始選項
-    cbb_gen_top_percent.bind('<Return>', lambda event: add_option(cbb_gen_top_percent, str_gen_top_percent, config_data['GeneralTopPercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralTopPercent', 'Threshold_Selected_Values'))
-    cbb_gen_top_percent.bind('<Delete>', lambda event: delete_option(cbb_gen_top_percent, str_gen_top_percent, config_data['GeneralTopPercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralTopPercent', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_gen_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-
+    commbobox_function(combobox= cbb_gen_top_percent, combobox_var= str_gen_top_percent, ini_dict_key= 'GeneralTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopPercent', ini_selected_section= 'Threshold_Selected_Values')
+    
     l_gen_threshold_1= tk.Label(label_frame_thres, text= '            Gen Thres Middle (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_mid_percent = tk.StringVar()
     cbb_gen_mid_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_mid_percent)
-    cbb_gen_mid_percent['values'] = config_data['GeneralMiddlePercent']  # 設置初始選項
-    cbb_gen_mid_percent.bind('<Return>', lambda event: add_option(cbb_gen_mid_percent, str_gen_mid_percent, config_data['GeneralMiddlePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddlePercent', 'Threshold_Selected_Values'))
-    cbb_gen_mid_percent.bind('<Delete>', lambda event: delete_option(cbb_gen_mid_percent, str_gen_mid_percent, config_data['GeneralMiddlePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddlePercent', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_gen_mid_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_gen_mid_percent, combobox_var= str_gen_mid_percent, ini_dict_key= 'GeneralMiddlePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddlePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     l_gen_threshold_2= tk.Label(label_frame_thres, text= '        Gen Thres Base (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_base_percent = tk.StringVar()
     cbb_gen_base_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_base_percent)
-    cbb_gen_base_percent['values'] = config_data['GeneralBasePercent']  # 設置初始選項
-    cbb_gen_base_percent.bind('<Return>', lambda event: add_option(cbb_gen_base_percent, str_gen_base_percent, config_data['GeneralBasePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralBasePercent', 'Threshold_Selected_Values'))
-    cbb_gen_base_percent.bind('<Delete>', lambda event: delete_option(cbb_gen_base_percent, str_gen_base_percent, config_data['GeneralBasePercent'], config_file_path, 'Threshold_Setup_Config', 'GeneralBasePercent', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_gen_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_gen_base_percent, combobox_var= str_gen_base_percent, ini_dict_key= 'GeneralBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     rb_gen_threshold_2= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (V)', variable= int_gen_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     rb_gen_threshold_2.select()
 
     str_gen_top = tk.StringVar()
     cbb_gen_top = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_top)
-    cbb_gen_top['values'] = config_data['GeneralTop']  # 設置初始選項
-    cbb_gen_top.bind('<Return>', lambda event: add_option(cbb_gen_top, str_gen_top, config_data['GeneralTop'], config_file_path, 'Threshold_Setup_Config', 'GeneralTop', 'Threshold_Selected_Values'))
-    cbb_gen_top.bind('<Delete>', lambda event: delete_option(cbb_gen_top, str_gen_top, config_data['GeneralTop'], config_file_path, 'Threshold_Setup_Config', 'GeneralTop', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_gen_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_gen_top, combobox_var= str_gen_top, ini_dict_key= 'GeneralTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTop', ini_selected_section= 'Threshold_Selected_Values')
 
     l_gen_threshold_4= tk.Label(label_frame_thres, text= '            Gen Thres Middle (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_mid = tk.StringVar()
     cbb_gen_mid = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_mid)
-    cbb_gen_mid['values'] = config_data['GeneralMiddle']  # 設置初始選項
-    cbb_gen_mid.bind('<Return>', lambda event: add_option(cbb_gen_mid, str_gen_mid, config_data['GeneralMiddle'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddle', 'Threshold_Selected_Values'))
-    cbb_gen_mid.bind('<Delete>', lambda event: delete_option(cbb_gen_mid, str_gen_mid, config_data['GeneralMiddle'], config_file_path, 'Threshold_Setup_Config', 'GeneralMiddle', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_gen_mid, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_gen_mid, combobox_var= str_gen_mid, ini_dict_key= 'GeneralMiddle', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddle', ini_selected_section= 'Threshold_Selected_Values')
 
     l_gen_threshold_5= tk.Label(label_frame_thres, text= '        Gen Thres Base (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     str_gen_base = tk.StringVar()
     cbb_gen_base = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_base)
-    cbb_gen_base['values'] = config_data['GeneralBase']  # 設置初始選項
-    cbb_gen_base.bind('<Return>', lambda event: add_option(cbb_gen_base, str_gen_base, config_data['GeneralBase'], config_file_path, 'Threshold_Setup_Config', 'GeneralBase', 'Threshold_Selected_Values'))
-    cbb_gen_base.bind('<Delete>', lambda event: delete_option(cbb_gen_base, str_gen_base, config_data['GeneralBase'], config_file_path, 'Threshold_Setup_Config', 'GeneralBase', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_gen_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-
-    b_gen_check = tk.Button(label_frame_thres, text= 'Gen Thres Check', command= lambda: mxr.gen_threshold(
-        g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), 
-        g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
-        )
+    commbobox_function(combobox= cbb_gen_base, combobox_var= str_gen_base, ini_dict_key= 'GeneralBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBase', ini_selected_section= 'Threshold_Selected_Values')
+    b_gen_check = tk.Button(
+        label_frame_thres, text= 'Gen Thres Check', command= lambda: mxr.gen_threshold(
+            g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
+            )
         )
 
     int_rf_thres = tk.IntVar()    
@@ -1035,19 +1122,11 @@ def main_window(scope_id):
 
     str_rf_top_percent = tk.StringVar()
     cbb_rf_top_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_top_percent)
-    cbb_rf_top_percent['values'] = config_data['RFTopPercent']  # 設置初始選項
-    cbb_rf_top_percent.bind('<Return>', lambda event: add_option(cbb_rf_top_percent, str_rf_top_percent, config_data['RFTopPercent'], config_file_path, 'Threshold_Setup_Config', 'RFTopPercent', 'Threshold_Selected_Values'))
-    cbb_rf_top_percent.bind('<Delete>', lambda event: delete_option(cbb_rf_top_percent, str_rf_top_percent, config_data['RFTopPercent'], config_file_path, 'Threshold_Setup_Config', 'RFTopPercent', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_rf_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_rf_top_percent, combobox_var= str_rf_top_percent, ini_dict_key= 'RFTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopPercent', ini_selected_section= 'Threshold_Selected_Values')
 
     str_rf_base_percent = tk.StringVar()
     cbb_rf_base_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_base_percent)
-    cbb_rf_base_percent['values'] = config_data['RFBasePercent']  # 設置初始選項
-    cbb_rf_base_percent.bind('<Return>', lambda event: add_option(cbb_rf_base_percent, str_rf_base_percent, config_data['RFBasePercent'], config_file_path, 'Threshold_Setup_Config', 'RFBasePercent', 'Threshold_Selected_Values'))
-    cbb_rf_base_percent.bind('<Delete>', lambda event: delete_option(cbb_rf_base_percent, str_rf_base_percent, config_data['RFBasePercent'], config_file_path, 'Threshold_Setup_Config', 'RFBasePercent', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_rf_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_rf_base_percent, combobox_var= str_rf_base_percent, ini_dict_key= 'RFBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     rb_rf_threshold_2= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (V)', variable= int_rf_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     rb_rf_threshold_2.select()
@@ -1056,24 +1135,16 @@ def main_window(scope_id):
 
     str_rf_top = tk.StringVar()
     cbb_rf_top = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_top)
-    cbb_rf_top['values'] = config_data['RFTop']  # 設置初始選項
-    cbb_rf_top.bind('<Return>', lambda event: add_option(cbb_rf_top, str_rf_top, config_data['RFTop'], config_file_path, 'Threshold_Setup_Config', 'RFTop', 'Threshold_Selected_Values'))
-    cbb_rf_top.bind('<Delete>', lambda event: delete_option(cbb_rf_top, str_rf_top, config_data['RFTop'], config_file_path, 'Threshold_Setup_Config', 'RFTop', 'Threshold_Selected_Values'))
-
-    ToolTip(cbb_rf_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    commbobox_function(combobox= cbb_rf_top, combobox_var= str_rf_top, ini_dict_key= 'RFTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTop', ini_selected_section= 'Threshold_Selected_Values')
 
     str_rf_base = tk.StringVar()
     cbb_rf_base = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_base)
-    cbb_rf_base['values'] = config_data['RFBase']  # 設置初始選項
-    cbb_rf_base.bind('<Return>', lambda event: add_option(cbb_rf_base, str_rf_base, config_data['RFBase'], config_file_path, 'Threshold_Setup_Config', 'RFBase', 'Threshold_Selected_Values'))
-    cbb_rf_base.bind('<Delete>', lambda event: delete_option(cbb_rf_base, str_rf_base, config_data['RFBase'], config_file_path, 'Threshold_Setup_Config', 'RFBase', 'Threshold_Selected_Values'))
+    commbobox_function(combobox= cbb_rf_base, combobox_var= str_rf_base, ini_dict_key= 'RFBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBase', ini_selected_section= 'Threshold_Selected_Values')
 
-    ToolTip(cbb_rf_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-
-    b_rf_check = tk.Button(label_frame_thres, text= 'RF Thres Check', command= lambda: mxr.RF_threshold(
-        rf_top= cbb_rf_top.get(), rf_base= cbb_rf_base.get(),
-        rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get(),
-        )
+    b_rf_check = tk.Button(
+        label_frame_thres, text= 'RF Thres Check', command= lambda: mxr.RF_threshold(
+            rf_top= cbb_rf_top.get(), rf_base= cbb_rf_base.get(), rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get(),
+            )
         )
 
     l_sampling_rate = tk.Label(label_frame_thres, text= '※ Sampling Rate', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
@@ -1095,31 +1166,26 @@ def main_window(scope_id):
     e_label_1 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_1)
 
     b_lable1 = tk.Button(label_frame_label, text= 'Chan1_label', command= lambda: mxr.add_label(chan= 1, label= str_label_1.get().rstrip('\n')))
-
     b_clear1 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_1))
 
     str_label_2 = tk.StringVar()
     e_label_2 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_2)
 
     b_lable2 = tk.Button(label_frame_label, text= 'Chan2_label', command= lambda: mxr.add_label(chan= 2, label= (str_label_2.get().rstrip('\n'))))
-
     b_clear2 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_2))
 
     str_label_3 = tk.StringVar()
     e_label_3 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_3)
 
     b_lable3 = tk.Button(label_frame_label, text= 'Chan3_label', command= lambda: mxr.add_label(chan= 3, label= (str_label_3.get().rstrip('\n'))))
-
     b_clear3 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_3))
 
     str_label_4 = tk.StringVar()
     e_label_4 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_4)
 
-    ToolTip(e_label_4, '133 221 333 123 111')
-
     b_lable4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_label(chan= 4, label= (str_label_4.get().rstrip('\n'))))
-
     b_clear4 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_4))
+
 
     # Control Frame ===================================================================================================================================
 
@@ -1153,8 +1219,6 @@ def main_window(scope_id):
     boolvar_marker_2 = tk.BooleanVar()    
     cb_marker_2= tk.Checkbutton(label_frame_control, text= 'Meas 2', variable= boolvar_marker_2, background= bg_color_2, fg= '#0D325C')
 
-    ToolTip(cb_marker_2, '防塵套不要亂丟!')
-
     boolvar_marker_3 = tk.BooleanVar()    
     cb_marker_3= tk.Checkbutton(label_frame_control, text= 'Meas 3', variable= boolvar_marker_3, background= bg_color_2, fg= '#0D325C')
 
@@ -1163,8 +1227,6 @@ def main_window(scope_id):
 
     boolvar_marker_5 = tk.BooleanVar()    
     cb_marker_5= tk.Checkbutton(label_frame_control, text= 'Meas 5', variable= boolvar_marker_5, background= bg_color_2, fg= '#0D325C')
-
-    ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
 
     boolvar_marker_6 = tk.BooleanVar()    
     cb_marker_6= tk.Checkbutton(label_frame_control, text= 'Meas 6', variable= boolvar_marker_6, background= bg_color_2, fg= '#0D325C')
@@ -1207,21 +1269,15 @@ def main_window(scope_id):
     int_ch_single = tk.IntVar()
     cb_ch_single = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_single, values= [1, 2, 3, 4])
 
-    ToolTip(cb_ch_single, '累')
-    
     rb_ch_delta = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_start = tk.IntVar()
     cb_ch_delta_start = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_start, values= [1, 2, 3, 4])
 
-    ToolTip(cb_ch_delta_start, '隨波逐流的')
-    
     l_arrow = tk.Label(label_frame_chan, text= '      ↓', background= bg_color_1, fg= '#0D325C', font= ('Calibri', 11, 'bold'),)
     l_ch_delta_stop = tk.Label(label_frame_chan, text= 'Chan', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_stop = tk.IntVar()
     cb_ch_delta_stop = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_stop, values= [1, 2, 3, 4])
 
-    ToolTip(cb_ch_delta_stop, '人生')
-    
     b_get_results = tk.Button(label_frame_chan, text= 'Get Results\n(只能取3個)', width= 10, command= lambda: mxr.get_results())
     l_meas_name_1 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
     text_mean_1 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
@@ -1233,24 +1289,25 @@ def main_window(scope_id):
     text_mean_3 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
     text_mean_3.config(state=tk.DISABLED)
 
+
     # Save Frame ===================================================================================================================================
 
     label_frame_save= tk.LabelFrame(window, text= 'Save', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     str_image_folder = tk.StringVar()
-    e_image_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_image_folder)
+    e_image_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_image_folder)
 
-    l_image_folder = tk.Label(label_frame_save, text= 'Waveform Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_image_folder = tk.Label(label_frame_save, text= 'Image Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_image_pc_folder = tk.StringVar()
-    e_image_pc_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_image_pc_folder)
+    e_image_pc_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_image_pc_folder)
 
-    l_image_pc_folder = tk.Label(label_frame_save, text= 'Waveform PC folder [填存在筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_image_pc_folder = tk.Label(label_frame_save, text= 'Image PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
+    b_image_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_image_pc_folder))
+    
     str_image = tk.StringVar()
-    e_image = tk.Entry(label_frame_save, width= 50, textvariable= str_image)
-
-    ToolTip(e_image, '蛤~~~!')
+    e_image = tk.Entry(label_frame_save, width= 45, textvariable= str_image)
 
     l_imagename = tk.Label(label_frame_save, text= '(填 圖檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
@@ -1258,22 +1315,25 @@ def main_window(scope_id):
     b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_waveform_pc(folder= str_image_folder.get(), file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
 
     str_WMe_folder = tk.StringVar()
-    e_WMe_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_WMe_folder)
+    e_WMe_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe_folder)
 
     l_WMe_folder = tk.Label(label_frame_save, text= 'WMemory Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_WMe_pc_folder = tk.StringVar()
-    e_WMe_pc_folder = tk.Entry(label_frame_save, width= 50, textvariable= str_WMe_pc_folder)
+    e_WMe_pc_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe_pc_folder)
 
-    l_WMe_pc_folder = tk.Label(label_frame_save, text= 'WMemory PC folder [填存在筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_WMe_pc_folder = tk.Label(label_frame_save, text= 'WMemory PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+
+    b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder))
 
     str_WMe = tk.StringVar()
-    e_WMe = tk.Entry(label_frame_save, width= 50, textvariable= str_WMe)
+    e_WMe = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe)
 
     l_WMename = tk.Label(label_frame_save, text= '(填 WMe檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     b_WMe_save_scpoe = tk.Button(label_frame_save, text= 'Save WMe-Scope', command= lambda: mxr.save_wmemory_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), wme_name= str_WMe.get()))
     b_WMe_save_pc = tk.Button(label_frame_save, text= 'Save WMe-PC', command= lambda: mxr.save_wmemory_pc(folder= str_WMe_folder.get(), file_name= str_WMe.get(), pc_folder= str_WMe_pc_folder.get()))
+
 
     # Load WMemory Frame ===================================================================================================================================
 
@@ -1281,37 +1341,28 @@ def main_window(scope_id):
 
     str_WMe1 = tk.StringVar()
     e_WMe1 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe1)
-    
-    ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
 
     b_WMe1_load = tk.Button(label_frame_load_wme, text= 'load WMemory1', command= lambda: mxr.load_wmemory(chan= 1, folder= str_WMe_folder.get(), wme_name= str_WMe1.get()))
-
     b_wme_clear1 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 1, string= str_WMe1))
 
     str_WMe2 = tk.StringVar()
     e_WMe2 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe2)
     
-    ToolTip(e_WMe2, '嗚啦啦一呀哈呀哈!')
-
     b_WMe2_load = tk.Button(label_frame_load_wme, text= 'load WMemory2', command= lambda: mxr.load_wmemory(chan= 2, folder= str_WMe_folder.get(), wme_name= str_WMe2.get()))
-
     b_wme_clear2 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 2, string= str_WMe2))
 
     str_WMe3 = tk.StringVar()
     e_WMe3 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe3)
 
     b_WMe3_load = tk.Button(label_frame_load_wme, text= 'load WMemory3', command= lambda: mxr.load_wmemory(chan= 3, folder= str_WMe_folder.get(), wme_name= str_WMe3.get()))
-
     b_wme_clear3 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 3, string= str_WMe3))
 
     str_WMe4 = tk.StringVar()
     e_WMe4 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe4)
     
-    ToolTip(e_WMe4, '噗嚕!')
-
     b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get()))
-
     b_wme_clear4 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 4, string= str_WMe4))
+
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
@@ -1466,20 +1517,23 @@ def main_window(scope_id):
     e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 3)
     l_image_folder.grid(row=0, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
     e_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 3)
-    l_image_pc_folder.grid(row= 1, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
+    b_image_pc_browse.grid(row= 1, column= 1, sticky= 'w', padx= 5, pady= 3)
+    l_image_pc_folder.grid(row= 1, column= 2, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
     e_image.grid(row= 2, column= 0, padx= 5, pady= 3)
     l_imagename.grid(row= 2, column= 1, sticky= 'w')
     b_image_save_scope.grid(row=2, column= 2, padx= 5, pady= 3, sticky= 'w')
     b_image_save_pc.grid(row= 2, column= 3, sticky= 'w', padx= 5, pady= 3)
+    
     e_WMe_folder.grid(row= 3, column= 0, padx= 5, pady= 3)
     l_WMe_folder.grid(row=3, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
-    e_WMe_pc_folder.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 3, columnspan= 3, )
-    l_WMe_pc_folder.grid(row= 4, column= 1, sticky= 'w', padx= 5, pady= 3, columnspan= 3, )
-
+    e_WMe_pc_folder.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 3)
+    b_WMe_pc_browse.grid(row= 4, column= 1, sticky= 'w', padx= 5, pady= 3)
+    l_WMe_pc_folder.grid(row= 4, column= 2, sticky= 'w', padx= 5, pady= 3, columnspan= 2)
     e_WMe.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady= 3)
     l_WMename.grid(row= 5, column= 1, sticky= 'w')
     b_WMe_save_scpoe.grid(row= 5, column= 2, padx= 5, pady= 3)
     b_WMe_save_pc.grid(row= 5, column= 3, padx= 5, pady= 3)
+    
     #LoadWMe grid
     e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 3)
     b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 3)
@@ -1493,6 +1547,47 @@ def main_window(scope_id):
     e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 3)
     b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 3)
     b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 3)
+
+
+    ToolTip(b_tSU, 'Channel記得勾對欸')
+    ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_volt_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cb_start_rf, '嗚啦!')
+    ToolTip(cb_start_num, '呀哈!')
+    ToolTip(cb_start_pos, '噗嚕!')
+    ToolTip(cb_stop_rf, '噗嚕!')
+    ToolTip(cb_stop_num, '嗚啦!')
+    ToolTip(cb_stop_pos, '呀哈!')
+    ToolTip(cbb_gen_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_gen_mid_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_gen_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_gen_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_gen_mid, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_gen_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_rf_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_rf_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_rf_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(cbb_rf_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(e_label_4, '133 221 333 123 111')
+    ToolTip(b_autoscale, '好的不得了')
+    ToolTip(cb_marker_2, '防塵套不要亂丟!')
+    ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
+    ToolTip(cb_ch_single, '累')
+    ToolTip(cb_ch_delta_start, '隨波逐流的')
+    ToolTip(cb_ch_delta_stop, '人生')
+    ToolTip(text_mean_3, '好忙好忙')
+    ToolTip(e_image_folder, '自己乖乖打字')
+    ToolTip(e_image, '蛤~~~!')
+    ToolTip(b_image_save_scope, '會幫你新增資料夾')
+    ToolTip(b_image_save_pc, '示波器有沒有檔案ㄏㄚˋ')
+    ToolTip(e_WMe_folder, '自己乖乖打字')
+    ToolTip(e_WMe, 'Channel要選對欸')
+    ToolTip(b_WMe_save_scpoe, '會幫你新增資料夾')
+    ToolTip(b_WMe_save_pc, '沒有檔案會出事ㄏㄚˋ')
+    ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
+    ToolTip(e_WMe2, '嗚啦啦一呀哈呀哈!')
+    ToolTip(e_WMe4, '噗嚕!')
 
     initialize()
 
