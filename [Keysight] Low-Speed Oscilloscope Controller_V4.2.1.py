@@ -482,7 +482,7 @@ def main_window(scope_id):
 
         def save_waveform_scope(self, folder, image_name):
             # 清空狀態
-            cls = self.inst.write('*CLS')
+            self.inst.write('*CLS')
             time.sleep(0.05)
 
             # error messenge
@@ -493,8 +493,10 @@ def main_window(scope_id):
                 # -420 Query UNTERMINATED
                 # 0 No error
 
+            # CDIRectory會害存圖卡死 orz
+
             # 資料夾是否存在
-            self.inst.write(f':DISK:CDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+            self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
             time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
             time.sleep(0.05)
@@ -523,6 +525,7 @@ def main_window(scope_id):
         
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            time.sleep(0.05)
             # 使用正則表達式來匹配所有 .png 檔案名稱
             png_files = re.findall(r'\b[\w-]+\.(?:png)\b', folder_content)
 
@@ -543,12 +546,16 @@ def main_window(scope_id):
             self.inst.write(f':DISK:SAVE:IMAGe "C:/Users/Administrator/Desktop/{folder}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
             time.sleep(0.05)
 
-        def save_waveform_pc(self, folder, pc_folder, file_name):
-            full_path = f"C:/Users/Administrator/Desktop/{folder}/{file_name}.png"
+        def save_waveform_pc(self, folder, pc_folder, file_name):            
+
+            full_path = rf"C:/Users/Administrator/Desktop/{folder}/{file_name}.png"
+            full_path = full_path.replace('\\', '/')
+            # print(full_path)
             data = b''
-            message = ':DISK:GETFILE? "' + full_path + '"'
-            data = self.inst.query_binary_values(message= message, datatype= 'B', header_fmt= 'ieee', container= bytes)
-            
+            message = f':DISK:GETFILE? "{full_path}"'
+            data = self.inst.query_binary_values(message=message, datatype='B', header_fmt='ieee', container=bytes)
+            time.sleep(0.05)
+
             if not os.path.exists(pc_folder):
                 ask_root = tk.Tk()
                 ask_root.withdraw()  # 隱藏主視窗
@@ -592,7 +599,7 @@ def main_window(scope_id):
                 # 0 No error
 
             # 資料夾是否存在
-            self.inst.write(f':DISK:CDIRectory "C:/Users/Administrator/Desktop/{folder}"')
+            self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
             time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
             time.sleep(0.05)
@@ -621,6 +628,7 @@ def main_window(scope_id):
         
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            time.sleep(0.05)
             # 使用正則表達式來匹配所有 .png 檔案名稱
             h5_files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
 
@@ -646,6 +654,7 @@ def main_window(scope_id):
             data = b''
             message = ':DISK:GETFILE? "' + full_path + '"'
             data = self.inst.query_binary_values(message= message, datatype= 'B', header_fmt= 'ieee', container= bytes)
+            time.sleep(0.05)
             
             if not os.path.exists(pc_folder):
                 ask_root = tk.Tk()
