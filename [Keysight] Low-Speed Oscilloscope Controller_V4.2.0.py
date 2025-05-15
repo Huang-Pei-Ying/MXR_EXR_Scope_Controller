@@ -160,12 +160,6 @@ def main_window(scope_id):
                 time.sleep(0.05)
                 self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{rf_top_percent},{(float(rf_top_percent)+float(rf_base_percent))/2},{rf_base_percent}')
                 time.sleep(0.05)
-            # elif int_rf_thres.get() == 2:
-            #     self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,T2080')
-            #     # self.inst.write(f':MEASure:THResholds:RFALl:TOPBase:PERCent ALL,80,20')
-            # elif int_rf_thres.get() == 3:
-            #     self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
-            #     self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,70,50,30')
             elif int_rf_thres.get() == 2:
                 self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,ABSolute')
                 time.sleep(0.05)
@@ -217,30 +211,17 @@ def main_window(scope_id):
                 time.sleep(0.05)
 
         def volt_check(self, scale, offset): # 科學記號
-            # res_ch1= self.inst.query(f':CHANnel1:DISPlay?')
-            # res_ch2= self.inst.query(f':CHANnel2:DISPlay?')
-            # res_ch3= self.inst.query(f':CHANnel3:DISPlay?')
-
-            # display_on_list= [res_ch1, res_ch2, res_ch3]
-            # for index, value in enumerate(display_on_list):
-            #     if value == '1\n':
-            #         self.inst.write(f':CHANnel{index+1}:SCALe {scale}')
-            #         self.inst.write(f':CHANnel{index+1}:OFFSet {offset}')
-            res= self.judge_chan_wme()
-            for i in range(1, 5):
-                if res == 'CHANnel':
-                    self.inst.write(f':CHANnel{i}:SCALe {scale}')
-                    time.sleep(0.05)
-                    self.inst.write(f':CHANnel{i}:OFFSet {offset}')
-                    time.sleep(0.05)
-                else:
-                    self.inst.write(f':WMEMory{i}:YRANge {float(scale)*8}')
-                    time.sleep(0.05)
-                    self.inst.write(f':WMEMory{i}:YOFFset {offset}')
-                    time.sleep(0.05)
-            # for i in range(1, 4):
-            #     self.inst.write(f':WMEMory{i}:SCALe {scale}')
-            #     self.inst.write(f':WMEMory{i}:YOFFset {offset}')   
+            display_dict= self.judge_chan_wme()
+            for chan in display_dict['CHANnel']:
+                self.inst.write(f':CHANnel{chan}:SCALe {scale}')
+                time.sleep(0.05)
+                self.inst.write(f':CHANnel{chan}:OFFSet {offset}')
+                time.sleep(0.05)
+            for wme in display_dict['WMEMory']:
+                self.inst.write(f':WMEMory{wme}:YRANge {float(scale)*8}')
+                time.sleep(0.05)
+                self.inst.write(f':WMEMory{wme}:YOFFset {offset}')
+                time.sleep(0.05)
 
         def timebase_position_check(self, position): # 科學記號
             self.inst.write(f':TIMebase:POSition {position}')
@@ -251,10 +232,18 @@ def main_window(scope_id):
             time.sleep(0.05)
 
         def trig_check(self, chan, level):
+            res= self.inst.query(f':CHANnel{chan}:DISPlay?')
+            time.sleep(0.05)
+            if not res == '1\n':
+                self.inst.write(f':CHANnel{chan}:DISPlay ON')
+                time.sleep(0.05)
             self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{chan}')
             time.sleep(0.05)
             self.inst.write(f':TRIGger:LEVel CHANnel{chan},{level}')
             time.sleep(0.05)
+            if not res == '1\n':
+                self.inst.write(f':CHANnel{chan}:DISPlay OFF')
+                time.sleep(0.05)
 
         def display_Chan(self, chan):
             res= self.inst.query(f':CHANnel{chan}:DISPlay?')
@@ -276,68 +265,104 @@ def main_window(scope_id):
                 self.inst.write(f':WMEMory{chan}:DISPlay ON')
                 time.sleep(0.05)
                 
+        def called_meas_function(self, chan, command_templates: dict):
+            display_dict= self.judge_chan_wme()
+            for key in command_templates:
+                if chan in display_dict[key]:
+                    self.inst.write(command_templates[key].format(chan))
+                    time.sleep(0.05)            
+        
         def freq(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:FREQuency {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:FREQuency CHANnel{}',
+                'WMEMory': ':MEASure:FREQuency WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)
 
         def period(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:PERiod {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:PERiod CHANnel{}',
+                'WMEMory': ':MEASure:PERiod WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)
     
         def dutycycle(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:DUTYcycle {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:DUTYcycle CHANnel{}',
+                'WMEMory': ':MEASure:DUTYcycle WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)
 
         def slewrate(self, chan, direction):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:SLEWrate {res}{chan},{direction}')
-            time.sleep(0.05)
-            if res == 'CHANnel':
-                self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({chan})"')
-                time.sleep(0.05)
-            else:
-                self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate(m{chan})"')
-                time.sleep(0.05)
+            display_dict= self.judge_chan_wme()
+            for cha in display_dict['CHANnel']:
+                if cha == chan:
+                    self.inst.write(f':MEASure:SLEWrate CHANnel{cha},{direction}')
+                    time.sleep(0.05)
+                    self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({cha})"')
+                    time.sleep(0.05)
+            for wme in display_dict['WMEMory']:
+                if wme == chan:
+                    self.inst.write(f':MEASure:SLEWrate WMEMory{wme},{direction}')
+                    time.sleep(0.05)
+                    self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate(m{wme})"')
+                    time.sleep(0.05)
 
         def tH(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:PWIDth {res}{chan},')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:PWIDth CHANnel{}',
+                'WMEMory': ':MEASure:PWIDth WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)  
 
         def tL(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:NWIDth {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:NWIDth CHANnel{}',
+                'WMEMory': ':MEASure:NWIDth WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)  
 
         def tR(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:RISetime {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:RISetime CHANnel{}',
+                'WMEMory': ':MEASure:RISetime WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)              
 
         def tF(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:FALLtime {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:FALLtime CHANnel{}',
+                'WMEMory': ':MEASure:FALLtime WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)              
 
         def VIH(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:VTOP {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:VTOP CHANnel{}',
+                'WMEMory': ':MEASure:VTOP WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)              
 
         def VIL(self, chan):
-            res= self.judge_chan_wme()
-            self.inst.write(f':MEASure:VBASe {res}{chan}')
-            time.sleep(0.05)
+            command_templates = {
+                'CHANnel': ':MEASure:VBASe CHANnel{}',
+                'WMEMory': ':MEASure:VBASe WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)              
 
         def tSU_tHO(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop):
-            res= self.judge_chan_wme()
+            displayed_dict= self.judge_chan_wme()
+            for format in displayed_dict:
+                for channel in displayed_dict[format]:
+                    if chan_start == channel:
+                        res_start= f'{format}'
+                    if chan_stop == channel:
+                        res_stop= f'{format}'
+
             if chan == 2:
                 self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
                 time.sleep(0.05)
-                self.inst.write(f':MEASure:DELTatime {res}{chan_start}, {res}{chan_stop}')
+                self.inst.write(f':MEASure:DELTatime {res_start}{chan_start}, {res_stop}{chan_stop}')
                 time.sleep(0.05)
             else:
                 pass
@@ -420,15 +445,21 @@ def main_window(scope_id):
                     time.sleep(0.05)
 
         def add_label(self, chan, label):
-            res= self.judge_chan_wme()
+            display_dict= self.judge_chan_wme()
             if label == '':
                 self.inst.write(f':DISPlay:LABel OFF')
                 time.sleep(0.05)
             else:
                 self.inst.write(f':DISPlay:LABel ON')
                 time.sleep(0.05)
-                self.inst.write(f':{res}{chan}:LABel "{label}"')
-                time.sleep(0.05)
+                for cha in display_dict['CHANnel']:
+                    if cha == chan:
+                        self.inst.write(f':CHANnel{chan}:LABel "{label}"')
+                        time.sleep(0.05)
+                for wme in display_dict['WMEMory']:
+                    if wme == chan:
+                        self.inst.write(f':WMEMory{chan}:LABel "{label}"')
+                        time.sleep(0.05)
 
         def load_wmemory(self, chan, folder, wme_name):
             self.inst.write(f':WMEMory:TIETimebase 1')
@@ -647,6 +678,7 @@ def main_window(scope_id):
                 f.write(data)
 
         def judge_chan_wme(self):
+            display_dict= {'CHANnel': [],'WMEMory': []}
             for i in range(1, 5):
                 chan_res= self.inst.query(f':CHANnel{i}:DISPlay?')
                 time.sleep(0.05)
@@ -654,11 +686,16 @@ def main_window(scope_id):
                 time.sleep(0.05)
 
                 if chan_res == '1\n' and not wme_res == '1\n':
-                    return 'CHANnel'
-                elif not chan_res == '1\n' and wme_res == '1\n':
-                    return 'WMEMory'
-                # else:
-                #     continue
+                    display_dict['CHANnel'].append(i)
+                    # return 'CHANnel'
+                if not chan_res == '1\n' and wme_res == '1\n':
+                    display_dict['WMEMory'].append(i)
+                    # return 'WMEMory'
+                if chan_res == '1\n' and wme_res == '1\n':
+                    display_dict['CHANnel'].append(i)
+                    display_dict['WMEMory'].append(i)
+
+            return display_dict
 
         def get_results(self):
             meas_name= ['', '', '']
@@ -1610,7 +1647,7 @@ def main_window(scope_id):
     b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 3)
 
 
-    ToolTip(b_tSU, 'Channel記得勾對欸')
+    # ToolTip(b_tSU, 'Channel記得勾對欸')
     ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_volt_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
