@@ -9,16 +9,16 @@ import time
 
 
 # 第一個視窗取得scope id並開啟主視窗
-def show_main_window(old_scope_ids):
+def show_main_window(old_scope_ips):
     # 取得scope id
-    selected_value = str_scope_id.get()
+    selected_value = str_scope_ip.get()
 
     # 新增scope id
-    if selected_value and selected_value not in old_scope_ids:
+    if selected_value and selected_value not in old_scope_ips:
         config = configparser.ConfigParser()
         config.optionxform = str
         config.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='utf-8',)
-        config.set('Scope_IDs', f'ID_{len(old_scope_ids)-1}', selected_value)
+        config.set('Scope_IPs', f'IP_{len(old_scope_ips)-1}', selected_value)
 
         # 寫回ini
         with open(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), 'w') as configfile:
@@ -28,11 +28,11 @@ def show_main_window(old_scope_ids):
     id_window.destroy()
     
     # 創建主視窗
-    main_window(scope_id= selected_value)
+    main_window(scope_ip= selected_value)
     
 
 # =====================================================================================================================================================
-def main_window(scope_id):
+def main_window(scope_ip):
 
     def initialize():
         config_initial = configparser.ConfigParser()
@@ -136,13 +136,13 @@ def main_window(scope_id):
         str_WMe3.set(value= LoadWMe3)
         str_WMe4.set(value= LoadWMe4)
 
-        # return scope_ids
 
     class MXR:
 
-        def __init__(self, scope_id):
-            rm = pyvisa.ResourceManager()
-            self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
+        def __init__(self, scope_ip, visa_lib= r'C:\Windows\System32\visa64.dll'):
+            rm = pyvisa.ResourceManager(visa_lib)
+            # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
+            self.inst = rm.open_resource(f'TCPIP0::{scope_ip}::inst0::INSTR')
             idn = self.inst.query('*IDN?').strip()
             print(f'Connect successfully! / {idn}')
 
@@ -880,8 +880,6 @@ def main_window(scope_id):
             config.optionxform = str
             config.read( os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='utf-8',)
             
-            # config.set('Scope_ID', 'ID', str_scope_id.get())
-
             config.set('Scale_Offset_Selected_Values', 'VoltScale', str_volt_scale.get())
             config.set('Scale_Offset_Selected_Values', 'VoltOffset', str_volt_offset.get())
             config.set('Scale_Offset_Config', 'TimebaseScale', str_time_scale.get())
@@ -1700,21 +1698,21 @@ def main_window(scope_id):
 
     window.protocol('WM_DELETE_WINDOW', close_window)
 
-    mxr= MXR(scope_id= scope_id)
+    mxr= MXR(scope_ip= scope_ip)
 
     window.mainloop()
 
 
-# 選擇 Scope ID ============================================================================================================================================
+# 選擇 Scope IP ============================================================================================================================================
 
 config_initial = configparser.ConfigParser()
 config_initial.optionxform = str
 config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='UTF-8',)
 
-scope_ids= []
-for i in range(len(config_initial['Scope_IDs'])):
-    scope_ids.append(config_initial['Scope_IDs'][f'ID_{i}'])
-scope_ids.append('')
+scope_ips= []
+for i in range(len(config_initial['Scope_IPs'])):
+    scope_ips.append(config_initial['Scope_IPs'][f'IP_{i}'])
+scope_ips.append('')
 
 id_window = tk.Tk()
 id_window.title('[Keysight] Low-Speed Oscilloscope Controller')
@@ -1722,16 +1720,16 @@ id_window.resizable(width= False, height= False)
 id_window.geometry('390x160+500+150')
 id_window.configure(background= '#91B6E1')
 
-l_scope_id = tk.Label(id_window, text= 'Enter Scope ID', background= '#91B6E1', fg= '#091E87', font= ('Candara', 12, 'bold'),)
-str_scope_id = tk.StringVar()
-cb_scope_id = ttk.Combobox(id_window, textvariable= str_scope_id, values= scope_ids)
-b_scope_id = tk.Button(id_window, text= 'OK', width= 10, height= 2, command= lambda: show_main_window(old_scope_ids= scope_ids), )
+l_scope_ip = tk.Label(id_window, text= 'Enter Scope IP', background= '#91B6E1', fg= '#091E87', font= ('Candara', 12, 'bold'),)
+str_scope_ip = tk.StringVar()
+cb_scope_ip = ttk.Combobox(id_window, textvariable= str_scope_ip, values= scope_ips)
+b_scope_ip = tk.Button(id_window, text= 'OK', width= 10, height= 2, command= lambda: show_main_window(old_scope_ips= scope_ips), )
 
 l_ip = tk.Label(id_window, text= '★★★ 確認電腦IP與Scope在同一網域 ★★★', background= '#91B6E1', fg= '#F6044D', font= ('Candara', 14, 'bold'),)
 
-l_scope_id.pack(padx= 5, pady= 5)
-cb_scope_id.pack(padx= 5, pady= 5)
-b_scope_id.pack(padx= 5, pady= 5)
+l_scope_ip.pack(padx= 5, pady= 5)
+cb_scope_ip.pack(padx= 5, pady= 5)
+b_scope_ip.pack(padx= 5, pady= 5)
 l_ip.pack(padx= 5, pady= 5)
 
 id_window.mainloop()
