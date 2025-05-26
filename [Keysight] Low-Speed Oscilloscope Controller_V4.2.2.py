@@ -1303,10 +1303,13 @@ def main_window(scope_ip):
     b_single = tk.Button(label_frame_control, text='SINGLE', width= 20, height= 2, command= lambda: mxr.single())
 
     b_clear_display = tk.Button(label_frame_control, text='Clear', width= 8, height= 2, command= lambda: mxr.clear_diaplay())
+    b_clear_display.config(state= 'disabled')
 
     b_autoscale = tk.Button(label_frame_control, text='Auto Scale', width= 20, height= 2, command= lambda: mxr.autoscale())
+    b_autoscale.config(state= 'disabled')
 
     b_default = tk.Button(label_frame_control, text='Default', width= 20, height= 2, command= lambda: mxr.default())
+    b_default.config(state= 'disabled')
 
     b_trigger = tk.Button(label_frame_control, text='Trigger Type', width= 20, height= 2, command= lambda: mxr.trig_type())
 
@@ -1317,6 +1320,22 @@ def main_window(scope_ip):
     b_del_marker = tk.Button(label_frame_control, text='Del Marker', width= 20, height= 2, command= lambda: mxr.delete_marker())
 
     b_trig_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 8, height= 2, command= lambda: mxr.trig_slope())
+
+    def disable_button():
+        if b_autoscale["state"] == 'normal':
+            b_autoscale.config(state="disabled")
+        else:
+            b_autoscale.config(state="normal")
+        if b_default["state"] == 'normal':
+            b_default.config(state="disabled")
+        else:
+            b_default.config(state="normal")
+        if b_clear_display["state"] == 'normal':
+            b_clear_display.config(state="disabled")
+        else:
+            b_clear_display.config(state="normal")
+
+    b_button_disable = tk.Button(label_frame_control, text= 'Disable\nButton', width= 8, height=2, command= disable_button)
 
     boolvar_marker_1 = tk.BooleanVar()    
     cb_marker_1= tk.Checkbutton(label_frame_control, text= 'Meas 1', variable= boolvar_marker_1, background= bg_color_2, fg= '#0D325C')
@@ -1581,6 +1600,7 @@ def main_window(scope_ip):
     b_add_marker.grid(row= 4, column= 1, padx= 5, pady= 5, rowspan= 2)
     b_del_marker.grid(row= 4, column= 2, padx= 5, pady= 5, rowspan= 2)
     b_trig_slope.grid(row= 2, column= 3, padx= 5, pady= 5, rowspan= 2)
+    b_button_disable.grid(row= 4, column= 3, padx= 5, pady= 5, rowspan= 2)
     cb_marker_1.grid(row= 0, column= 4, padx= 5) 
     cb_marker_2.grid(row= 1, column= 4, padx= 5) 
     cb_marker_3.grid(row= 2, column= 4, padx= 5) 
@@ -1676,20 +1696,22 @@ def main_window(scope_ip):
     ToolTip(cbb_rf_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(e_label_4, '133 221 333 123 111')
     ToolTip(b_autoscale, '好的不得了')
+    ToolTip(b_clear_display, '嗚嚕嗚啦~哀~呀哈!')
+    ToolTip(b_default, '6666')
     ToolTip(cb_marker_2, '防塵套不要亂丟!')
     ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
     ToolTip(cb_ch_single, '累')
     ToolTip(cb_ch_delta_start, '隨波逐流的')
     ToolTip(cb_ch_delta_stop, '人生')
     ToolTip(text_mean_3, '好忙好忙')
-    ToolTip(e_image_folder, '自己乖乖打字')
+    ToolTip(e_image_folder, '自己乖乖打字，按按鈕會幫你新增資料夾')
     ToolTip(e_image, '蛤~~~!')
-    ToolTip(b_image_save_scope, '會幫你新增資料夾')
-    ToolTip(b_image_save_pc, '示波器有沒有檔案ㄏㄚˋ')
-    ToolTip(e_WMe_folder, '自己乖乖打字')
+    # ToolTip(b_image_save_scope, '會幫你新增資料夾')
+    ToolTip(e_image_pc_folder, '示波器有沒有檔案ㄏㄚˋ')
+    ToolTip(e_WMe_folder, '自己乖乖打字，按按鈕會幫你新增資料夾')
     ToolTip(e_WMe, 'Channel要選對欸')
-    ToolTip(b_WMe_save_scpoe, '會幫你新增資料夾')
-    ToolTip(b_WMe_save_pc, '沒有檔案會出事ㄏㄚˋ')
+    # ToolTip(b_WMe_save_scpoe, '會幫你新增資料夾')
+    ToolTip(e_WMe_pc_folder, '沒有檔案會出事ㄏㄚˋ')
     ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
     ToolTip(e_WMe2, '嗚啦啦一呀哈呀哈!')
     ToolTip(e_WMe4, '噗嚕!')
