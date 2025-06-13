@@ -6,6 +6,7 @@ import os
 from decimal import Decimal
 import re
 import time
+import sys
 
 
 # 第一個視窗取得scope id並開啟主視窗
@@ -142,9 +143,17 @@ def main_window(scope_ip):
         def __init__(self, scope_ip, visa_lib= r'C:\Windows\System32\visa64.dll'):
             rm = pyvisa.ResourceManager(visa_lib)
             # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
-            self.inst = rm.open_resource(f'TCPIP0::{scope_ip}::inst0::INSTR')
-            idn = self.inst.query('*IDN?').strip()
-            print(f'Connect successfully! / {idn}')
+            try:
+                self.inst = rm.open_resource(f'TCPIP0::{scope_ip}::inst0::INSTR')
+                idn = self.inst.query('*IDN?').strip()
+                print(f'Connect successfully! / {idn}')
+            except:
+                warning_root = tk.Tk()
+                warning_root.withdraw()  # 隱藏主視窗
+                connection_fail = messagebox.showinfo("Error", f"Connection Failed.")
+                close_window()
+                sys.exit()
+                
 
         def sampling_rate_acquire(self, rate): # 科學記號
             self.inst.write(f':ACQuire:SRATe:ANALog {rate}')
@@ -871,6 +880,12 @@ def main_window(scope_ip):
                 # 如果指数不在指定的范围内，返回原始文本
                 return f"{base} Hz"
 
+    def switch_string(var_1, var_2):
+        string_1= var_1.get()
+        string_2= var_2.get()
+        var_1.set(string_2)
+        var_2.set(string_1)
+
     def clear(string):
         string.set('')
 
@@ -1172,6 +1187,8 @@ def main_window(scope_ip):
     stop_pos = tk.StringVar()
     cb_stop_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
     
+    b_edge_switch = tk.Button(label_frame_delta, text= 'Edge Switch', height= 1, command= lambda: switch_string(var_1= start_rf, var_2= stop_rf))
+    b_pos_switch = tk.Button(label_frame_delta, text= 'Position Switch', height= 1, command= lambda: switch_string(var_1= start_pos, var_2= stop_pos))
 
     # Threshold Frame ===================================================================================================================================
 
@@ -1413,6 +1430,7 @@ def main_window(scope_ip):
     text_mean_3 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
     text_mean_3.config(state=tk.DISABLED)
 
+    b_chan_switch = tk.Button(label_frame_chan, text= 'Delta Chan Switch', height= 1, command= lambda: switch_string(var_1= int_ch_delta_start, var_2= int_ch_delta_stop))
 
     # Save Frame ===================================================================================================================================
 
@@ -1542,6 +1560,8 @@ def main_window(scope_ip):
     cb_stop_rf.grid(row= 1, column= 1, padx=5, pady= 5)
     cb_stop_num.grid(row= 2, column= 1, padx=5, pady= 5)
     cb_stop_pos.grid(row= 3, column= 1, padx=5, pady= 5)
+    b_edge_switch.grid(row= 4, column= 0, padx= 5, pady= 5)
+    b_pos_switch.grid(row= 4, column= 1, padx= 5, pady= 5)
 
     # Thres grid
     rb_gen_threshold_1.grid(row= 0, column= 0, padx= 5, pady= 3)
@@ -1625,6 +1645,7 @@ def main_window(scope_ip):
     b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
     rb_ch_single.grid(row= 4, column= 0, sticky= 'e')
     cb_ch_single.grid(row= 4, column= 1, sticky= 'w')
+    b_chan_switch.grid(row= 5, column= 0, rowspan=2, columnspan= 2)
     rb_ch_delta.grid(row= 4, column= 2, sticky= 'e')
     cb_ch_delta_start.grid(row= 4, column= 3, sticky= 'w')
     l_arrow.grid(row= 5, column= 2, sticky= 'e')
