@@ -458,10 +458,10 @@ def main_window(scope_ip):
             time.sleep(0.05)
             is_marker_area= self.inst.query(':MARKer1:ENABle?') 
             time.sleep(0.05)
-            if is_meas_area == '"no meas"\n' or is_marker_area == '0\n':
-                interval= 3.5
-            else:
+            if not is_meas_area == '"no meas"\n' or is_marker_area == '1\n':
                 interval= 5
+            else:
+                interval= 3.5
 
             if bookmark == '':
                 self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
