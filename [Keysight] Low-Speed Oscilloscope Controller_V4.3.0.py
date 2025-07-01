@@ -71,6 +71,10 @@ def main_window(scope_ip):
         ChanLabel2 = config_initial['Lable_Setup_Config']['ChanLabel2']
         ChanLabel3 = config_initial['Lable_Setup_Config']['ChanLabel3']
         ChanLabel4 = config_initial['Lable_Setup_Config']['ChanLabel4']
+        WMeLabel1 = config_initial['Lable_Setup_Config']['WMeLabel1']
+        WMeLabel2 = config_initial['Lable_Setup_Config']['WMeLabel2']
+        WMeLabel3 = config_initial['Lable_Setup_Config']['WMeLabel3']
+        WMeLabel4 = config_initial['Lable_Setup_Config']['WMeLabel4']
 
         ChanSingle = config_initial['Chan_Delta']['ChanSingle']
         ChanStart = config_initial['Chan_Delta']['ChanStart']
@@ -119,6 +123,10 @@ def main_window(scope_ip):
         str_label_2.set(value= ChanLabel2)
         str_label_3.set(value= ChanLabel3)
         str_label_4.set(value= ChanLabel4)
+        str_label_5.set(value= WMeLabel1)
+        str_label_6.set(value= WMeLabel2)
+        str_label_7.set(value= WMeLabel3)
+        str_label_8.set(value= WMeLabel4)
 
         int_ch_single.set(value= int(ChanSingle))
         int_ch_delta_start.set(value= int(ChanStart))
@@ -147,6 +155,9 @@ def main_window(scope_ip):
                 self.inst = rm.open_resource(f'TCPIP0::{scope_ip}::inst0::INSTR')
                 idn = self.inst.query('*IDN?').strip()
                 print(f'Connect successfully! / {idn}')
+                time.sleep(0.1)
+                self.inst.write(f':ANALyze:AEDGes 0')
+                time.sleep(0.05)
             except:
                 warning_root = tk.Tk()
                 warning_root.withdraw()  # 隱藏主視窗
@@ -162,6 +173,18 @@ def main_window(scope_ip):
         def memory_depth_acquire(self, points_value: int):
             self.inst.write(f':ACQuire:POINts:ANALog {points_value}')
             time.sleep(0.05)
+
+        def meas_all_edge(self):
+            ans= self.inst.query(':ANALyze:AEDGes?')
+            time.sleep(0.05)
+            if ans == '0\n':
+                b_meas_all_edge['text'] = "Meas All Edge: \nON"
+                self.inst.write(f':ANALyze:AEDGes 1')
+                time.sleep(0.05)
+            else:
+                b_meas_all_edge['text'] = "Meas All Edge: \nOFF"
+                self.inst.write(f':ANALyze:AEDGes 0')
+                time.sleep(0.05)
         
         def RF_threshold(self, rf_top, rf_base, rf_top_percent, rf_base_percent):
             if int_rf_thres.get() == 1:
@@ -428,6 +451,51 @@ def main_window(scope_ip):
                 if boolvar.get():
                     self.inst.write(f'MEASurement{i+1}:CLEar')
                     time.sleep(0.05)
+
+        def add_bookmark(self, bookmark, chan):
+            display_dict= self.judge_chan_wme()      
+            is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
+            time.sleep(0.05)
+            is_marker_area= self.inst.query(':MARKer1:ENABle?') 
+            time.sleep(0.05)
+            if is_meas_area == '"no meas"\n' or is_marker_area == '0\n':
+                interval= 3.5
+            else:
+                interval= 5
+
+            if bookmark == '':
+                self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+            else:
+                bookmark_display_list= []
+                count= 0
+                for cha in display_dict['CHANnel']:
+                    if cha == chan:
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                        time.sleep(0.05)
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",CHANnel{chan},"",1')
+                        time.sleep(0.05)
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
+                        time.sleep(0.05)
+                        bookmark_display_list.append(count)
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
+                        time.sleep(0.05)
+                    count+=1
+                for wme in display_dict['WMEMory']:
+                    if wme == chan-4:
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                        time.sleep(0.05)
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",CHANnel{chan-4},"",1')
+                        time.sleep(0.05)
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
+                        time.sleep(0.05)
+                        bookmark_display_list.append(count)
+                        self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
+                        time.sleep(0.05)
+                    count+=1
+
+        def delete_bookmark(self, chan):
+            self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+            time.sleep(0.05)
 
         def add_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -926,6 +994,10 @@ def main_window(scope_ip):
             config.set('Lable_Setup_Config', 'ChanLabel2', str_label_2.get())
             config.set('Lable_Setup_Config', 'ChanLabel3', str_label_3.get())
             config.set('Lable_Setup_Config', 'ChanLabel4', str_label_4.get())
+            config.set('Lable_Setup_Config', 'WMeLabel1', str_label_5.get())
+            config.set('Lable_Setup_Config', 'WMeLabel2', str_label_6.get())
+            config.set('Lable_Setup_Config', 'WMeLabel3', str_label_7.get())
+            config.set('Lable_Setup_Config', 'WMeLabel4', str_label_8.get())
 
             config.set('Chan_Delta', 'ChanSingle', str(int_ch_single.get()))
             config.set('Chan_Delta', 'ChanStart', str(int_ch_delta_start.get()))
@@ -1161,6 +1233,8 @@ def main_window(scope_ip):
     b_time_scale_check = tk.Button(label_frame_scale, text= 'Time scale Check', height= 1, command= lambda: mxr.timebase_scale_check(scale= str_time_scale.get()))
     b_time_position_check = tk.Button(label_frame_scale, text= 'Time posi Check', height= 1, command= lambda: mxr.timebase_position_check(position= str_time_offset.get()))
 
+    b_meas_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: \nOFF', height= 2, command= lambda: mxr.meas_all_edge())
+
     # Delta Setup Frame ===================================================================================================================================
 
     label_frame_delta= tk.LabelFrame(window, text= 'Delta Setup', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
@@ -1273,11 +1347,13 @@ def main_window(scope_ip):
     str_sampling_rate = tk.StringVar()
     e_sampling_rate = tk.Entry(label_frame_thres, width= 10, textvariable= str_sampling_rate)
     b_sampling_rate_check = tk.Button(label_frame_thres, text= 'Check', height= 1, command= lambda: mxr.sampling_rate_acquire(rate= str_sampling_rate.get()))
+    b_sampling_rate_auto = tk.Button(label_frame_thres, text= 'Auto', height= 1, command= lambda: mxr.sampling_rate_acquire(rate= 'AUTO'))
 
     l_memory_depth = tk.Label(label_frame_thres, text= '※ Memory Depth', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
     str_memory_depth = tk.StringVar()
     e_memory_depth = tk.Entry(label_frame_thres, width= 10, textvariable= str_memory_depth)
     b_memory_depth_check = tk.Button(label_frame_thres, text= 'Check', height= 1, command= lambda: mxr.memory_depth_acquire(points_value= str_memory_depth.get()))
+    b_memory_depth_auto = tk.Button(label_frame_thres, text= 'Auto', height= 1, command= lambda: mxr.memory_depth_acquire(points_value= 'AUTO'))
 
 
     # Label Frame ===================================================================================================================================
@@ -1285,29 +1361,60 @@ def main_window(scope_ip):
     label_frame_label= tk.LabelFrame(window, text= 'Label', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     str_label_1 = tk.StringVar()
-    e_label_1 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_1)
+    e_label_1 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_1)
 
-    b_lable1 = tk.Button(label_frame_label, text= 'Chan1_label', command= lambda: mxr.add_label(chan= 1, label= str_label_1.get().rstrip('\n')))
-    b_clear1 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_1))
+    b_lable1 = tk.Button(label_frame_label, text= 'Chan1_label', command= lambda: mxr.add_bookmark(chan= 1, bookmark= str_label_1.get().rstrip('\n')))
+    # b_clear1 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_1))
+    b_del_label1 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 1))
 
     str_label_2 = tk.StringVar()
-    e_label_2 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_2)
+    e_label_2 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_2)
 
-    b_lable2 = tk.Button(label_frame_label, text= 'Chan2_label', command= lambda: mxr.add_label(chan= 2, label= (str_label_2.get().rstrip('\n'))))
-    b_clear2 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_2))
+    b_lable2 = tk.Button(label_frame_label, text= 'Chan2_label', command= lambda: mxr.add_bookmark(chan= 2, bookmark= (str_label_2.get().rstrip('\n'))))
+    # b_clear2 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_2))
+    b_del_label2 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 2))
 
     str_label_3 = tk.StringVar()
-    e_label_3 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_3)
+    e_label_3 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_3)
 
-    b_lable3 = tk.Button(label_frame_label, text= 'Chan3_label', command= lambda: mxr.add_label(chan= 3, label= (str_label_3.get().rstrip('\n'))))
-    b_clear3 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_3))
+    b_lable3 = tk.Button(label_frame_label, text= 'Chan3_label', command= lambda: mxr.add_bookmark(chan= 3, bookmark= (str_label_3.get().rstrip('\n'))))
+    # b_clear3 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_3))
+    b_del_label3 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 3))
 
     str_label_4 = tk.StringVar()
-    e_label_4 = tk.Entry(label_frame_label, width= 50, textvariable= str_label_4)
+    e_label_4 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_4)
 
-    b_lable4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_label(chan= 4, label= (str_label_4.get().rstrip('\n'))))
-    b_clear4 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_4))
+    b_lable4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_bookmark(chan= 4, bookmark= (str_label_4.get().rstrip('\n'))))
+    # b_clear4 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_4))
+    b_del_label4 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 4))
 
+    str_label_5 = tk.StringVar()
+    e_label_5 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_5)
+
+    b_lable5 = tk.Button(label_frame_label, text= 'WMe1_label', command= lambda: mxr.add_bookmark(chan= 5, bookmark= str_label_5.get().rstrip('\n')))
+    # b_clear5 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_5))
+    b_del_label5 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 5))
+
+    str_label_6 = tk.StringVar()
+    e_label_6 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_6)
+
+    b_lable6 = tk.Button(label_frame_label, text= 'WMe2_label', command= lambda: mxr.add_bookmark(chan= 6, bookmark= (str_label_6.get().rstrip('\n'))))
+    # b_clear6 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_6))
+    b_del_label6 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 6))
+
+    str_label_7 = tk.StringVar()
+    e_label_7 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_7)
+
+    b_lable7 = tk.Button(label_frame_label, text= 'WMe3_label', command= lambda: mxr.add_bookmark(chan= 7, bookmark= (str_label_7.get().rstrip('\n'))))
+    # b_clear7 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_7))
+    b_del_label7 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 7))
+
+    str_label_8 = tk.StringVar()
+    e_label_8 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_8)
+
+    b_lable8 = tk.Button(label_frame_label, text= 'WMe4_label', command= lambda: mxr.add_bookmark(chan= 8, bookmark= (str_label_8.get().rstrip('\n'))))
+    # b_clear8 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_8))
+    b_del_label8 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 8))
 
     # Control Frame ===================================================================================================================================
 
@@ -1550,6 +1657,7 @@ def main_window(scope_ip):
     e_time_offset.grid(row= 1, column= 3, padx= 5, pady= 4)
     b_time_scale_check.grid(row= 2, column= 2, padx= 5, pady= 4)
     b_time_position_check.grid(row= 2, column= 3, padx= 5, pady= 4)
+    b_meas_all_edge.grid(row= 4, column= 3, padx= 5, pady= 4)
 
     # Delta grid
     l_start.grid(row= 0, column= 0, padx= 5, pady= 5)
@@ -1585,28 +1693,51 @@ def main_window(scope_ip):
     l_rf_threshold_2.grid(row= 3, column= 3, padx= 5, pady= 3) 
     cbb_rf_top.grid(row= 2, column= 4, sticky= 'w')
     cbb_rf_base.grid(row= 3, column= 4, sticky= 'w')
-    b_rf_check.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e')
+    b_rf_check.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e', columnspan= 2)
 
     l_sampling_rate.grid(row= 4, column= 3)
     e_sampling_rate.grid(row= 4, column= 4)
     b_sampling_rate_check.grid(row= 4, column= 5)
+    b_sampling_rate_auto.grid(row= 4, column= 6)
     l_memory_depth.grid(row= 5, column= 3)
     e_memory_depth.grid(row= 5, column= 4)
     b_memory_depth_check.grid(row= 5, column= 5)
+    b_memory_depth_auto.grid(row= 5, column= 6)
 
     # Label grid
-    e_label_1.grid(row= 0, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable1.grid(row= 0, column= 2, padx= 5, pady= 3)
-    b_clear1.grid(row= 0, column= 3, padx= 5, pady= 3)
-    e_label_2.grid(row= 1, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable2.grid(row= 1, column= 2, padx= 5, pady= 3)
-    b_clear2.grid(row= 1, column= 3, padx= 5, pady= 3)
-    e_label_3.grid(row= 2, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable3.grid(row= 2, column= 2, padx= 5, pady= 3)
-    b_clear3.grid(row= 2, column= 3, padx= 5, pady= 3)
-    e_label_4.grid(row= 3, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable4.grid(row= 3, column= 2, padx= 5, pady= 3)
-    b_clear4.grid(row= 3, column= 3, padx= 5, pady= 3)
+    e_label_1.grid(row= 0, column= 0, padx= 5, pady= 3)
+    b_lable1.grid(row= 0, column= 1, padx= 5, pady= 3)
+    # b_clear1.grid(row= 0, column= 3, padx= 5, pady= 3)
+    b_del_label1.grid(row= 0, column= 2, padx= 5, pady= 3)
+    e_label_2.grid(row= 1, column= 0, padx= 5, pady= 3)
+    b_lable2.grid(row= 1, column= 1, padx= 5, pady= 3)
+    # b_clear2.grid(row= 1, column= 3, padx= 5, pady= 3)
+    b_del_label2.grid(row= 1, column= 2, padx= 5, pady= 3)
+    e_label_3.grid(row= 2, column= 0, padx= 5, pady= 3)
+    b_lable3.grid(row= 2, column= 1, padx= 5, pady= 3)
+    # b_clear3.grid(row= 2, column= 3, padx= 5, pady= 3)
+    b_del_label3.grid(row= 2, column= 2, padx= 5, pady= 3)
+    e_label_4.grid(row= 3, column= 0, padx= 5, pady= 3)
+    b_lable4.grid(row= 3, column= 1, padx= 5, pady= 3)
+    # b_clear4.grid(row= 3, column= 3, padx= 5, pady= 3)
+    b_del_label4.grid(row= 3, column= 2, padx= 5, pady= 3)
+
+    e_label_5.grid(row= 0, column= 3, padx= 5, pady= 3, sticky= 'e')
+    b_lable5.grid(row= 0, column= 4, padx= 5, pady= 3, sticky= 'e')
+    # b_clear5.grid(row= 0, column= 3, padx= 5, pady= 3)
+    b_del_label5.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e')
+    e_label_6.grid(row= 1, column= 3, padx= 5, pady= 3, sticky= 'e')
+    b_lable6.grid(row= 1, column= 4, padx= 5, pady= 3, sticky= 'e')
+    # b_clear6.grid(row= 1, column= 3, padx= 5, pady= 3)
+    b_del_label6.grid(row= 1, column= 5, padx= 5, pady= 3, sticky= 'e')
+    e_label_7.grid(row= 2, column= 3, padx= 5, pady= 3, sticky= 'e')
+    b_lable7.grid(row= 2, column= 4, padx= 5, pady= 3, sticky= 'e')
+    # b_clear7.grid(row= 2, column= 3, padx= 5, pady= 3)
+    b_del_label7.grid(row= 2, column= 5, padx= 5, pady= 3, sticky= 'e')
+    e_label_8.grid(row= 3, column= 3, padx= 5, pady= 3, sticky= 'e')
+    b_lable8.grid(row= 3, column= 4, padx= 5, pady= 3, sticky= 'e')
+    # b_clear8.grid(row= 3, column= 3, padx= 5, pady= 3)
+    b_del_label8.grid(row= 3, column= 5, padx= 5, pady= 3, sticky= 'e')
 
     # Control grid
     b_run.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2)
@@ -1716,8 +1847,9 @@ def main_window(scope_ip):
     ToolTip(cbb_rf_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_rf_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(e_label_4, '133 221 333 123 111')
+    ToolTip(e_label_6, '電倉鼠!')
     ToolTip(b_autoscale, '好的不得了')
-    ToolTip(b_clear_display, '嗚嚕嗚啦~哀~呀哈!')
+    ToolTip(b_clear_display, '嗚嚕嗚啦')
     ToolTip(b_default, '6666')
     ToolTip(cb_marker_2, '防塵套不要亂丟!')
     ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
