@@ -870,6 +870,18 @@ def main_window(scope_ip):
                     return f"{base * 10} V/ns"
                 elif exponent == 11:
                     return f"{base * 100} V/ns"
+                elif exponent == 12:
+                    return f"{base} V/ps"
+                elif exponent == 13:
+                    return f"{base * 10} V/ps"
+                elif exponent == 14:
+                    return f"{base * 100} V/ps"
+                elif exponent == 15:
+                    return f"{base} V/fs"
+                elif exponent == 16:
+                    return f"{base * 10} V/fs"
+                elif exponent == 17:
+                    return f"{base * 100} V/fs"
                 else:
                     # 如果指數不在指定的範圍内，返回原始字串
                     return f"{base} V/s"
@@ -898,6 +910,12 @@ def main_window(scope_ip):
                     return f"{base * 10} ps"
                 elif exponent == -10:
                     return f"{base * 100} ps"
+                elif exponent == -15:
+                    return f"{base} fs"
+                elif exponent == -14:
+                    return f"{base * 10} fs"
+                elif exponent == -13:
+                    return f"{base * 100} fs"
                 else:
                     # 如果指數不在指定的範圍内，返回原始字串
                     return f'{base} s'
