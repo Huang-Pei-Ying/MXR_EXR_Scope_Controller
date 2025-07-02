@@ -165,7 +165,7 @@ def main_window(scope_ip):
                 close_window()
                 sys.exit()
                 
-
+        ### Acquisition Related ###
         def sampling_rate_acquire(self, rate): # 科學記號
             self.inst.write(f':ACQuire:SRATe:ANALog {rate}')
             time.sleep(0.05)
@@ -186,6 +186,7 @@ def main_window(scope_ip):
                 self.inst.write(f':ANALyze:AEDGes 0')
                 time.sleep(0.05)
         
+        ### Threshold Reslated ###
         def RF_threshold(self, rf_top, rf_base, rf_top_percent, rf_base_percent):
             if int_rf_thres.get() == 1:
                 self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
@@ -242,6 +243,7 @@ def main_window(scope_ip):
                 self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
                 time.sleep(0.05)
 
+        ### Scale Related ###
         def volt_check(self, scale, offset): # 科學記號
             display_dict= self.judge_chan_wme()
             for chan in display_dict['CHANnel']:
@@ -277,6 +279,7 @@ def main_window(scope_ip):
                 self.inst.write(f':CHANnel{chan}:DISPlay OFF')
                 time.sleep(0.05)
 
+        ### Display Related ###
         def display_Chan(self, chan):
             res= self.inst.query(f':CHANnel{chan}:DISPlay?')
             time.sleep(0.05)
@@ -296,7 +299,8 @@ def main_window(scope_ip):
             else:
                 self.inst.write(f':WMEMory{chan}:DISPlay ON')
                 time.sleep(0.05)
-                
+        
+        ### Measurement Related ###
         def called_meas_function(self, chan, command_templates: dict):
             display_dict= self.judge_chan_wme()
             for key in command_templates:
@@ -399,6 +403,7 @@ def main_window(scope_ip):
             else:
                 pass
 
+        ### Control Related ###
         def run(self):
             self.inst.write(':RUN')
             time.sleep(0.05)
@@ -423,6 +428,7 @@ def main_window(scope_ip):
             self.inst.write(':SYSTem:PRESet DEFault')
             time.sleep(0.05)
 
+        ### Trigger Related ###
         def trig_type(self):
             res= self.inst.query(f':TRIGger:SWEep?')
             time.sleep(0.05)
@@ -442,7 +448,8 @@ def main_window(scope_ip):
             else:
                 self.inst.write(':TRIGger:EDGE:SLOPe POSitive')
                 time.sleep(0.05)
-                
+        
+        ### Measurement Related (label) ###
         def delete_item(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
                             # boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
@@ -538,6 +545,7 @@ def main_window(scope_ip):
                         self.inst.write(f':WMEMory{chan}:LABel "{label}"')
                         time.sleep(0.05)
 
+        ### Save Related ###
         def load_wmemory(self, chan, folder, wme_name):
             self.inst.write(f':WMEMory:TIETimebase 1')
             time.sleep(0.05)
@@ -763,6 +771,7 @@ def main_window(scope_ip):
             with open(f"{pc_folder}/{file_name}.h5", 'wb') as f:
                 f.write(data)
 
+        ### Display Related ###
         def judge_chan_wme(self):
             display_dict= {'CHANnel': [],'WMEMory': []}
             for i in range(1, 5):
@@ -783,6 +792,7 @@ def main_window(scope_ip):
 
             return display_dict
 
+        ### Result Related ###
         def get_results(self):
             meas_name= ['', '', '']
             mean= ['', '', '']
@@ -845,6 +855,7 @@ def main_window(scope_ip):
             text_mean_3.insert(tk.END, f"{mean[2]}")
             text_mean_3.config(state=tk.DISABLED)  # 設置為只讀狀態
 
+        ### Unit Related ###
         def judge_time_unit(self, value, slew):
             pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
             match = re.search(pattern, value)
@@ -966,6 +977,7 @@ def main_window(scope_ip):
                 # 如果指数不在指定的范围内，返回原始文本
                 return f"{base} Hz"
 
+    ### Others ###
     def switch_string(var_1, var_2):
         string_1= var_1.get()
         string_2= var_2.get()
