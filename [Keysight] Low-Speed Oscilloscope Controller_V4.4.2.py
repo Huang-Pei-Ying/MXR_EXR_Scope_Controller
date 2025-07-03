@@ -280,25 +280,37 @@ def main_window(scope_ip):
                 time.sleep(0.05)
 
         ### Display Related ###
-        def display_Chan(self, chan):
+        def display_Chan(self, chan, bookmark):
             res= self.inst.query(f':CHANnel{chan}:DISPlay?')
             time.sleep(0.05)
             if res == '1\n':
                 self.inst.write(f':CHANnel{chan}:DISPlay OFF')
                 time.sleep(0.05)
+                try:
+                    self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                    time.sleep(0.05)
+                except:
+                    pass
             else:
                 self.inst.write(f':CHANnel{chan}:DISPlay ON')
                 time.sleep(0.05)
+                self.add_bookmark(bookmark= bookmark, chan= chan)
 
-        def display_WMemory(self, chan):
+        def display_WMemory(self, chan, bookmark):
             res= self.inst.query(f':WMEMory{chan}:DISPlay?')
             time.sleep(0.05)
             if res == '1\n':
                 self.inst.write(f':WMEMory{chan}:DISPlay OFF')
                 time.sleep(0.05)
+                try:
+                    self.inst.write(f':DISPlay:BOOKmark{chan+4}:DELete')
+                    time.sleep(0.05)
+                except:
+                    pass
             else:
                 self.inst.write(f':WMEMory{chan}:DISPlay ON')
                 time.sleep(0.05)
+                self.add_bookmark(bookmark= bookmark, chan= chan+4)
         
         ### Measurement Related ###
         def called_meas_function(self, chan, command_templates: dict):
@@ -460,8 +472,11 @@ def main_window(scope_ip):
                     time.sleep(0.05)
 
         def add_bookmark(self, bookmark, chan):
-            display_dict= self.judge_chan_wme()      
-            is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
+            display_dict= self.judge_chan_wme()    
+            try:
+                is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
+            except:
+                is_meas_area= 0
             time.sleep(0.05)
             is_marker_area= self.inst.query(':MARKer1:ENABle?') 
             time.sleep(0.05)
@@ -1532,14 +1547,14 @@ def main_window(scope_ip):
 
     label_frame_chan= tk.LabelFrame(window, text= 'Channel', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 1))
-    b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 2))
-    b_Chan3 = tk.Button(label_frame_chan, text='Chan3', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 3))
-    b_Chan4 = tk.Button(label_frame_chan, text='Chan4', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 4))
-    b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 1))
-    b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 2))
-    b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 3))
-    b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 4))
+    b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 1, bookmark= str_label_1.get()))
+    b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 2, bookmark= str_label_2.get()))
+    b_Chan3 = tk.Button(label_frame_chan, text='Chan3', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 3, bookmark= str_label_3.get()))
+    b_Chan4 = tk.Button(label_frame_chan, text='Chan4', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 4, bookmark= str_label_4.get()))
+    b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 1, bookmark= str_label_5.get()))
+    b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 2, bookmark= str_label_6.get()))
+    b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 3, bookmark= str_label_7.get()))
+    b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 4, bookmark= str_label_8.get()))
 
     int_ch = tk.IntVar()    
     rb_ch_single = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
