@@ -7,6 +7,7 @@ from decimal import Decimal
 import re
 import time
 import sys
+import numpy as np
 
 
 # 第一個視窗取得scope id並開啟主視窗
@@ -153,6 +154,7 @@ def main_window(scope_ip):
             # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
             try:
                 self.inst = rm.open_resource(f'TCPIP0::{scope_ip}::inst0::INSTR')
+                self.inst.timeout = 6000
                 idn = self.inst.query('*IDN?').strip()
                 print(f'Connect successfully! / {idn}')
                 time.sleep(0.1)
@@ -163,7 +165,7 @@ def main_window(scope_ip):
                 warning_root.withdraw()  # 隱藏主視窗
                 connection_fail = messagebox.showinfo("Error", f"Connection Failed.")
                 close_window()
-                sys.exit()
+                # sys.exit()
                 
         ### Acquisition Related ###
         def sampling_rate_acquire(self, rate): # 科學記號
@@ -280,7 +282,7 @@ def main_window(scope_ip):
                 time.sleep(0.05)
 
         ### Display Related ###
-        def display_Chan(self, chan, bookmark):
+        def display_Chan(self, chan, bookmark, choose_type):
             res= self.inst.query(f':CHANnel{chan}:DISPlay?')
             time.sleep(0.05)
             if res == '1\n':
@@ -294,9 +296,9 @@ def main_window(scope_ip):
             else:
                 self.inst.write(f':CHANnel{chan}:DISPlay ON')
                 time.sleep(0.05)
-                self.add_bookmark(bookmark= bookmark, chan= chan)
+                self.add_bookmark(choose_type= choose_type,bookmark= bookmark, chan= chan)
 
-        def display_WMemory(self, chan, bookmark):
+        def display_WMemory(self, chan, bookmark, choose_type):
             res= self.inst.query(f':WMEMory{chan}:DISPlay?')
             time.sleep(0.05)
             if res == '1\n':
@@ -310,7 +312,7 @@ def main_window(scope_ip):
             else:
                 self.inst.write(f':WMEMory{chan}:DISPlay ON')
                 time.sleep(0.05)
-                self.add_bookmark(bookmark= bookmark, chan= chan+4)
+                self.add_bookmark(choose_type= choose_type, bookmark= bookmark, chan= chan+4)
         
         ### Measurement Related ###
         def called_meas_function(self, chan, command_templates: dict):
@@ -471,53 +473,65 @@ def main_window(scope_ip):
                     self.inst.write(f'MEASurement{i+1}:CLEar')
                     time.sleep(0.05)
 
-        def add_bookmark(self, bookmark, chan):
-            display_dict= self.judge_chan_wme()    
-            try:
-                is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
-            except:
-                is_meas_area= 0
-            time.sleep(0.05)
-            is_marker_area= self.inst.query(':MARKer1:ENABle?') 
-            time.sleep(0.05)
-            if not is_meas_area == '"no meas"\n' or is_marker_area == '1\n':
-                interval= 5
+        def add_bookmark(self, choose_type, bookmark, chan):
+            if choose_type == 1:
+                self.inst.write(f':DISPlay:BOOKmark:DELete:ALL')
+                time.sleep(0.05)
+                self.add_label(chan= chan, label= bookmark)
+                return
             else:
-                interval= 3.5
+                self.inst.write(f':DISPlay:LABel OFF')
+                time.sleep(0.05)
+                display_dict= self.judge_chan_wme()    
+                try:
+                    is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
+                    time.sleep(0.05)
+                except:
+                    is_meas_area= 0
+                is_marker_area= self.inst.query(':MARKer1:ENABle?') 
+                time.sleep(0.05)
+                if not is_meas_area == '"no meas"\n' or is_marker_area == '1\n':
+                    interval= 5
+                else:
+                    interval= 3.5
 
-            if bookmark == '':
+                if bookmark == '':
+                    self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                else:
+                    bookmark_display_list= []
+                    count= 0
+                    for cha in display_dict['CHANnel']:
+                        if cha == chan:
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                            time.sleep(0.05)
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",CHANnel{chan},"",1')
+                            time.sleep(0.05)
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
+                            time.sleep(0.05)
+                            bookmark_display_list.append(count)
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
+                            time.sleep(0.05)
+                        count+=1
+                    for wme in display_dict['WMEMory']:
+                        if wme == chan-4:
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                            time.sleep(0.05)
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",WMEMory{chan-4},"",1')
+                            time.sleep(0.05)
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
+                            time.sleep(0.05)
+                            bookmark_display_list.append(count)
+                            self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
+                            time.sleep(0.05)
+                        count+=1
+
+        def delete_bookmark(self, chan, choose_type):
+            if choose_type == 1:
+                self.inst.write(f':DISPlay:LABel OFF')
+                time.sleep(0.05)
+            else:
                 self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
-            else:
-                bookmark_display_list= []
-                count= 0
-                for cha in display_dict['CHANnel']:
-                    if cha == chan:
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",CHANnel{chan},"",1')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
-                        time.sleep(0.05)
-                        bookmark_display_list.append(count)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
-                        time.sleep(0.05)
-                    count+=1
-                for wme in display_dict['WMEMory']:
-                    if wme == chan-4:
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",CHANnel{chan-4},"",1')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
-                        time.sleep(0.05)
-                        bookmark_display_list.append(count)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
-                        time.sleep(0.05)
-                    count+=1
-
-        def delete_bookmark(self, chan):
-            self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
-            time.sleep(0.05)
+                time.sleep(0.05)
 
         def add_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -556,8 +570,8 @@ def main_window(scope_ip):
                         self.inst.write(f':CHANnel{chan}:LABel "{label}"')
                         time.sleep(0.05)
                 for wme in display_dict['WMEMory']:
-                    if wme == chan:
-                        self.inst.write(f':WMEMory{chan}:LABel "{label}"')
+                    if wme == chan-4:
+                        self.inst.write(f':WMEMory{chan-4}:LABel "{label}"')
                         time.sleep(0.05)
 
         ### Save Related ###
@@ -685,6 +699,41 @@ def main_window(scope_ip):
            
             with open(f"{pc_folder}/{file_name}.png", 'wb') as f:
                 f.write(data)
+
+        def save_image_pc(self, pc_folder, file_name):
+            screen_data = np.array(self.inst.query_binary_values(":DISPlay:DATA? PNG", datatype = 's', container = bytes))
+            time.sleep(0.05)
+
+            if not os.path.exists(pc_folder):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    # print("檔案未保存。")
+                    return     
+                os.mkdir(pc_folder) 
+
+            if os.path.exists(f"{pc_folder}/{file_name}.png"):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    # print("檔案未保存。")
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    return     
+            
+            f_img = open(f"{pc_folder}/{file_name}.png", "wb")
+            f_img.write(bytearray(screen_data))
+            f_img.close()
 
         def save_wmemory_scope(self, chan, folder, wme_name):
             # 清空狀態
@@ -1065,6 +1114,7 @@ def main_window(scope_ip):
             # formatted_time= self.current_time()
             # print(f'\n{formatted_time} [GUI Message] Window Closed.')
             window.destroy()
+            sys.exit()
 
     
     def combo_ini():
@@ -1405,61 +1455,67 @@ def main_window(scope_ip):
 
     label_frame_label= tk.LabelFrame(window, text= 'Label', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
+    int_label_type = tk.IntVar()    
+    rb_label= tk.Radiobutton(label_frame_label, text= 'Label', variable= int_label_type, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+
+    rb_bookmark= tk.Radiobutton(label_frame_label, text= 'Bookmark', variable= int_label_type, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    rb_bookmark.select()
+
     str_label_1 = tk.StringVar()
     e_label_1 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_1)
 
-    b_lable1 = tk.Button(label_frame_label, text= 'Chan1_label', command= lambda: mxr.add_bookmark(chan= 1, bookmark= str_label_1.get().rstrip('\n')))
+    b_lable1 = tk.Button(label_frame_label, text= 'Chan1_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 1, bookmark= str_label_1.get().rstrip('\n')))
     # b_clear1 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_1))
-    b_del_label1 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 1))
+    b_del_label1 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 1, choose_type= int_label_type.get()))
 
     str_label_2 = tk.StringVar()
     e_label_2 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_2)
 
-    b_lable2 = tk.Button(label_frame_label, text= 'Chan2_label', command= lambda: mxr.add_bookmark(chan= 2, bookmark= (str_label_2.get().rstrip('\n'))))
+    b_lable2 = tk.Button(label_frame_label, text= 'Chan2_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 2, bookmark= (str_label_2.get().rstrip('\n'))))
     # b_clear2 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_2))
-    b_del_label2 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 2))
+    b_del_label2 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 2, choose_type= int_label_type.get()))
 
     str_label_3 = tk.StringVar()
     e_label_3 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_3)
 
-    b_lable3 = tk.Button(label_frame_label, text= 'Chan3_label', command= lambda: mxr.add_bookmark(chan= 3, bookmark= (str_label_3.get().rstrip('\n'))))
+    b_lable3 = tk.Button(label_frame_label, text= 'Chan3_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 3, bookmark= (str_label_3.get().rstrip('\n'))))
     # b_clear3 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_3))
-    b_del_label3 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 3))
+    b_del_label3 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 3, choose_type= int_label_type.get()))
 
     str_label_4 = tk.StringVar()
     e_label_4 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_4)
 
-    b_lable4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_bookmark(chan= 4, bookmark= (str_label_4.get().rstrip('\n'))))
+    b_lable4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 4, bookmark= (str_label_4.get().rstrip('\n'))))
     # b_clear4 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_4))
-    b_del_label4 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 4))
+    b_del_label4 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 4, choose_type= int_label_type.get()))
 
     str_label_5 = tk.StringVar()
     e_label_5 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_5)
 
-    b_lable5 = tk.Button(label_frame_label, text= 'WMe1_label', command= lambda: mxr.add_bookmark(chan= 5, bookmark= str_label_5.get().rstrip('\n')))
+    b_lable5 = tk.Button(label_frame_label, text= 'WMe1_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 5, bookmark= str_label_5.get().rstrip('\n')))
     # b_clear5 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_5))
-    b_del_label5 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 5))
+    b_del_label5 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 5, choose_type= int_label_type.get()))
 
     str_label_6 = tk.StringVar()
     e_label_6 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_6)
 
-    b_lable6 = tk.Button(label_frame_label, text= 'WMe2_label', command= lambda: mxr.add_bookmark(chan= 6, bookmark= (str_label_6.get().rstrip('\n'))))
+    b_lable6 = tk.Button(label_frame_label, text= 'WMe2_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 6, bookmark= (str_label_6.get().rstrip('\n'))))
     # b_clear6 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_6))
-    b_del_label6 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 6))
+    b_del_label6 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 6, choose_type= int_label_type.get()))
 
     str_label_7 = tk.StringVar()
     e_label_7 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_7)
 
-    b_lable7 = tk.Button(label_frame_label, text= 'WMe3_label', command= lambda: mxr.add_bookmark(chan= 7, bookmark= (str_label_7.get().rstrip('\n'))))
+    b_lable7 = tk.Button(label_frame_label, text= 'WMe3_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 7, bookmark= (str_label_7.get().rstrip('\n'))))
     # b_clear7 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_7))
-    b_del_label7 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 7))
+    b_del_label7 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 7, choose_type= int_label_type.get()))
 
     str_label_8 = tk.StringVar()
     e_label_8 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_8)
 
-    b_lable8 = tk.Button(label_frame_label, text= 'WMe4_label', command= lambda: mxr.add_bookmark(chan= 8, bookmark= (str_label_8.get().rstrip('\n'))))
+    b_lable8 = tk.Button(label_frame_label, text= 'WMe4_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 8, bookmark= (str_label_8.get().rstrip('\n'))))
     # b_clear8 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_8))
-    b_del_label8 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 8))
+    b_del_label8 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 8, choose_type= int_label_type.get()))
 
     # Control Frame ===================================================================================================================================
 
@@ -1547,14 +1603,14 @@ def main_window(scope_ip):
 
     label_frame_chan= tk.LabelFrame(window, text= 'Channel', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 1, bookmark= str_label_1.get()))
-    b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 2, bookmark= str_label_2.get()))
-    b_Chan3 = tk.Button(label_frame_chan, text='Chan3', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 3, bookmark= str_label_3.get()))
-    b_Chan4 = tk.Button(label_frame_chan, text='Chan4', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 4, bookmark= str_label_4.get()))
-    b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 1, bookmark= str_label_5.get()))
-    b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 2, bookmark= str_label_6.get()))
-    b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 3, bookmark= str_label_7.get()))
-    b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 4, bookmark= str_label_8.get()))
+    b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 1, bookmark= str_label_1.get(), choose_type= int_label_type.get()))
+    b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 2, bookmark= str_label_2.get(), choose_type= int_label_type.get()))
+    b_Chan3 = tk.Button(label_frame_chan, text='Chan3', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 3, bookmark= str_label_3.get(), choose_type= int_label_type.get()))
+    b_Chan4 = tk.Button(label_frame_chan, text='Chan4', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 4, bookmark= str_label_4.get(), choose_type= int_label_type.get()))
+    b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 1, bookmark= str_label_5.get(), choose_type= int_label_type.get()))
+    b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 2, bookmark= str_label_6.get(), choose_type= int_label_type.get()))
+    b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 3, bookmark= str_label_7.get(), choose_type= int_label_type.get()))
+    b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 4, bookmark= str_label_8.get(), choose_type= int_label_type.get()))
 
     int_ch = tk.IntVar()    
     rb_ch_single = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
@@ -1606,8 +1662,9 @@ def main_window(scope_ip):
     l_imagename = tk.Label(label_frame_save, text= '(填 圖檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     b_image_save_scope = tk.Button(label_frame_save, text= 'Save Image-Scope', command= lambda: mxr.save_waveform_scope(folder= str_image_folder.get(), image_name= str_image.get()))
-    b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_waveform_pc(folder= str_image_folder.get(), file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
-
+    # b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_waveform_pc(folder= str_image_folder.get(), file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
+    b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_image_pc(file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
+    
     str_WMe_folder = tk.StringVar()
     e_WMe_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe_folder)
 
@@ -1750,39 +1807,34 @@ def main_window(scope_ip):
     b_memory_depth_auto.grid(row= 5, column= 6)
 
     # Label grid
-    e_label_1.grid(row= 0, column= 0, padx= 5, pady= 3)
-    b_lable1.grid(row= 0, column= 1, padx= 5, pady= 3)
-    # b_clear1.grid(row= 0, column= 3, padx= 5, pady= 3)
-    b_del_label1.grid(row= 0, column= 2, padx= 5, pady= 3)
-    e_label_2.grid(row= 1, column= 0, padx= 5, pady= 3)
-    b_lable2.grid(row= 1, column= 1, padx= 5, pady= 3)
-    # b_clear2.grid(row= 1, column= 3, padx= 5, pady= 3)
-    b_del_label2.grid(row= 1, column= 2, padx= 5, pady= 3)
-    e_label_3.grid(row= 2, column= 0, padx= 5, pady= 3)
-    b_lable3.grid(row= 2, column= 1, padx= 5, pady= 3)
-    # b_clear3.grid(row= 2, column= 3, padx= 5, pady= 3)
-    b_del_label3.grid(row= 2, column= 2, padx= 5, pady= 3)
-    e_label_4.grid(row= 3, column= 0, padx= 5, pady= 3)
-    b_lable4.grid(row= 3, column= 1, padx= 5, pady= 3)
-    # b_clear4.grid(row= 3, column= 3, padx= 5, pady= 3)
-    b_del_label4.grid(row= 3, column= 2, padx= 5, pady= 3)
+    rb_label.grid(row= 0, column= 0, padx= 5, sticky= 'w')
+    rb_bookmark.grid(row= 0, column= 1, padx= 5, sticky= 'w')
 
-    e_label_5.grid(row= 0, column= 3, padx= 5, pady= 3, sticky= 'e')
-    b_lable5.grid(row= 0, column= 4, padx= 5, pady= 3, sticky= 'e')
-    # b_clear5.grid(row= 0, column= 3, padx= 5, pady= 3)
-    b_del_label5.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e')
-    e_label_6.grid(row= 1, column= 3, padx= 5, pady= 3, sticky= 'e')
-    b_lable6.grid(row= 1, column= 4, padx= 5, pady= 3, sticky= 'e')
-    # b_clear6.grid(row= 1, column= 3, padx= 5, pady= 3)
-    b_del_label6.grid(row= 1, column= 5, padx= 5, pady= 3, sticky= 'e')
-    e_label_7.grid(row= 2, column= 3, padx= 5, pady= 3, sticky= 'e')
-    b_lable7.grid(row= 2, column= 4, padx= 5, pady= 3, sticky= 'e')
-    # b_clear7.grid(row= 2, column= 3, padx= 5, pady= 3)
-    b_del_label7.grid(row= 2, column= 5, padx= 5, pady= 3, sticky= 'e')
-    e_label_8.grid(row= 3, column= 3, padx= 5, pady= 3, sticky= 'e')
-    b_lable8.grid(row= 3, column= 4, padx= 5, pady= 3, sticky= 'e')
-    # b_clear8.grid(row= 3, column= 3, padx= 5, pady= 3)
-    b_del_label8.grid(row= 3, column= 5, padx= 5, pady= 3, sticky= 'e')
+    e_label_1.grid(row= 1, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable1.grid(row= 1, column= 2, padx= 5, pady= 3)
+    b_del_label1.grid(row= 1, column= 3, padx= 5, pady= 3)
+    e_label_2.grid(row= 2, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable2.grid(row= 2, column= 2, padx= 5, pady= 3)
+    b_del_label2.grid(row= 2, column= 3, padx= 5, pady= 3)
+    e_label_3.grid(row= 3, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable3.grid(row= 3, column= 2, padx= 5, pady= 3)
+    b_del_label3.grid(row= 3, column= 3, padx= 5, pady= 3)
+    e_label_4.grid(row= 4, column= 0, padx= 5, pady= 3, columnspan= 2)
+    b_lable4.grid(row= 4, column= 2, padx= 5, pady= 3)
+    b_del_label4.grid(row= 4, column= 3, padx= 5, pady= 3)
+
+    e_label_5.grid(row= 1, column= 4, padx= 5, pady= 3, sticky= 'e')
+    b_lable5.grid(row= 1, column= 5, padx= 5, pady= 3, sticky= 'e')
+    b_del_label5.grid(row= 1, column= 6, padx= 5, pady= 3, sticky= 'e')
+    e_label_6.grid(row= 2, column= 4, padx= 5, pady= 3, sticky= 'e')
+    b_lable6.grid(row= 2, column= 5, padx= 5, pady= 3, sticky= 'e')
+    b_del_label6.grid(row= 2, column= 6, padx= 5, pady= 3, sticky= 'e')
+    e_label_7.grid(row= 3, column= 4, padx= 5, pady= 3, sticky= 'e')
+    b_lable7.grid(row= 3, column= 5, padx= 5, pady= 3, sticky= 'e')
+    b_del_label7.grid(row= 3, column= 6, padx= 5, pady= 3, sticky= 'e')
+    e_label_8.grid(row= 4, column= 4, padx= 5, pady= 3, sticky= 'e')
+    b_lable8.grid(row= 4, column= 5, padx= 5, pady= 3, sticky= 'e')
+    b_del_label8.grid(row= 4, column= 6, padx= 5, pady= 3, sticky= 'e')
 
     # Control grid
     b_run.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2)
@@ -1897,21 +1949,21 @@ def main_window(scope_ip):
     ToolTip(b_clear_display, '嗚嚕嗚啦')
     ToolTip(b_default, '6666')
     ToolTip(cb_marker_2, '防塵套不要亂丟!')
-    ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
+    # ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
     ToolTip(cb_ch_single, '累')
     ToolTip(cb_ch_delta_start, '隨波逐流的')
     ToolTip(cb_ch_delta_stop, '人生')
     ToolTip(text_mean_3, '好忙好忙')
-    ToolTip(e_image_folder, '自己乖乖打字，按按鈕會幫你新增資料夾')
+    ToolTip(e_image_folder, '自己打字，按按鈕會幫你新增資料夾')
     ToolTip(e_image, '蛤~~~!')
     # ToolTip(b_image_save_scope, '會幫你新增資料夾')
-    ToolTip(e_image_pc_folder, '示波器有沒有檔案ㄏㄚˋ')
-    ToolTip(e_WMe_folder, '自己乖乖打字，按按鈕會幫你新增資料夾')
+    ToolTip(e_image_pc_folder, '可以直接存電腦啦~')
+    ToolTip(e_WMe_folder, '自己打字，按按鈕會幫你新增資料夾')
     ToolTip(e_WMe, 'Channel要選對欸')
     # ToolTip(b_WMe_save_scpoe, '會幫你新增資料夾')
-    ToolTip(e_WMe_pc_folder, '沒有檔案會出事ㄏㄚˋ')
-    ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
-    ToolTip(e_WMe2, '嗚啦啦一呀哈呀哈!')
+    ToolTip(e_WMe_pc_folder, '示波器有沒有先存檔ㄏㄚˋ')
+    # ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
+    ToolTip(e_WMe2, '呀哈呀哈')
     ToolTip(e_WMe4, '噗嚕!')
 
     initialize()
