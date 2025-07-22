@@ -92,6 +92,7 @@ def main_window(scope_ip):
         LoadWMe2 = config_initial['Load_WMemory_Setup_Config']['LoadWMe2']
         LoadWMe3 = config_initial['Load_WMemory_Setup_Config']['LoadWMe3']
         LoadWMe4 = config_initial['Load_WMemory_Setup_Config']['LoadWMe4']
+        LoadSetup = config_initial['Load_WMemory_Setup_Config']['LoadSetup']
 
         str_volt_scale.set(value= select_VoltScale)
         str_volt_offset.set(value= select_VoltOffset)
@@ -139,12 +140,13 @@ def main_window(scope_ip):
         str_image.set(value= SaveImgName)
         str_WMe_folder.set(value= SaveWMeFolder)
         str_WMe_pc_folder.set(value= SaveWMePCFolder)
-        str_WMe.set(value= SaveWMeName)
+        str_other_file.set(value= SaveWMeName)
 
         str_WMe1.set(value= LoadWMe1)
         str_WMe2.set(value= LoadWMe2)
         str_WMe3.set(value= LoadWMe3)
         str_WMe4.set(value= LoadWMe4)
+        str_setup.set(value= LoadSetup)
 
 
     class MXR:
@@ -588,6 +590,10 @@ def main_window(scope_ip):
             time.sleep(0.05)
             self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
+
+        def load_setup(self, folder, setup_name):
+            self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{setup_name}.set"')
+            time.sleep(0.05)
         
         def clear_wmemory(self, chan, string):
             self.inst.write(f':WMEMory{chan}:CLEar')
@@ -735,7 +741,7 @@ def main_window(scope_ip):
             f_img.write(bytearray(screen_data))
             f_img.close()
 
-        def save_wmemory_scope(self, chan, folder, wme_name):
+        def save_other_file_scope(self, chan, folder, file_name, ext_type):
             # 清空狀態
             self.inst.write('*CLS')
             time.sleep(0.05)
@@ -778,11 +784,21 @@ def main_window(scope_ip):
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
             time.sleep(0.05)
-            # 使用正則表達式來匹配所有 .png 檔案名稱
-            h5_files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
 
-            for file_name in h5_files:
-                if f'{wme_name}.h5' == file_name:
+            # 判斷存.h5或.set
+            if ext_type == 1:
+                # 使用正則表達式來匹配所有 .h5 檔案名稱
+                files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
+                ext= 'h5'
+                command= f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{file_name}",H5,OFF'
+            else:
+                # 使用正則表達式來匹配所有 .set 檔案名稱
+                files = re.findall(r'\b[\w-]+\.(?:set)\b', folder_content)
+                ext= 'set'
+                command= f':DISK:SAVE:SETup "C:/Users/Administrator/Desktop/{folder}/{file_name}"'
+
+            for file_name in files:
+                if f'{file_name}.{ext}' == file_name:
                     ask_scp_root = tk.Tk()
                     ask_scp_root.withdraw()  # 隱藏主視窗
                     ask_scp_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
@@ -795,11 +811,16 @@ def main_window(scope_ip):
                         messagebox.showinfo("Warning", f'檔案未儲存')
                         return     
 
-            self.inst.write(f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{wme_name}",H5,OFF')
+            self.inst.write(command)
             time.sleep(0.05)
 
-        def save_wmemory_pc(self, folder, pc_folder, file_name):
-            full_path = f"C:/Users/Administrator/Desktop/{folder}/{file_name}.h5"
+        def save_wmemory_pc(self, folder, pc_folder, file_name, ext_type):
+            if ext_type == 1:
+                ext = 'h5'
+            else:
+                ext = 'set'
+
+            full_path = f"C:/Users/Administrator/Desktop/{folder}/{file_name}.{ext}"
             data = b''
             message = ':DISK:GETFILE? "' + full_path + '"'
             data = self.inst.query_binary_values(message= message, datatype= 'B', header_fmt= 'ieee', container= bytes)
@@ -819,7 +840,7 @@ def main_window(scope_ip):
                     return     
                 os.mkdir(pc_folder) 
 
-            if os.path.exists(f"{pc_folder}/{file_name}.h5"):
+            if os.path.exists(f"{pc_folder}/{file_name}.{ext}"):
                 ask_root = tk.Tk()
                 ask_root.withdraw()  # 隱藏主視窗
                 ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
@@ -832,7 +853,7 @@ def main_window(scope_ip):
                     messagebox.showinfo("Warning", f'檔案未儲存')
                     return     
            
-            with open(f"{pc_folder}/{file_name}.h5", 'wb') as f:
+            with open(f"{pc_folder}/{file_name}.{ext}", 'wb') as f:
                 f.write(data)
 
         ### Display Related ###
@@ -1102,12 +1123,13 @@ def main_window(scope_ip):
             config.set('Save_Setup_Config', 'SaveImgName', str_image.get())
             config.set('Save_Setup_Config', 'SaveWMeFolder', str_WMe_folder.get())
             config.set('Save_Setup_Config', 'SaveWMePCFolder', str_WMe_pc_folder.get())
-            config.set('Save_Setup_Config', 'SaveWMeName', str_WMe.get())
+            config.set('Save_Setup_Config', 'SaveWMeName', str_other_file.get())
 
             config.set('Load_WMemory_Setup_Config', 'LoadWMe1', str_WMe1.get())
             config.set('Load_WMemory_Setup_Config', 'LoadWMe2', str_WMe2.get())
             config.set('Load_WMemory_Setup_Config', 'LoadWMe3', str_WMe3.get())
             config.set('Load_WMemory_Setup_Config', 'LoadWMe4', str_WMe4.get())
+            config.set('Load_WMemory_Setup_Config', 'LoadSetup', str_setup.get())
 
             config.write(open(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), 'w'))
 
@@ -1456,9 +1478,9 @@ def main_window(scope_ip):
     label_frame_label= tk.LabelFrame(window, text= 'Label', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     int_label_type = tk.IntVar()    
-    rb_label= tk.Radiobutton(label_frame_label, text= 'Label', variable= int_label_type, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    rb_label= tk.Radiobutton(label_frame_label, text= 'Label', variable= int_label_type, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
 
-    rb_bookmark= tk.Radiobutton(label_frame_label, text= 'Bookmark', variable= int_label_type, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    rb_bookmark= tk.Radiobutton(label_frame_label, text= 'Bookmark', variable= int_label_type, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
     rb_bookmark.select()
 
     str_label_1 = tk.StringVar()
@@ -1665,25 +1687,33 @@ def main_window(scope_ip):
     # b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_waveform_pc(folder= str_image_folder.get(), file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
     b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_image_pc(file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
     
+    l_divider = tk.Label(label_frame_save, text= '=====================================================================================================================================================', 
+                         height= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 6,),)
+
+    int_file_type = tk.IntVar()
+    rb_Wme = tk.Radiobutton(label_frame_save, text= 'WMemory', variable= int_file_type, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
+    rb_Setup = tk.Radiobutton(label_frame_save, text= 'Setup', variable= int_file_type, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
+    rb_Wme.select()
+
     str_WMe_folder = tk.StringVar()
     e_WMe_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe_folder)
 
-    l_WMe_folder = tk.Label(label_frame_save, text= 'WMemory Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_WMe_folder = tk.Label(label_frame_save, text= 'Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     str_WMe_pc_folder = tk.StringVar()
     e_WMe_pc_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe_pc_folder)
 
-    l_WMe_pc_folder = tk.Label(label_frame_save, text= 'WMemory PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_WMe_pc_folder = tk.Label(label_frame_save, text= 'PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder))
 
-    str_WMe = tk.StringVar()
-    e_WMe = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe)
+    str_other_file = tk.StringVar()
+    e_other_file = tk.Entry(label_frame_save, width= 45, textvariable= str_other_file)
 
-    l_WMename = tk.Label(label_frame_save, text= '(填 WMe檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_other_filename = tk.Label(label_frame_save, text= '(填 檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_WMe_save_scpoe = tk.Button(label_frame_save, text= 'Save WMe-Scope', command= lambda: mxr.save_wmemory_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), wme_name= str_WMe.get()))
-    b_WMe_save_pc = tk.Button(label_frame_save, text= 'Save WMe-PC', command= lambda: mxr.save_wmemory_pc(folder= str_WMe_folder.get(), file_name= str_WMe.get(), pc_folder= str_WMe_pc_folder.get()))
+    b_other_file_save_scpoe = tk.Button(label_frame_save, text= 'Save file in Scope', command= lambda: mxr.save_other_file_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), file_name= str_other_file.get(), ext_type= int_file_type.get()))
+    b_other_file_save_pc = tk.Button(label_frame_save, text= 'Save file in PC', command= lambda: mxr.save_wmemory_pc(folder= str_WMe_folder.get(), file_name= str_other_file.get(), pc_folder= str_WMe_pc_folder.get(), ext_type= int_file_type.get()))
 
 
     # Load WMemory Frame ===================================================================================================================================
@@ -1714,33 +1744,37 @@ def main_window(scope_ip):
     b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get()))
     b_wme_clear4 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 4, string= str_WMe4))
 
+    str_setup = tk.StringVar()
+    e_setup = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_setup)
+    
+    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get()))
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
-    label_frame_meas_item.grid(row= 0, column= 0, padx= 5, pady= 3, columnspan= 2, sticky= 'nsew')
-    label_frame_scale.grid(row= 1, column= 0, padx= 5, pady= 3, sticky= 'nsew')
-    label_frame_delta.grid(row= 1, column= 1, padx= 5, pady= 3, sticky= 'nsew')
-    label_frame_thres.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'nsew')
-    label_frame_label.grid(row= 4, column= 0, padx= 5, pady= 3, columnspan= 2, sticky= 'nsew')
+    label_frame_meas_item.grid(row= 0, column= 0, padx= 5, pady= 2, columnspan= 2, sticky= 'nsew')
+    label_frame_scale.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'nsew')
+    label_frame_delta.grid(row= 1, column= 1, padx= 5, pady= 2, sticky= 'nsew')
+    label_frame_thres.grid(row= 2, column= 0, padx= 5, pady= 2, rowspan= 2, columnspan= 2, sticky= 'nsew')
+    label_frame_label.grid(row= 4, column= 0, padx= 5, pady= 2, columnspan= 2, sticky= 'nsew')
 
-    label_frame_control.grid(row= 0, column= 2, padx= 5, pady= 3, sticky= 'nsew')
-    label_frame_chan.grid(row= 1, column= 2, padx= 5, pady= 3, sticky= 'nsew')
-    label_frame_save.grid(row= 2, column= 2, padx= 5, pady= 3, sticky= 'nsew')
-    label_frame_load_wme.grid(row= 3, column= 2, padx= 5, pady= 3, rowspan= 2, sticky= 'nsew')
+    label_frame_control.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'nsew')
+    label_frame_chan.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'nsew')
+    label_frame_save.grid(row= 2, column= 2, padx= 5, pady= 2, sticky= 'nsew')
+    label_frame_load_wme.grid(row= 3, column= 2, padx= 5, pady= 2, rowspan= 2, sticky= 'nsew')
 
     # Meas grid
-    b_freq.grid(row= 0, column= 0, padx= 5, pady= 5)
-    b_period.grid(row= 0, column= 1, padx= 5, pady= 5)
-    b_dutycycle.grid(row= 0, column= 2, padx= 5, pady= 5)
-    b_tSU.grid(row= 0, column= 3, padx= 5, pady= 5)
-    b_tH.grid(row= 1, column= 0, padx= 5, pady= 5)
-    b_tL.grid(row= 1, column= 1, padx= 5, pady= 5)
-    b_tR.grid(row= 1, column= 2, padx= 5, pady= 5)
-    b_tF.grid(row= 1, column= 3, padx= 5, pady= 5)
-    b_VIH.grid(row= 2, column= 0, padx= 5, pady= 5)
-    b_VIL.grid(row= 2, column= 1, padx= 5, pady= 5)
-    b_slewrate_tR.grid(row= 2, column= 2, padx= 5, pady= 5)
-    b_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 5)
+    b_freq.grid(row= 0, column= 0, padx= 5, pady= 4)
+    b_period.grid(row= 0, column= 1, padx= 5, pady= 4)
+    b_dutycycle.grid(row= 0, column= 2, padx= 5, pady= 4)
+    b_tSU.grid(row= 0, column= 3, padx= 5, pady= 4)
+    b_tH.grid(row= 1, column= 0, padx= 5, pady= 4)
+    b_tL.grid(row= 1, column= 1, padx= 5, pady= 4)
+    b_tR.grid(row= 1, column= 2, padx= 5, pady= 4)
+    b_tF.grid(row= 1, column= 3, padx= 5, pady= 4)
+    b_VIH.grid(row= 2, column= 0, padx= 5, pady= 4)
+    b_VIL.grid(row= 2, column= 1, padx= 5, pady= 4)
+    b_slewrate_tR.grid(row= 2, column= 2, padx= 5, pady= 4)
+    b_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 4)
 
     # Scale grid
     l_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'w') 
@@ -1837,18 +1871,18 @@ def main_window(scope_ip):
     b_del_label8.grid(row= 4, column= 6, padx= 5, pady= 3, sticky= 'e')
 
     # Control grid
-    b_run.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2)
-    b_stop.grid(row= 0, column= 1, padx= 5, pady= 5, rowspan= 2)
-    b_single.grid(row= 0, column= 2, padx= 5, pady= 5, rowspan= 2)
-    b_clear_display.grid(row= 0, column= 3, padx= 5, pady= 5, rowspan= 2)
-    b_autoscale.grid(row= 2, column= 0, padx= 5, pady= 5, rowspan= 2)
-    b_default.grid(row= 2, column= 1, padx= 5, pady= 5, rowspan= 2)
-    b_trigger.grid(row= 2, column= 2, padx= 5, pady= 5, rowspan= 2)
-    b_del.grid(row= 4, column= 0, padx= 5, pady= 5, rowspan= 2)
-    b_add_marker.grid(row= 4, column= 1, padx= 5, pady= 5, rowspan= 2)
-    b_del_marker.grid(row= 4, column= 2, padx= 5, pady= 5, rowspan= 2)
-    b_trig_slope.grid(row= 2, column= 3, padx= 5, pady= 5, rowspan= 2)
-    b_button_disable.grid(row= 4, column= 3, padx= 5, pady= 5, rowspan= 2)
+    b_run.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2)
+    b_stop.grid(row= 0, column= 1, padx= 5, pady= 3, rowspan= 2)
+    b_single.grid(row= 0, column= 2, padx= 5, pady= 3, rowspan= 2)
+    b_clear_display.grid(row= 0, column= 3, padx= 5, pady= 3, rowspan= 2)
+    b_autoscale.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2)
+    b_default.grid(row= 2, column= 1, padx= 5, pady= 3, rowspan= 2)
+    b_trigger.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2)
+    b_del.grid(row= 4, column= 0, padx= 5, pady= 3, rowspan= 2)
+    b_add_marker.grid(row= 4, column= 1, padx= 5, pady= 3, rowspan= 2)
+    b_del_marker.grid(row= 4, column= 2, padx= 5, pady= 3, rowspan= 2)
+    b_trig_slope.grid(row= 2, column= 3, padx= 5, pady= 3, rowspan= 2)
+    b_button_disable.grid(row= 4, column= 3, padx= 5, pady= 3, rowspan= 2)
     cb_marker_1.grid(row= 0, column= 4, padx= 5) 
     cb_marker_2.grid(row= 1, column= 4, padx= 5) 
     cb_marker_3.grid(row= 2, column= 4, padx= 5) 
@@ -1863,14 +1897,14 @@ def main_window(scope_ip):
     # cb_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
 
     # Chan grid
-    b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_Chan2.grid(row= 0, column= 2, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_Chan3.grid(row= 0, column= 4, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_Chan4.grid(row= 0, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe2.grid(row= 2, column= 2, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe3.grid(row= 2, column= 4, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 5, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_Chan2.grid(row= 0, column= 2, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_Chan3.grid(row= 0, column= 4, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_Chan4.grid(row= 0, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe2.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe3.grid(row= 2, column= 4, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
     rb_ch_single.grid(row= 4, column= 0, sticky= 'e')
     cb_ch_single.grid(row= 4, column= 1, sticky= 'w')
     b_chan_switch.grid(row= 5, column= 0, rowspan=2, columnspan= 2)
@@ -1888,39 +1922,46 @@ def main_window(scope_ip):
     text_mean_3.grid(row= 6, column= 6, sticky= 'w')
 
     # Save grid
-    e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 3)
-    l_image_folder.grid(row=0, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
-    e_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 3)
-    b_image_pc_browse.grid(row= 1, column= 1, sticky= 'w', padx= 5, pady= 3)
-    l_image_pc_folder.grid(row= 1, column= 2, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
-    e_image.grid(row= 2, column= 0, padx= 5, pady= 3)
+    e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 2)
+    l_image_folder.grid(row=0, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 2)
+    e_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 2)
+    b_image_pc_browse.grid(row= 1, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_image_pc_folder.grid(row= 1, column= 2, columnspan= 3, sticky= 'w', padx= 5, pady= 2)
+    e_image.grid(row= 2, column= 0, padx= 5, pady= 2)
     l_imagename.grid(row= 2, column= 1, sticky= 'w')
-    b_image_save_scope.grid(row=2, column= 2, padx= 5, pady= 3, sticky= 'w')
-    b_image_save_pc.grid(row= 2, column= 3, sticky= 'w', padx= 5, pady= 3)
+    b_image_save_scope.grid(row=2, column= 2, padx= 5, pady= 2, sticky= 'w')
+    b_image_save_pc.grid(row= 2, column= 3, sticky= 'w', padx= 5, pady= 2)
     
-    e_WMe_folder.grid(row= 3, column= 0, padx= 5, pady= 3)
-    l_WMe_folder.grid(row=3, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 3)
-    e_WMe_pc_folder.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 3)
-    b_WMe_pc_browse.grid(row= 4, column= 1, sticky= 'w', padx= 5, pady= 3)
-    l_WMe_pc_folder.grid(row= 4, column= 2, sticky= 'w', padx= 5, pady= 3, columnspan= 2)
-    e_WMe.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady= 3)
-    l_WMename.grid(row= 5, column= 1, sticky= 'w')
-    b_WMe_save_scpoe.grid(row= 5, column= 2, padx= 5, pady= 3)
-    b_WMe_save_pc.grid(row= 5, column= 3, padx= 5, pady= 3)
+    l_divider.grid(row= 3, column= 0, columnspan= 4)
+
+    rb_Wme.grid(row= 4, column= 0, padx= 5, sticky= 'w')
+    rb_Setup.grid(row= 4, column= 0, padx= 5)
+
+    e_WMe_folder.grid(row= 5, column= 0, padx= 5, pady= 2)
+    l_WMe_folder.grid(row=5, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 2)
+    e_WMe_pc_folder.grid(row= 6, column= 0, sticky= 'w', padx= 5, pady= 2)
+    b_WMe_pc_browse.grid(row= 6, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_WMe_pc_folder.grid(row= 6, column= 2, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    e_other_file.grid(row= 7, column= 0, sticky= 'w', padx= 5, pady= 2)
+    l_other_filename.grid(row= 7, column= 1, sticky= 'w')
+    b_other_file_save_scpoe.grid(row= 7, column= 2, padx= 5, pady= 2, sticky= 'w')
+    b_other_file_save_pc.grid(row= 7, column= 3, padx= 5, pady= 2, sticky= 'w')
     
     #LoadWMe grid
-    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 3)
-    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 3)
-    b_wme_clear1.grid(row= 0, column= 2, padx= 5, pady= 3)
-    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 3)
-    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 3)
-    b_wme_clear2.grid(row= 1, column= 2, padx= 5, pady= 3)
-    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 3)
-    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 3)
-    b_wme_clear3.grid(row= 2, column= 2, padx= 5, pady= 3)
-    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 3)
-    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 3)
-    b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 3)
+    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2)
+    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 2)
+    b_wme_clear1.grid(row= 0, column= 2, padx= 5, pady= 2)
+    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 2)
+    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 2)
+    b_wme_clear2.grid(row= 1, column= 2, padx= 5, pady= 2)
+    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 2)
+    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 2)
+    b_wme_clear3.grid(row= 2, column= 2, padx= 5, pady= 2)
+    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 2)
+    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 2)
+    b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 2)
+    e_setup.grid(row= 4, column= 0, padx= 5, pady= 2)
+    b_setup_load.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
 
 
     # ToolTip(b_tSU, 'Channel記得勾對欸')
@@ -1959,7 +2000,7 @@ def main_window(scope_ip):
     # ToolTip(b_image_save_scope, '會幫你新增資料夾')
     ToolTip(e_image_pc_folder, '可以直接存電腦啦~')
     ToolTip(e_WMe_folder, '自己打字，按按鈕會幫你新增資料夾')
-    ToolTip(e_WMe, 'Channel要選對欸')
+    ToolTip(e_other_file, 'Channel要選對欸')
     # ToolTip(b_WMe_save_scpoe, '會幫你新增資料夾')
     ToolTip(e_WMe_pc_folder, '示波器有沒有先存檔ㄏㄚˋ')
     # ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
