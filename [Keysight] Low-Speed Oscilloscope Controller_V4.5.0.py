@@ -741,7 +741,7 @@ def main_window(scope_ip):
             f_img.write(bytearray(screen_data))
             f_img.close()
 
-        def save_other_file_scope(self, chan, folder, file_name, ext_type):
+        def save_other_file_scope(self, chan, folder, current_file_name, ext_type):
             # 清空狀態
             self.inst.write('*CLS')
             time.sleep(0.05)
@@ -790,15 +790,15 @@ def main_window(scope_ip):
                 # 使用正則表達式來匹配所有 .h5 檔案名稱
                 files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
                 ext= 'h5'
-                command= f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{file_name}",H5,OFF'
+                command= f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{current_file_name}",H5,OFF'
             else:
                 # 使用正則表達式來匹配所有 .set 檔案名稱
                 files = re.findall(r'\b[\w-]+\.(?:set)\b', folder_content)
                 ext= 'set'
-                command= f':DISK:SAVE:SETup "C:/Users/Administrator/Desktop/{folder}/{file_name}"'
+                command= f':DISK:SAVE:SETup "C:/Users/Administrator/Desktop/{folder}/{current_file_name}"'
 
             for file_name in files:
-                if f'{file_name}.{ext}' == file_name:
+                if f'{current_file_name}.{ext}' == file_name:
                     ask_scp_root = tk.Tk()
                     ask_scp_root.withdraw()  # 隱藏主視窗
                     ask_scp_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
@@ -1712,7 +1712,7 @@ def main_window(scope_ip):
 
     l_other_filename = tk.Label(label_frame_save, text= '(填 檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_other_file_save_scpoe = tk.Button(label_frame_save, text= 'Save file in Scope', command= lambda: mxr.save_other_file_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), file_name= str_other_file.get(), ext_type= int_file_type.get()))
+    b_other_file_save_scpoe = tk.Button(label_frame_save, text= 'Save file in Scope', command= lambda: mxr.save_other_file_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), current_file_name= str_other_file.get(), ext_type= int_file_type.get()))
     b_other_file_save_pc = tk.Button(label_frame_save, text= 'Save file in PC', command= lambda: mxr.save_wmemory_pc(folder= str_WMe_folder.get(), file_name= str_other_file.get(), pc_folder= str_WMe_pc_folder.get(), ext_type= int_file_type.get()))
 
 
