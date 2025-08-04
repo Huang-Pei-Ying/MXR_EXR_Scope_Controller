@@ -591,9 +591,10 @@ def main_window(scope_ip):
             self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
 
-        def load_setup(self, folder, setup_name):
+        def load_setup(self, folder, setup_name, position):
             self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{setup_name}.set"')
             time.sleep(0.05)
+            self.timebase_position_check(position= position)
         
         def clear_wmemory(self, chan, string):
             self.inst.write(f':WMEMory{chan}:CLEar')
@@ -1747,7 +1748,7 @@ def main_window(scope_ip):
     str_setup = tk.StringVar()
     e_setup = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_setup)
     
-    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get()))
+    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get(), position= str_time_offset.get()))
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
