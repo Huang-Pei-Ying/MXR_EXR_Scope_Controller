@@ -484,22 +484,23 @@ def main_window(scope_ip):
             else:
                 self.inst.write(f':DISPlay:LABel OFF')
                 time.sleep(0.05)
-                display_dict= self.judge_chan_wme()    
-                try:
-                    is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
-                    time.sleep(0.05)
-                except:
-                    is_meas_area= 0
-                is_marker_area= self.inst.query(':MARKer1:ENABle?') 
-                time.sleep(0.05)
-                if not is_meas_area == '"no meas"\n' or is_marker_area == '1\n':
-                    interval= 5
-                else:
-                    interval= 3.5
-
                 if bookmark == '':
                     self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+
                 else:
+                    display_dict= self.judge_chan_wme()    
+                    try:
+                        is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
+                        time.sleep(0.05)
+                    except:
+                        is_meas_area= 0
+                    is_marker_area= self.inst.query(':MARKer1:ENABle?') 
+                    time.sleep(0.05)
+                    if not is_meas_area == '"no meas"\n' or is_marker_area == '1\n':
+                        interval= 5
+                    else:
+                        interval= 3.5
+                        
                     bookmark_display_list= []
                     count= 0
                     for cha in display_dict['CHANnel']:
@@ -591,10 +592,19 @@ def main_window(scope_ip):
             self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
 
-        def load_setup(self, folder, setup_name, position):
+        def load_setup(self, folder, setup_name, scale, position, choose_type):
             self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{setup_name}.set"')
             time.sleep(0.05)
-            self.timebase_position_check(position= position)
+            if boolvar_setup_timebase.get() == True:
+                self.timebase_scale_check(scale= scale)
+                self.timebase_position_check(position= position)
+            if boolvar_setup_label.get() == True:
+                label_content = [
+                    str_label_1, str_label_2, str_label_3, str_label_4, 
+                    str_label_5, str_label_6, str_label_7, str_label_8, 
+                    ]
+                for i in range(8):
+                    self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), chan= i+1)
         
         def clear_wmemory(self, chan, string):
             self.inst.write(f':WMEMory{chan}:CLEar')
@@ -1748,7 +1758,15 @@ def main_window(scope_ip):
     str_setup = tk.StringVar()
     e_setup = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_setup)
     
-    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get(), position= str_time_offset.get()))
+    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get(), scale= str_time_scale.get(), position= str_time_offset.get(), choose_type= int_label_type.get()))
+
+    boolvar_setup_timebase = tk.BooleanVar()    
+    cb_setup_timebase= tk.Checkbutton(label_frame_load_wme, text= 'Timebase', variable= boolvar_setup_timebase, background= bg_color_1, fg= '#0D325C')
+    cb_setup_timebase.select()
+
+    boolvar_setup_label = tk.BooleanVar()    
+    cb_setup_label= tk.Checkbutton(label_frame_load_wme, text= 'Label', variable= boolvar_setup_label, background= bg_color_1, fg= '#0D325C')
+    cb_setup_label.select()
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
@@ -1950,19 +1968,21 @@ def main_window(scope_ip):
     
     #LoadWMe grid
     e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2)
-    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 2)
-    b_wme_clear1.grid(row= 0, column= 2, padx= 5, pady= 2)
+    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 2, columnspan= 2)
+    b_wme_clear1.grid(row= 0, column= 3, padx= 5, pady= 2)
     e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 2)
-    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 2)
-    b_wme_clear2.grid(row= 1, column= 2, padx= 5, pady= 2)
+    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 2, columnspan= 2)
+    b_wme_clear2.grid(row= 1, column= 3, padx= 5, pady= 2)
     e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 2)
-    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 2)
-    b_wme_clear3.grid(row= 2, column= 2, padx= 5, pady= 2)
+    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 2, columnspan= 2)
+    b_wme_clear3.grid(row= 2, column= 3, padx= 5, pady= 2)
     e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 2)
-    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 2)
-    b_wme_clear4.grid(row= 3, column= 2, padx= 5, pady= 2)
+    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 2, columnspan= 2)
+    b_wme_clear4.grid(row= 3, column= 3, padx= 5, pady= 2)
     e_setup.grid(row= 4, column= 0, padx= 5, pady= 2)
     b_setup_load.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
+    cb_setup_timebase.grid(row= 4, column= 2, padx= 5, pady= 2, columnspan= 2)
+    cb_setup_label.grid(row= 4, column= 4, padx= 5, pady= 2)
 
 
     # ToolTip(b_tSU, 'Channel記得勾對欸')
