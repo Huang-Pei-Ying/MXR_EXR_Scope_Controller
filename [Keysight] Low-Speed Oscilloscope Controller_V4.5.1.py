@@ -82,9 +82,11 @@ def main_window(scope_ip):
         ChanStop = config_initial['Chan_Delta']['ChanStop']
 
         SaveImgFolder = config_initial['Save_Setup_Config']['SaveImgFolder']
+        SaveImgLocation = config_initial['Save_Setup_Config']['SaveImgLocation']
         SaveImgPCFolder = config_initial['Save_Setup_Config']['SaveImgPCFolder']
         SaveImgName = config_initial['Save_Setup_Config']['SaveImgName']
         SaveWMeFolder = config_initial['Save_Setup_Config']['SaveWMeFolder']
+        SaveWMeLocation = config_initial['Save_Setup_Config']['SaveWMeLocation']
         SaveWMePCFolder = config_initial['Save_Setup_Config']['SaveWMePCFolder']
         SaveWMeName = config_initial['Save_Setup_Config']['SaveWMeName']
 
@@ -135,10 +137,11 @@ def main_window(scope_ip):
         int_ch_delta_stop.set(value= int(ChanStop))
 
         str_image_folder.set(value= SaveImgFolder)
-        str_image_folder.set(value= SaveImgFolder)
+        int_img_path_choice.set(value= SaveImgLocation)
         str_image_pc_folder.set(value= SaveImgPCFolder)
         str_image.set(value= SaveImgName)
         str_WMe_folder.set(value= SaveWMeFolder)
+        int_wme_path_choice.set(value= SaveWMeLocation)
         str_WMe_pc_folder.set(value= SaveWMePCFolder)
         str_other_file.set(value= SaveWMeName)
 
@@ -578,7 +581,7 @@ def main_window(scope_ip):
                         time.sleep(0.05)
 
         ### Save Related ###
-        def load_wmemory(self, chan, folder, wme_name):
+        def load_wmemory(self, chan, folder, wme_name, file_path_choice):
             self.inst.write(f':WMEMory:TIETimebase 1')
             time.sleep(0.05)
             self.inst.write(f':DISPlay:SCOLor WMEMory1,17,100,100')
@@ -589,11 +592,21 @@ def main_window(scope_ip):
             time.sleep(0.05)
             self.inst.write(f':DISPlay:SCOLor WMEMory4,94,100,100')
             time.sleep(0.05)
-            self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{wme_name}.h5",WMEMory{chan},OFF')
+            
+            if file_path_choice == 2:
+                total_folder_path = folder
+            else:
+                total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
+
+            self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
 
-        def load_setup(self, folder, setup_name, scale, position, choose_type):
-            self.inst.write(f':DISK:LOAD "C:/Users/Administrator/Desktop/{folder}/{setup_name}.set"')
+        def load_setup(self, folder, setup_name, scale, position, choose_type, file_path_choice):
+            if file_path_choice == 2:
+                total_folder_path = folder
+            else:
+                total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
+            self.inst.write(f':DISK:LOAD "{total_folder_path}/{setup_name}.set"')
             time.sleep(0.05)
             if boolvar_setup_timebase.get() == True:
                 self.timebase_scale_check(scale= scale)
@@ -611,7 +624,7 @@ def main_window(scope_ip):
             time.sleep(0.05)
             string.set('')
 
-        def save_waveform_scope(self, folder, image_name):
+        def save_image_scope(self, folder, image_name, path_choice):
             # 清空狀態
             self.inst.write('*CLS')
             time.sleep(0.05)
@@ -626,8 +639,13 @@ def main_window(scope_ip):
 
             # CDIRectory會害存圖卡死 orz
 
+            if path_choice == 2:
+                folder_total_path = folder
+            else:
+                folder_total_path = f"C:/Users/Administrator/Desktop/{folder}"
+
             # 資料夾是否存在
-            self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
             time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
             time.sleep(0.05)
@@ -655,7 +673,7 @@ def main_window(scope_ip):
                     time.sleep(0.05)
         
             # 資料夾全部內容
-            folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
             time.sleep(0.05)
             # 使用正則表達式來匹配所有 .png 檔案名稱
             png_files = re.findall(r'\b[\w-]+\.(?:png)\b', folder_content)
@@ -674,7 +692,7 @@ def main_window(scope_ip):
                         messagebox.showinfo("Warning", f'檔案未儲存')
                         return     
 
-            self.inst.write(f':DISK:SAVE:IMAGe "C:/Users/Administrator/Desktop/{folder}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
+            self.inst.write(f':DISK:SAVE:IMAGe "{folder_total_path}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
             time.sleep(0.05)
 
         def save_waveform_pc(self, folder, pc_folder, file_name):            
@@ -752,7 +770,7 @@ def main_window(scope_ip):
             f_img.write(bytearray(screen_data))
             f_img.close()
 
-        def save_other_file_scope(self, chan, folder, current_file_name, ext_type):
+        def save_other_file_scope(self, chan, folder, current_file_name, ext_type, path_choice):
             # 清空狀態
             self.inst.write('*CLS')
             time.sleep(0.05)
@@ -764,8 +782,13 @@ def main_window(scope_ip):
                 # -420 Query UNTERMINATED
                 # 0 No error
 
+            if path_choice == 2:
+                folder_total_path = folder
+            else:
+                folder_total_path = f"C:/Users/Administrator/Desktop/{folder}"
+
             # 資料夾是否存在
-            self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
             time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
             time.sleep(0.05)
@@ -793,7 +816,7 @@ def main_window(scope_ip):
                     time.sleep(0.05)
         
             # 資料夾全部內容
-            folder_content= self.inst.query(f':DISK:DIRectory? "C:/Users/Administrator/Desktop/{folder}"')
+            folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
             time.sleep(0.05)
 
             # 判斷存.h5或.set
@@ -801,12 +824,12 @@ def main_window(scope_ip):
                 # 使用正則表達式來匹配所有 .h5 檔案名稱
                 files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
                 ext= 'h5'
-                command= f':DISK:SAVE:WAVeform CHANnel{chan},"C:/Users/Administrator/Desktop/{folder}/{current_file_name}",H5,OFF'
+                command= f':DISK:SAVE:WAVeform CHANnel{chan},"{folder_total_path}/{current_file_name}",H5,OFF'
             else:
                 # 使用正則表達式來匹配所有 .set 檔案名稱
                 files = re.findall(r'\b[\w-]+\.(?:set)\b', folder_content)
                 ext= 'set'
-                command= f':DISK:SAVE:SETup "C:/Users/Administrator/Desktop/{folder}/{current_file_name}"'
+                command= f':DISK:SAVE:SETup "{folder_total_path}/{current_file_name}"'
 
             for file_name in files:
                 if f'{current_file_name}.{ext}' == file_name:
@@ -1130,9 +1153,11 @@ def main_window(scope_ip):
             config.set('Chan_Delta', 'ChanStop', str(int_ch_delta_stop.get()))
 
             config.set('Save_Setup_Config', 'SaveImgFolder', str_image_folder.get())
+            config.set('Save_Setup_Config', 'SaveImgLocation', str(int_img_path_choice.get()))
             config.set('Save_Setup_Config', 'SaveImgPCFolder', str_image_pc_folder.get())
             config.set('Save_Setup_Config', 'SaveImgName', str_image.get())
             config.set('Save_Setup_Config', 'SaveWMeFolder', str_WMe_folder.get())
+            config.set('Save_Setup_Config', 'SaveWMeLocation', str(int_wme_path_choice.get()))
             config.set('Save_Setup_Config', 'SaveWMePCFolder', str_WMe_pc_folder.get())
             config.set('Save_Setup_Config', 'SaveWMeName', str_other_file.get())
 
@@ -1678,23 +1703,28 @@ def main_window(scope_ip):
     label_frame_save= tk.LabelFrame(window, text= 'Save', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     str_image_folder = tk.StringVar()
-    e_image_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_image_folder)
+    e_image_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_image_folder)
 
-    l_image_folder = tk.Label(label_frame_save, text= 'Image Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_image_folder = tk.Label(label_frame_save, text= 'Image Scope folder', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+
+    int_img_path_choice = tk.IntVar()
+    rb_img_desktop_path = tk.Radiobutton(label_frame_save, text= 'Desktop', variable= int_img_path_choice, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    rb_img_server_path = tk.Radiobutton(label_frame_save, text= 'Server', variable= int_img_path_choice, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    # rb_img_desktop_path.select()
 
     str_image_pc_folder = tk.StringVar()
-    e_image_pc_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_image_pc_folder)
+    e_image_pc_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_image_pc_folder)
 
     l_image_pc_folder = tk.Label(label_frame_save, text= 'Image PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     b_image_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_image_pc_folder))
     
     str_image = tk.StringVar()
-    e_image = tk.Entry(label_frame_save, width= 45, textvariable= str_image)
+    e_image = tk.Entry(label_frame_save, width= 40, textvariable= str_image)
 
     l_imagename = tk.Label(label_frame_save, text= '(填 圖檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_image_save_scope = tk.Button(label_frame_save, text= 'Save Image-Scope', command= lambda: mxr.save_waveform_scope(folder= str_image_folder.get(), image_name= str_image.get()))
+    b_image_save_scope = tk.Button(label_frame_save, text= 'Save Image-Scope', command= lambda: mxr.save_image_scope(folder= str_image_folder.get(), image_name= str_image.get(), path_choice= int_img_path_choice.get()))
     # b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_waveform_pc(folder= str_image_folder.get(), file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
     b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_image_pc(file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
     
@@ -1707,23 +1737,28 @@ def main_window(scope_ip):
     rb_Wme.select()
 
     str_WMe_folder = tk.StringVar()
-    e_WMe_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe_folder)
+    e_WMe_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_WMe_folder)
 
-    l_WMe_folder = tk.Label(label_frame_save, text= 'Scope folder [填Desktop之後的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    l_WMe_folder = tk.Label(label_frame_save, text= 'Scope folder', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+
+    int_wme_path_choice = tk.IntVar()
+    rb_wme_desktop_path = tk.Radiobutton(label_frame_save, text= 'Desktop', variable= int_wme_path_choice, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    rb_wme_server_path = tk.Radiobutton(label_frame_save, text= 'Server', variable= int_wme_path_choice, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    # rb_wme_desktop_path.select()
 
     str_WMe_pc_folder = tk.StringVar()
-    e_WMe_pc_folder = tk.Entry(label_frame_save, width= 45, textvariable= str_WMe_pc_folder)
+    e_WMe_pc_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_WMe_pc_folder)
 
     l_WMe_pc_folder = tk.Label(label_frame_save, text= 'PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
     b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder))
 
     str_other_file = tk.StringVar()
-    e_other_file = tk.Entry(label_frame_save, width= 45, textvariable= str_other_file)
+    e_other_file = tk.Entry(label_frame_save, width= 40, textvariable= str_other_file)
 
     l_other_filename = tk.Label(label_frame_save, text= '(填 檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_other_file_save_scpoe = tk.Button(label_frame_save, text= 'Save file in Scope', command= lambda: mxr.save_other_file_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), current_file_name= str_other_file.get(), ext_type= int_file_type.get()))
+    b_other_file_save_scope = tk.Button(label_frame_save, text= 'Save file in Scope', command= lambda: mxr.save_other_file_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), current_file_name= str_other_file.get(), ext_type= int_file_type.get(), path_choice= int_img_path_choice.get()))
     b_other_file_save_pc = tk.Button(label_frame_save, text= 'Save file in PC', command= lambda: mxr.save_wmemory_pc(folder= str_WMe_folder.get(), file_name= str_other_file.get(), pc_folder= str_WMe_pc_folder.get(), ext_type= int_file_type.get()))
 
 
@@ -1734,31 +1769,31 @@ def main_window(scope_ip):
     str_WMe1 = tk.StringVar()
     e_WMe1 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe1)
 
-    b_WMe1_load = tk.Button(label_frame_load_wme, text= 'load WMemory1', command= lambda: mxr.load_wmemory(chan= 1, folder= str_WMe_folder.get(), wme_name= str_WMe1.get()))
+    b_WMe1_load = tk.Button(label_frame_load_wme, text= 'load WMemory1', command= lambda: mxr.load_wmemory(chan= 1, folder= str_WMe_folder.get(), wme_name= str_WMe1.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear1 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 1, string= str_WMe1))
 
     str_WMe2 = tk.StringVar()
     e_WMe2 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe2)
     
-    b_WMe2_load = tk.Button(label_frame_load_wme, text= 'load WMemory2', command= lambda: mxr.load_wmemory(chan= 2, folder= str_WMe_folder.get(), wme_name= str_WMe2.get()))
+    b_WMe2_load = tk.Button(label_frame_load_wme, text= 'load WMemory2', command= lambda: mxr.load_wmemory(chan= 2, folder= str_WMe_folder.get(), wme_name= str_WMe2.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear2 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 2, string= str_WMe2))
 
     str_WMe3 = tk.StringVar()
     e_WMe3 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe3)
 
-    b_WMe3_load = tk.Button(label_frame_load_wme, text= 'load WMemory3', command= lambda: mxr.load_wmemory(chan= 3, folder= str_WMe_folder.get(), wme_name= str_WMe3.get()))
+    b_WMe3_load = tk.Button(label_frame_load_wme, text= 'load WMemory3', command= lambda: mxr.load_wmemory(chan= 3, folder= str_WMe_folder.get(), wme_name= str_WMe3.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear3 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 3, string= str_WMe3))
 
     str_WMe4 = tk.StringVar()
     e_WMe4 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe4)
     
-    b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get()))
+    b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear4 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 4, string= str_WMe4))
 
     str_setup = tk.StringVar()
     e_setup = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_setup)
     
-    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get(), scale= str_time_scale.get(), position= str_time_offset.get(), choose_type= int_label_type.get()))
+    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get(), scale= str_time_scale.get(), position= str_time_offset.get(), choose_type= int_label_type.get(), file_path_choice = int_wme_path_choice.get()))
 
     boolvar_setup_timebase = tk.BooleanVar()    
     cb_setup_timebase= tk.Checkbutton(label_frame_load_wme, text= 'Timebase', variable= boolvar_setup_timebase, background= bg_color_1, fg= '#0D325C')
@@ -1941,30 +1976,34 @@ def main_window(scope_ip):
     text_mean_3.grid(row= 6, column= 6, sticky= 'w')
 
     # Save grid
-    e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 2)
-    l_image_folder.grid(row=0, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 2)
-    e_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 2)
-    b_image_pc_browse.grid(row= 1, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_image_pc_folder.grid(row= 1, column= 2, columnspan= 3, sticky= 'w', padx= 5, pady= 2)
-    e_image.grid(row= 2, column= 0, padx= 5, pady= 2)
-    l_imagename.grid(row= 2, column= 1, sticky= 'w')
-    b_image_save_scope.grid(row=2, column= 2, padx= 5, pady= 2, sticky= 'w')
-    b_image_save_pc.grid(row= 2, column= 3, sticky= 'w', padx= 5, pady= 2)
+    e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 1)
+    l_image_folder.grid(row=0, column= 1, columnspan= 2, sticky= 'w', padx= 5, pady= 1)
+    rb_img_desktop_path.grid(row= 0, column= 2, padx= 5, pady= 1, sticky= 'e')
+    rb_img_server_path.grid(row= 0, column= 3, padx= 5, pady= 1, sticky= 'w')
+    e_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 1)
+    b_image_pc_browse.grid(row= 1, column= 1, sticky= 'w', padx= 5, pady= 1)
+    l_image_pc_folder.grid(row= 1, column= 2, columnspan= 3, sticky= 'w', padx= 5, pady= 1)
+    e_image.grid(row= 2, column= 0, padx= 5, pady= 1)
+    l_imagename.grid(row= 2, column= 1, padx= 5, pady= 1, sticky= 'w')
+    b_image_save_scope.grid(row= 2, column= 2, padx= 5, pady= 1, sticky= 'w')
+    b_image_save_pc.grid(row= 2, column= 3, sticky= 'w', padx= 5, pady= 1, columnspan= 2)
     
     l_divider.grid(row= 3, column= 0, columnspan= 4)
 
     rb_Wme.grid(row= 4, column= 0, padx= 5, sticky= 'w')
     rb_Setup.grid(row= 4, column= 0, padx= 5)
 
-    e_WMe_folder.grid(row= 5, column= 0, padx= 5, pady= 2)
-    l_WMe_folder.grid(row=5, column= 1, columnspan= 3, sticky= 'w', padx= 5, pady= 2)
-    e_WMe_pc_folder.grid(row= 6, column= 0, sticky= 'w', padx= 5, pady= 2)
-    b_WMe_pc_browse.grid(row= 6, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_WMe_pc_folder.grid(row= 6, column= 2, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    e_other_file.grid(row= 7, column= 0, sticky= 'w', padx= 5, pady= 2)
-    l_other_filename.grid(row= 7, column= 1, sticky= 'w')
-    b_other_file_save_scpoe.grid(row= 7, column= 2, padx= 5, pady= 2, sticky= 'w')
-    b_other_file_save_pc.grid(row= 7, column= 3, padx= 5, pady= 2, sticky= 'w')
+    e_WMe_folder.grid(row= 5, column= 0, padx= 5, pady= 1)
+    l_WMe_folder.grid(row=5, column= 1, sticky= 'w', padx= 5, pady= 1)
+    rb_wme_desktop_path.grid(row= 5, column= 2, padx= 5, pady= 1, sticky= 'e')
+    rb_wme_server_path.grid(row= 5, column= 3, padx= 5, pady= 1, sticky= 'w')
+    e_WMe_pc_folder.grid(row= 6, column= 0, padx= 5, pady= 1)
+    b_WMe_pc_browse.grid(row= 6, column= 1, sticky= 'w', padx= 5, pady= 1)
+    l_WMe_pc_folder.grid(row= 6, column= 2, sticky= 'w', padx= 5, pady= 1, columnspan= 2)
+    e_other_file.grid(row= 7, column= 0, padx= 5, pady= 1)
+    l_other_filename.grid(row= 7, column= 1, sticky= 'w', padx= 5, pady= 1)
+    b_other_file_save_scope.grid(row= 7, column= 2, padx= 5, pady= 1, sticky= 'w')
+    b_other_file_save_pc.grid(row= 7, column= 3, padx= 5, pady= 1, sticky= 'w')
     
     #LoadWMe grid
     e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2)
