@@ -9,6 +9,8 @@ import time
 import sys
 import numpy as np
 
+# test
+
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
