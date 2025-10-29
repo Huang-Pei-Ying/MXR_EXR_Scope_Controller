@@ -288,6 +288,11 @@ def main_window(scope_ip):
                 self.inst.write(f':CHANnel{chan}:DISPlay OFF')
                 time.sleep(0.05)
 
+        # def intensity_check(self, intensity_value):
+        #      q= self.inst.query(f':WAVeform:CGRade:WIDTh?')
+        #      print(q)
+        #     # self.inst.write(f' :DISPlay:GRATicule:INTensity {intensity_value}')
+
         ### Display Related ###
         def display_Chan(self, chan, bookmark, choose_type):
             res= self.inst.query(f':CHANnel{chan}:DISPlay?')
@@ -651,7 +656,7 @@ def main_window(scope_ip):
             time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
             time.sleep(0.05)
-            # print(error_messenge)
+            print(error_messenge)
             if error_messenge == '-256\n' or error_messenge == '113\n' or error_messenge == '-257\n':
                 ask_scp_root = tk.Tk()
                 ask_scp_root.withdraw()  # 隱藏主視窗
@@ -665,15 +670,11 @@ def main_window(scope_ip):
                     # print("檔案未保存。")
                     return     
                 # 新建資料夾
-                folder= folder.replace("/", "\\")
-                # print(folder)
-                temp_list= folder.split('\\')
-                path= 'C:/Users/Administrator/Desktop'
-                for i in temp_list:
-                    path= f'{path}/{i}'
-                    self.inst.write(f':DISK:MDIRectory "{path}"')
-                    time.sleep(0.05)
-        
+                folder_total_path= folder_total_path.replace("/", "\\")
+                # print(folder_total_path)
+                self.inst.write(f':DISK:MDIRectory "{folder_total_path}"')
+                time.sleep(0.05)
+
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
             time.sleep(0.05)
@@ -808,14 +809,10 @@ def main_window(scope_ip):
                     # print("檔案未保存。")
                     return     
                 # 新建資料夾
-                folder= folder.replace("/", "\\")
-                # print(folder)
-                temp_list= folder.split('\\')
-                path= 'C:/Users/Administrator/Desktop'
-                for i in temp_list:
-                    path= f'{path}/{i}'
-                    self.inst.write(f':DISK:MDIRectory "{path}"')
-                    time.sleep(0.05)
+                folder_total_path= folder_total_path.replace("/", "\\")
+                # print(folder_total_path)
+                self.inst.write(f':DISK:MDIRectory "{folder_total_path}"')
+                time.sleep(0.05)
         
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
@@ -1373,7 +1370,7 @@ def main_window(scope_ip):
     str_trigger_chan = tk.StringVar()
     cb_trigger_chan = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_trigger_chan, values= [1, 2, 3, 4])
 
-    b_str_trigger_check = tk.Button(label_frame_scale, text= 'Trig Check', width= 10, height= 1, command= lambda: mxr.trig_check(chan= str_trigger_chan.get(), level= str_trigger_level.get()))
+    b_trigger_check = tk.Button(label_frame_scale, text= 'Trig Check', width= 10, height= 1, command= lambda: mxr.trig_check(chan= str_trigger_chan.get(), level= str_trigger_level.get()))
 
     l_time_scale = tk.Label(label_frame_scale, text= 'Timebase Scale (sec)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
@@ -1388,7 +1385,14 @@ def main_window(scope_ip):
     b_time_scale_check = tk.Button(label_frame_scale, text= 'Time scale Check', height= 1, command= lambda: mxr.timebase_scale_check(scale= str_time_scale.get()))
     b_time_position_check = tk.Button(label_frame_scale, text= 'Time posi Check', height= 1, command= lambda: mxr.timebase_position_check(position= str_time_offset.get()))
 
-    b_meas_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: \nOFF', height= 2, command= lambda: mxr.meas_all_edge())
+    # l_wfm_intensity = tk.Label(label_frame_scale, text= 'Waveform Intensity (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+
+    # str_wfm_intensity = tk.StringVar()
+    # e_wfm_intensity = tk.Entry(label_frame_scale, width= 7, textvariable= str_wfm_intensity)
+
+    # b_wfm_intensity = tk.Button(label_frame_scale, text= 'Intensity Check', height= 1, command= lambda: mxr.intensity_check(intensity_value= str_wfm_intensity.get()))
+
+    b_meas_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: OFF', height= 1, command= lambda: mxr.meas_all_edge())
 
     # Delta Setup Frame ===================================================================================================================================
 
@@ -1842,14 +1846,18 @@ def main_window(scope_ip):
     cbb_trigger_level.grid(row= 3, column= 1, padx= 5, pady= 4)
     l_trigger_chan.grid(row= 4, column= 0, padx= 5, pady= 4, sticky= 'w') 
     cb_trigger_chan.grid(row= 4, column= 1, padx= 5, pady= 4)
-    b_str_trigger_check.grid(row= 4, column= 2, padx= 5, pady= 4)
+    b_trigger_check.grid(row= 5, column= 0, padx= 5, pady= 4, sticky= 'e')
     l_time_scale.grid(row= 0, column= 2, padx= 5, pady= 4, sticky= 'w') 
     e_time_scale.grid(row= 0, column= 3, padx= 5, pady= 4)
     l_time_offset.grid(row= 1, column= 2, padx= 5, pady= 4, sticky= 'w') 
     e_time_offset.grid(row= 1, column= 3, padx= 5, pady= 4)
     b_time_scale_check.grid(row= 2, column= 2, padx= 5, pady= 4)
     b_time_position_check.grid(row= 2, column= 3, padx= 5, pady= 4)
-    b_meas_all_edge.grid(row= 4, column= 3, padx= 5, pady= 4)
+    # l_wfm_intensity.grid(row= 3, column= 2, padx= 5, pady= 4, sticky= 'w')
+    # e_wfm_intensity.grid(row= 3, column= 3, padx= 5, pady= 4)
+    # b_wfm_intensity.grid(row= 4, column= 3, padx= 5, pady= 4, sticky= 'e')
+
+    b_meas_all_edge.grid(row= 5, column= 2, padx= 5, pady= 4, columnspan= 2)
 
     # Delta grid
     l_start.grid(row= 0, column= 0, padx= 5, pady= 5)
