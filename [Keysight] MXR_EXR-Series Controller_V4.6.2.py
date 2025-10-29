@@ -1315,7 +1315,7 @@ def main_window(scope_ip):
 
 
     window = tk.Tk()
-    window.title('[Keysight] Low-Speed Oscilloscope Controller_v4.6.2')
+    window.title('[Keysight] MXR/EXR-Series Controller_v4.6.2')
     # window.geometry('1500x760+2+2')
     window.geometry('+2+2')
     window.configure(bg= '#E9F4FF')
