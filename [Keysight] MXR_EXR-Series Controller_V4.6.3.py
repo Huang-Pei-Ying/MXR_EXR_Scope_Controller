@@ -1308,6 +1308,7 @@ def main_window(scope_ip):
         e_wfm_intensity.delete(0, tk.END)
         e_wfm_intensity.insert(0, str(value))
         update_color(value)
+        mxr.intensity_check(intensity_value= 50)
 
     class ToolTip:
         def __init__(self, widget, text):
@@ -1441,7 +1442,7 @@ def main_window(scope_ip):
     update_color(value= str_wfm_intensity.get())
     b_wfm_intensity = tk.Button(label_frame_scale, text= 'Intensity Check', height= 1, command= lambda: mxr.intensity_check(intensity_value= str_wfm_intensity.get()))
     
-    b_set_intensity_50 = tk.Button(label_frame_scale, text="set 50", command=set_to_50, font=("Candara", 10))
+    b_set_intensity_50 = tk.Button(label_frame_scale, text="Set Intensity 50", command=set_to_50, font=("Candara", 10))
 
     e_wfm_intensity.bind("<MouseWheel>", on_mouse_wheel)
     e_wfm_intensity.bind("<Button-4>", lambda e: on_mouse_wheel(type("Event", (), {"delta": 120})))
@@ -1911,7 +1912,7 @@ def main_window(scope_ip):
     l_wfm_intensity.grid(row= 3, column= 2, padx= 5, pady= 4, sticky= 'w')
     e_wfm_intensity.grid(row= 3, column= 3, padx= 5, pady= 4)
     b_wfm_intensity.grid(row= 4, column= 3, padx= 5, pady= 4, sticky= 'e')
-    b_set_intensity_50.grid(row= 5, column= 3, padx= 5, pady= 4)
+    b_set_intensity_50.grid(row= 5, column= 3, padx= 5, pady= 4, sticky= 'e')
 
     b_meas_all_edge.grid(row= 5, column= 2, padx= 5, pady= 4)
 
