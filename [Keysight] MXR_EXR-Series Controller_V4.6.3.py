@@ -291,6 +291,7 @@ def main_window(scope_ip):
 
         def intensity_check(self, intensity_value):
             self.inst.write(f'SYSTem:CONTrol "WaveformBrt -1 {intensity_value}"')
+            time.sleep(0.05)
 
         ### Display Related ###
         def display_Chan(self, chan, bookmark, choose_type):
@@ -655,7 +656,7 @@ def main_window(scope_ip):
             time.sleep(0.05)
             error_messenge=self.inst.query(f':SYSTem:ERRor?')
             time.sleep(0.05)
-            print(error_messenge)
+            # print(error_messenge)
             if error_messenge == '-256\n' or error_messenge == '113\n' or error_messenge == '-257\n':
                 ask_scp_root = tk.Tk()
                 ask_scp_root.withdraw()  # 隱藏主視窗
@@ -2095,6 +2096,7 @@ def main_window(scope_ip):
     ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_volt_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(b_wfm_intensity, '可用滑鼠滾輪調整數字大小')
     ToolTip(cb_start_rf, '嗚啦!')
     ToolTip(cb_start_num, '呀哈!')
     ToolTip(cb_start_pos, '噗嚕!')
