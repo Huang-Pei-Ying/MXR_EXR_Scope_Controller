@@ -9,8 +9,7 @@ import time
 import sys
 import numpy as np
 
-# test
-
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.6.3'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -49,6 +48,7 @@ def main_window(scope_ip):
         TimebaseOffset = config_initial['Scale_Offset_Config']['TimebaseOffset']
         select_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
         TriggerChan = config_initial['Scale_Offset_Config']['TriggerChan']
+        WfmIntensity = config_initial['Scale_Offset_Config']['WfmIntensity']
 
         DeltaStartEdge = config_initial['Delta_Setup_Config']['DeltaStartEdge']
         DeltaStartNum = config_initial['Delta_Setup_Config']['DeltaStartNum']
@@ -104,6 +104,7 @@ def main_window(scope_ip):
         str_time_offset.set(value= TimebaseOffset)
         str_trigger_level.set(value= select_TriggerLevel)
         str_trigger_chan.set(value= TriggerChan)
+        str_wfm_intensity.set(value= WfmIntensity)
 
         start_rf.set(value= DeltaStartEdge)
         start_num.set(value= DeltaStartNum)
@@ -187,11 +188,11 @@ def main_window(scope_ip):
             ans= self.inst.query(':ANALyze:AEDGes?')
             time.sleep(0.05)
             if ans == '0\n':
-                b_meas_all_edge['text'] = "Meas All Edge: \nON"
+                b_meas_all_edge['text'] = "Meas All Edge: ON"
                 self.inst.write(f':ANALyze:AEDGes 1')
                 time.sleep(0.05)
             else:
-                b_meas_all_edge['text'] = "Meas All Edge: \nOFF"
+                b_meas_all_edge['text'] = "Meas All Edge: OFF"
                 self.inst.write(f':ANALyze:AEDGes 0')
                 time.sleep(0.05)
         
@@ -288,10 +289,8 @@ def main_window(scope_ip):
                 self.inst.write(f':CHANnel{chan}:DISPlay OFF')
                 time.sleep(0.05)
 
-        # def intensity_check(self, intensity_value):
-        #      q= self.inst.query(f':WAVeform:CGRade:WIDTh?')
-        #      print(q)
-        #     # self.inst.write(f' :DISPlay:GRATicule:INTensity {intensity_value}')
+        def intensity_check(self, intensity_value):
+            self.inst.write(f'SYSTem:CONTrol "WaveformBrt -1 {intensity_value}"')
 
         ### Display Related ###
         def display_Chan(self, chan, bookmark, choose_type):
@@ -1117,6 +1116,7 @@ def main_window(scope_ip):
             config.set('Scale_Offset_Config', 'TimebaseOffset', str_time_offset.get())
             config.set('Scale_Offset_Selected_Values', 'TriggerLevel', str_trigger_level.get())
             config.set('Scale_Offset_Config', 'TriggerChan', str_trigger_chan.get())
+            config.set('Scale_Offset_Config', 'WfmIntensity', str_wfm_intensity.get())
             
             config.set('Delta_Setup_Config', 'DeltaStartEdge', start_rf.get())
             config.set('Delta_Setup_Config', 'DeltaStartNum', start_num.get())
@@ -1265,6 +1265,49 @@ def main_window(scope_ip):
         with open(config_file, 'w') as configfile:
             config.write(configfile)
 
+    def update_color(value):
+        """根據數值改變文字顏色"""
+        if value == 50:
+            e_wfm_intensity.config(fg="black")
+        else:
+            e_wfm_intensity.config(fg="red")
+
+    def validate_number(new_value):
+        """限制只能輸入數字 (允許空白)"""
+        if new_value == "":  # 空白允許
+            e_wfm_intensity.config(fg="red")
+            return True
+        if new_value.isdigit():
+            num = int(new_value)
+            # 限制範圍
+            if wfm_intensity_MIN_VALUE <= num <= wfm_intensity_MAX_VALUE:
+                update_color(num)
+            else:
+                e_wfm_intensity.config(fg="red")
+            return True
+        return False  # 阻擋非數字字元
+
+    def on_mouse_wheel(event):
+        try:
+            value = int(e_wfm_intensity.get())
+        except ValueError:
+            value = 0
+
+        if event.delta > 0:
+            value += wfm_intensity_STEP
+        else:
+            value -= wfm_intensity_STEP
+
+        value = max(wfm_intensity_MIN_VALUE, min(wfm_intensity_MAX_VALUE, value))
+        e_wfm_intensity.delete(0, tk.END)
+        e_wfm_intensity.insert(0, str(value))
+        update_color(value)
+
+    def set_to_50():
+        value = 50
+        e_wfm_intensity.delete(0, tk.END)
+        e_wfm_intensity.insert(0, str(value))
+        update_color(value)
 
     class ToolTip:
         def __init__(self, widget, text):
@@ -1315,13 +1358,18 @@ def main_window(scope_ip):
 
 
     window = tk.Tk()
-    window.title('[Keysight] MXR/EXR-Series Controller_v4.6.2')
+    window.title(window_name)
     # window.geometry('1500x760+2+2')
     window.geometry('+2+2')
     window.configure(bg= '#E9F4FF')
 
     bg_color_1= '#c4cdd8'
     bg_color_2= '#b0c8db'
+
+    # 設定wfm intensity參數
+    wfm_intensity_STEP = 1
+    wfm_intensity_MIN_VALUE = 0
+    wfm_intensity_MAX_VALUE = 100
 
     # Measurement Frame ===================================================================================================================================
 
@@ -1385,12 +1433,19 @@ def main_window(scope_ip):
     b_time_scale_check = tk.Button(label_frame_scale, text= 'Time scale Check', height= 1, command= lambda: mxr.timebase_scale_check(scale= str_time_scale.get()))
     b_time_position_check = tk.Button(label_frame_scale, text= 'Time posi Check', height= 1, command= lambda: mxr.timebase_position_check(position= str_time_offset.get()))
 
-    # l_wfm_intensity = tk.Label(label_frame_scale, text= 'Waveform Intensity (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    l_wfm_intensity = tk.Label(label_frame_scale, text= 'Waveform Intensity (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    # str_wfm_intensity = tk.StringVar()
-    # e_wfm_intensity = tk.Entry(label_frame_scale, width= 7, textvariable= str_wfm_intensity)
+    vcmd = (window.register(validate_number), "%P") # %P = 輸入後字串
+    str_wfm_intensity = tk.StringVar()
+    e_wfm_intensity = tk.Entry(label_frame_scale, width= 7, justify="center", textvariable= str_wfm_intensity, validate="key", validatecommand=vcmd)
+    update_color(value= str_wfm_intensity.get())
+    b_wfm_intensity = tk.Button(label_frame_scale, text= 'Intensity Check', height= 1, command= lambda: mxr.intensity_check(intensity_value= str_wfm_intensity.get()))
+    
+    b_set_intensity_50 = tk.Button(label_frame_scale, text="set 50", command=set_to_50, font=("Candara", 10))
 
-    # b_wfm_intensity = tk.Button(label_frame_scale, text= 'Intensity Check', height= 1, command= lambda: mxr.intensity_check(intensity_value= str_wfm_intensity.get()))
+    e_wfm_intensity.bind("<MouseWheel>", on_mouse_wheel)
+    e_wfm_intensity.bind("<Button-4>", lambda e: on_mouse_wheel(type("Event", (), {"delta": 120})))
+    e_wfm_intensity.bind("<Button-5>", lambda e: on_mouse_wheel(type("Event", (), {"delta": -120})))
 
     b_meas_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: OFF', height= 1, command= lambda: mxr.meas_all_edge())
 
@@ -1853,11 +1908,12 @@ def main_window(scope_ip):
     e_time_offset.grid(row= 1, column= 3, padx= 5, pady= 4)
     b_time_scale_check.grid(row= 2, column= 2, padx= 5, pady= 4)
     b_time_position_check.grid(row= 2, column= 3, padx= 5, pady= 4)
-    # l_wfm_intensity.grid(row= 3, column= 2, padx= 5, pady= 4, sticky= 'w')
-    # e_wfm_intensity.grid(row= 3, column= 3, padx= 5, pady= 4)
-    # b_wfm_intensity.grid(row= 4, column= 3, padx= 5, pady= 4, sticky= 'e')
+    l_wfm_intensity.grid(row= 3, column= 2, padx= 5, pady= 4, sticky= 'w')
+    e_wfm_intensity.grid(row= 3, column= 3, padx= 5, pady= 4)
+    b_wfm_intensity.grid(row= 4, column= 3, padx= 5, pady= 4, sticky= 'e')
+    b_set_intensity_50.grid(row= 5, column= 3, padx= 5, pady= 4)
 
-    b_meas_all_edge.grid(row= 5, column= 2, padx= 5, pady= 4, columnspan= 2)
+    b_meas_all_edge.grid(row= 5, column= 2, padx= 5, pady= 4)
 
     # Delta grid
     l_start.grid(row= 0, column= 0, padx= 5, pady= 5)
@@ -2098,7 +2154,7 @@ for i in range(len(config_initial['Scope_IPs'])):
 scope_ips.append('')
 
 id_window = tk.Tk()
-id_window.title('[Keysight] Low-Speed Oscilloscope Controller')
+id_window.title(window_name)
 id_window.resizable(width= False, height= False)
 id_window.geometry('390x160+500+150')
 id_window.configure(background= '#91B6E1')
