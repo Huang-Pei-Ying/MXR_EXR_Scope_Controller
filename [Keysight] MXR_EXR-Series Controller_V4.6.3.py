@@ -672,8 +672,20 @@ def main_window(scope_ip):
                 # 新建資料夾
                 folder_total_path= folder_total_path.replace("/", "\\")
                 # print(folder_total_path)
-                self.inst.write(f':DISK:MDIRectory "{folder_total_path}"')
-                time.sleep(0.05)
+
+                split_folder_list= folder_total_path.split('\\')
+
+                folder= split_folder_list[0]
+                for split in split_folder_list[1:]:
+                    folder= f'{folder}\\{split}'
+                    self.inst.query(f':DISK:DIRectory? "{folder}"')
+                    time.sleep(0.05)
+                    response= self.inst.query(f':SYSTem:ERRor?')
+                    time.sleep(0.05)
+                    # print(response)
+                    if response == '-256\n' or response == '113\n' or response == '-257\n':
+                        self.inst.write(f':DISK:MDIRectory "{folder}"')
+                        time.sleep(0.05)
 
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
@@ -811,9 +823,20 @@ def main_window(scope_ip):
                 # 新建資料夾
                 folder_total_path= folder_total_path.replace("/", "\\")
                 # print(folder_total_path)
-                self.inst.write(f':DISK:MDIRectory "{folder_total_path}"')
-                time.sleep(0.05)
-        
+                split_folder_list= folder_total_path.split('\\')
+
+                folder= split_folder_list[0]
+                for split in split_folder_list[1:]:
+                    folder= f'{folder}\\{split}'
+                    self.inst.query(f':DISK:DIRectory? "{folder}"')
+                    time.sleep(0.05)
+                    response= self.inst.query(f':SYSTem:ERRor?')
+                    time.sleep(0.05)
+                    # print(response)
+                    if response == '-256\n' or response == '113\n' or response == '-257\n':
+                        self.inst.write(f':DISK:MDIRectory "{folder}"')
+                        time.sleep(0.05)
+
             # 資料夾全部內容
             folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
             time.sleep(0.05)
