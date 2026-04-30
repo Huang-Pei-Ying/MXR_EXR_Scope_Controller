@@ -8,8 +8,11 @@ import re
 import time
 import sys
 import numpy as np
+from PIL import Image
+import random
+import string
 
-window_name= '[Keysight] MXR/EXR-Series Controller_v4.6.4'
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.7.0'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -548,18 +551,28 @@ def main_window(scope_ip):
 
         def add_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
-                            # boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
+                            boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
                             )
-        
-            for i, boolvar in enumerate(tuple_marker):
-                self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},OFF')
-                time.sleep(0.05)
+            color_all= [
+                '#FFFFC0CB', '#FF99DAE8', '#FFFF2674', '#FF0000FF', '#FFFF8A00', '#FFFF8A00',
+                '#FFFF8A00', '#FFFF8A00', '#FFFF8A00', '#FFFF8A00', '#FFFF8A00', '#FFFF8A00'
+            ]
 
             for i, boolvar in enumerate(tuple_marker):
+                self.inst.write(f':MARKer:MEASurement:MEASurement MEAS{i+1},OFF')
+                time.sleep(0.05)
+
+            c=1
+            color= 0
+            for i, boolvar in enumerate(tuple_marker):
                 if boolvar.get():
-                    self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},ON')
+                    self.inst.write(f':MARKer:MEASurement:MEASurement MEAS{i+1},ON')
+                    self.inst.write(f':MARKer{c}:COLor "{color_all[color]}"')
+                    self.inst.write(f':MARKer{c+1}:COLor "{color_all[color]}"')
+                    c+=2
+                    color+=1
                     time.sleep(0.05)
-        
+
         def delete_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
                             # boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
@@ -780,10 +793,17 @@ def main_window(scope_ip):
                     ask_root.withdraw()  # 隱藏主視窗
                     messagebox.showinfo("Warning", f'檔案未儲存')
                     return     
-            
-            f_img = open(f"{pc_folder}/{file_name}.png", "wb")
+            temp_img_name= ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+
+            temp_folder= fr'{os.path.dirname(__file__)}/Temp'
+            if not os.path.exists(temp_folder):
+                os.mkdir(temp_folder) 
+                
+            f_img = open(f"{temp_folder}/{temp_img_name}.png", "wb")
             f_img.write(bytearray(screen_data))
             f_img.close()
+
+            rgba_to_rgb_composite(f"{temp_folder}/{temp_img_name}.png", f"{pc_folder}/{file_name}.png", background=(0,0,0))
 
         def save_other_file_scope(self, chan, folder, current_file_name, ext_type, path_choice):
             # 清空狀態
@@ -1334,6 +1354,18 @@ def main_window(scope_ip):
         update_color(value)
         mxr.intensity_check(intensity_value= 50)
 
+
+    def rgba_to_rgb_composite(in_path, out_path, background=(0, 0, 0)):
+        img = Image.open(in_path)
+        # 確保有 alpha 通道用 RGBA
+        if img.mode != 'RGBA':
+            img = img.convert('RGBA')
+        # 建一個同尺寸的背景（含不透明 alpha）
+        bg = Image.new('RGBA', img.size, background + (255,))
+        # 將原圖疊在背景上，並去掉 alpha
+        composed = Image.alpha_composite(bg, img).convert('RGB')
+        composed.save(out_path, format='PNG')
+
     class ToolTip:
         def __init__(self, widget, text):
             self.widget = widget
@@ -1724,23 +1756,23 @@ def main_window(scope_ip):
     boolvar_marker_6 = tk.BooleanVar()    
     cb_marker_6= tk.Checkbutton(label_frame_control, text= 'Meas 6', variable= boolvar_marker_6, background= bg_color_2, fg= '#0D325C')
 
-    # boolvar_marker_7 = tk.BooleanVar()    
-    # cb_marker_7= tk.Checkbutton(label_frame_control, text= 'Meas7', variable= boolvar_marker_7)
+    boolvar_marker_7 = tk.BooleanVar()    
+    cb_marker_7= tk.Checkbutton(label_frame_control, text= 'Meas7', variable= boolvar_marker_7, background= bg_color_2, fg= '#0D325C')
 
-    # boolvar_marker_8 = tk.BooleanVar()    
-    # cb_marker_8= tk.Checkbutton(label_frame_control, text= 'Meas8', variable= boolvar_marker_8)
+    boolvar_marker_8 = tk.BooleanVar()    
+    cb_marker_8= tk.Checkbutton(label_frame_control, text= 'Meas8', variable= boolvar_marker_8, background= bg_color_2, fg= '#0D325C')
 
-    # boolvar_marker_9 = tk.BooleanVar()    
-    # cb_marker_9= tk.Checkbutton(label_frame_control, text= 'Meas9', variable= boolvar_marker_9)
+    boolvar_marker_9 = tk.BooleanVar()    
+    cb_marker_9= tk.Checkbutton(label_frame_control, text= 'Meas9', variable= boolvar_marker_9, background= bg_color_2, fg= '#0D325C')
 
-    # boolvar_marker_10 = tk.BooleanVar()    
-    # cb_marker_10= tk.Checkbutton(label_frame_control, text= 'Meas10', variable= boolvar_marker_10)
+    boolvar_marker_10 = tk.BooleanVar()    
+    cb_marker_10= tk.Checkbutton(label_frame_control, text= 'Meas10', variable= boolvar_marker_10, background= bg_color_2, fg= '#0D325C')
 
-    # boolvar_marker_11 = tk.BooleanVar()    
-    # cb_marker_11= tk.Checkbutton(label_frame_control, text= 'Meas11', variable= boolvar_marker_11)
+    boolvar_marker_11 = tk.BooleanVar()    
+    cb_marker_11= tk.Checkbutton(label_frame_control, text= 'Meas11', variable= boolvar_marker_11, background= bg_color_2, fg= '#0D325C')
 
-    # boolvar_marker_12 = tk.BooleanVar()    
-    # cb_marker_12= tk.Checkbutton(label_frame_control, text= 'Meas12', variable= boolvar_marker_12)
+    boolvar_marker_12 = tk.BooleanVar()    
+    cb_marker_12= tk.Checkbutton(label_frame_control, text= 'Meas12', variable= boolvar_marker_12, background= bg_color_2, fg= '#0D325C')
 
 
     # Channel Frame ===================================================================================================================================
@@ -2034,12 +2066,12 @@ def main_window(scope_ip):
     cb_marker_4.grid(row= 3, column= 4, padx= 5) 
     cb_marker_5.grid(row= 4, column= 4, padx= 5) 
     cb_marker_6.grid(row= 5, column= 4, padx= 5) 
-    # cb_marker_7.grid(row= 0, column= 5, sticky= 'w',) 
-    # cb_marker_8.grid(row= 1, column= 5, sticky= 'w',) 
-    # cb_marker_9.grid(row= 2, column= 5, sticky= 'w',) 
-    # cb_marker_10.grid(row= 3, column= 5, sticky= 'w',) 
-    # cb_marker_11.grid(row= 4, column= 5, sticky= 'w',) 
-    # cb_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
+    cb_marker_7.grid(row= 0, column= 5, sticky= 'w',) 
+    cb_marker_8.grid(row= 1, column= 5, sticky= 'w',) 
+    cb_marker_9.grid(row= 2, column= 5, sticky= 'w',) 
+    cb_marker_10.grid(row= 3, column= 5, sticky= 'w',) 
+    cb_marker_11.grid(row= 4, column= 5, sticky= 'w',) 
+    cb_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
 
     # Chan grid
     b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
