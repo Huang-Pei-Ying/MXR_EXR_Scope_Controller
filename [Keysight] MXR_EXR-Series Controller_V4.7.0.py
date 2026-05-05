@@ -553,25 +553,42 @@ def main_window(scope_ip):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
                             boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
                             )
-            color_all= [
-                '#FFFFC0CB', '#FF99DAE8', '#FFFF2674', '#FF0000FF', '#FFFF8A00', '#FFFF8A00',
-                '#FFFF8A00', '#FFFF8A00', '#FFFF8A00', '#FFFF8A00', '#FFFF8A00', '#FFFF8A00'
+            color_list= [
+                '#FFFFC0CB', # 粉 (系統)
+                '#FF99DAE8', # 淡藍 (系統)
+                '#FFFF2674', # 桃紅 (系統)
+                '#FF0000FF', # 藍 (系統)
+                '#FFEEE8AA', # 淺金菊黃
+                '#FFE0FFFF', # 淡青
+
+                '#FFFFB6C1', # 淡粉
+                '#FF98FB98', # 淡綠
+                '#FFBA55D3', # 紫
+                '#FF5F9EA0', # 灰藍
+                '#FFDAA520', # 金黃
+                '#FF008B8B', # 深青
+
+                # '#FFADD8E6', # 粉藍
+                # '#FFAFEEEE', # 淡藍綠
+                # '#FFFF69B4', # 桃紅
+                # '#FF9932CC', # 暗紫
+                # '#FFA9A9A9', # 深灰
             ]
 
             for i, boolvar in enumerate(tuple_marker):
                 self.inst.write(f':MARKer:MEASurement:MEASurement MEAS{i+1},OFF')
                 time.sleep(0.05)
 
-            c=1
-            color= 0
+            c=0
             for i, boolvar in enumerate(tuple_marker):
                 if boolvar.get():
                     self.inst.write(f':MARKer:MEASurement:MEASurement MEAS{i+1},ON')
-                    self.inst.write(f':MARKer{c}:COLor "{color_all[color]}"')
-                    self.inst.write(f':MARKer{c+1}:COLor "{color_all[color]}"')
-                    c+=2
-                    color+=1
                     time.sleep(0.05)
+                    self.inst.write(f':MARKer{2*c+1}:COLor "{color_list[c]}"')
+                    time.sleep(0.05)
+                    self.inst.write(f':MARKer{2*c+2}:COLor "{color_list[c]}"')
+                    time.sleep(0.05)
+                    c+=1
 
         def delete_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
