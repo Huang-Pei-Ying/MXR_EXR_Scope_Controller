@@ -553,26 +553,44 @@ def main_window(scope_ip):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
                             boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
                             )
+            
+            # ans= self.inst.query(':MARKer2:COLor?')
+            # print(ans)
+            
             color_list= [
-                '#FFFFC0CB', # 粉 (系統)
-                '#FF99DAE8', # 淡藍 (系統)
-                '#FFFF2674', # 桃紅 (系統)
-                '#FF0000FF', # 藍 (系統)
-                '#FFEEE8AA', # 淺金菊黃
-                '#FFE0FFFF', # 淡青
+                '#FFFF8A00',  # 橘
+                '#FFFFE4C4',  # 膚
+                '#FFFFA8BD',  # 粉
+                '#FF99DAE8',  # 淡藍
+                '#FFC0C0C0',  # 灰
+                '#FF8FBC8F',  # 灰綠
 
-                '#FFFFB6C1', # 淡粉
-                '#FF98FB98', # 淡綠
-                '#FFBA55D3', # 紫
-                '#FF5F9EA0', # 灰藍
-                '#FFDAA520', # 金黃
-                '#FF008B8B', # 深青
+                '#FFFF8A00',  # 橘
+                '#FFFFE4C4',  # 膚
+                '#FFFFA8BD',  # 粉
+                '#FF99DAE8',  # 淡藍
+                '#FFC0C0C0',  # 灰
+                '#FF8FBC8F'  # 灰綠
 
-                # '#FFADD8E6', # 粉藍
-                # '#FFAFEEEE', # 淡藍綠
-                # '#FFFF69B4', # 桃紅
-                # '#FF9932CC', # 暗紫
-                # '#FFA9A9A9', # 深灰
+                # '#FFFFC0CB', # 粉 (系統)   
+                # '#FF99DAE8', # 淡藍 (系統) 
+                # '#FFFF2674', # 桃紅 (系統) 
+                # '#FF0000FF', # 藍 (系統)   
+                # '#FFEEE8AA', # 淺金菊黃    
+                # '#FFE0FFFF', # 淡青        
+
+                # '#FFFFB6C1', # 淡粉        
+                # '#FF98FB98', # 淡綠        
+                # '#FFBA55D3', # 紫          
+                # '#FF5F9EA0', # 灰藍        
+                # '#FFDAA520', # 金黃        
+                # '#FF008B8B', # 深青        
+
+                # # '#FFADD8E6', # 粉藍      
+                # # '#FFAFEEEE', # 淡藍綠    
+                # # '#FFFF69B4', # 桃紅      
+                # # '#FF9932CC', # 暗紫      
+                # # '#FFA9A9A9', # 深灰      
             ]
 
             for i, boolvar in enumerate(tuple_marker):
@@ -638,7 +656,7 @@ def main_window(scope_ip):
             self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
 
-        def load_setup(self, folder, setup_name, scale, position, choose_type, file_path_choice):
+        def load_setup(self, folder, setup_name, time_scale, time_position, choose_type, file_path_choice, volt_scale, volt_offset, trig_chan, trig_level, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
             if file_path_choice == 2:
                 total_folder_path = folder
             else:
@@ -646,8 +664,8 @@ def main_window(scope_ip):
             self.inst.write(f':DISK:LOAD "{total_folder_path}/{setup_name}.set"')
             time.sleep(0.05)
             if boolvar_setup_timebase.get() == True:
-                self.timebase_scale_check(scale= scale)
-                self.timebase_position_check(position= position)
+                self.timebase_scale_check(scale= time_scale)
+                self.timebase_position_check(position= time_position)
             if boolvar_setup_label.get() == True:
                 label_content = [
                     str_label_1, str_label_2, str_label_3, str_label_4, 
@@ -655,7 +673,12 @@ def main_window(scope_ip):
                     ]
                 for i in range(8):
                     self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), chan= i+1)
-        
+            if boolvar_setup_volt.get() == True:
+                self.volt_check(scale= volt_scale, offset= volt_offset)
+                self.trig_check(chan= trig_chan, level= trig_level)
+                self.gen_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
+                self.RF_threshold(rf_top= rf_top, rf_base= rf_base, rf_top_percent= rf_top_percent, rf_base_percent= rf_base_percent)
+
         def clear_wmemory(self, chan, string):
             self.inst.write(f':WMEMory{chan}:CLEar')
             time.sleep(0.05)
@@ -972,8 +995,8 @@ def main_window(scope_ip):
 
         ### Result Related ###
         def get_results(self):
-            meas_name= ['', '', '']
-            mean= ['', '', '']
+            meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
+            mean= ['', '', '', '', '', '', '', '', '', '', '', '']
             all_results= self.inst.query(f':MEASure:RESults?')
             time.sleep(0.05)
             for index, value in enumerate(all_results.split(',')):
@@ -1032,6 +1055,60 @@ def main_window(scope_ip):
             text_mean_3.delete(1.0, tk.END)  # 清空當前內容
             text_mean_3.insert(tk.END, f"{mean[2]}")
             text_mean_3.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_4.config(text=f'{meas_name[3]}')
+            text_mean_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_4.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_4.insert(tk.END, f"{mean[3]}")
+            text_mean_4.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_5.config(text=f'{meas_name[4]}')
+            text_mean_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_5.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_5.insert(tk.END, f"{mean[4]}")
+            text_mean_5.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_6.config(text=f'{meas_name[5]}')
+            text_mean_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_6.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_6.insert(tk.END, f"{mean[5]}")
+            text_mean_6.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_7.config(text=f'{meas_name[6]}')
+            text_mean_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_7.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_7.insert(tk.END, f"{mean[6]}")
+            text_mean_7.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_8.config(text=f'{meas_name[7]}')
+            text_mean_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_8.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_8.insert(tk.END, f"{mean[7]}")
+            text_mean_8.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_9.config(text=f'{meas_name[8]}')
+            text_mean_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_9.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_9.insert(tk.END, f"{mean[8]}")
+            text_mean_9.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_10.config(text=f'{meas_name[9]}')
+            text_mean_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_10.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_10.insert(tk.END, f"{mean[9]}")
+            text_mean_10.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_11.config(text=f'{meas_name[10]}')
+            text_mean_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_11.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_11.insert(tk.END, f"{mean[10]}")
+            text_mean_11.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            l_meas_name_12.config(text=f'{meas_name[11]}')
+            text_mean_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_mean_12.delete(1.0, tk.END)  # 清空當前內容
+            text_mean_12.insert(tk.END, f"{mean[11]}")
+            text_mean_12.config(state=tk.DISABLED)  # 設置為只讀狀態
 
         ### Unit Related ###
         def judge_time_unit(self, value, slew):
@@ -1371,7 +1448,6 @@ def main_window(scope_ip):
         update_color(value)
         mxr.intensity_check(intensity_value= 50)
 
-
     def rgba_to_rgb_composite(in_path, out_path, background=(0, 0, 0)):
         img = Image.open(in_path)
         # 確保有 alpha 通道用 RGBA
@@ -1382,6 +1458,7 @@ def main_window(scope_ip):
         # 將原圖疊在背景上，並去掉 alpha
         composed = Image.alpha_composite(bg, img).convert('RGB')
         composed.save(out_path, format='PNG')
+
 
     class ToolTip:
         def __init__(self, widget, text):
@@ -1714,28 +1791,28 @@ def main_window(scope_ip):
 
     label_frame_control= tk.LabelFrame(window, text= 'Control', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_run = tk.Button(label_frame_control, text='RUN', width= 20, height= 2, command= lambda: mxr.run())
+    b_run = tk.Button(label_frame_control, text='RUN', width= 18, height= 2, command= lambda: mxr.run())
 
-    b_stop = tk.Button(label_frame_control, text='STOP', width= 20, height= 2, command= lambda: mxr.stop())
+    b_stop = tk.Button(label_frame_control, text='STOP', width= 18, height= 2, command= lambda: mxr.stop())
 
-    b_single = tk.Button(label_frame_control, text='SINGLE', width= 20, height= 2, command= lambda: mxr.single())
+    b_single = tk.Button(label_frame_control, text='SINGLE', width= 18, height= 2, command= lambda: mxr.single())
 
     b_clear_display = tk.Button(label_frame_control, text='Clear', width= 8, height= 2, command= lambda: mxr.clear_diaplay())
     b_clear_display.config(state= 'disabled')
 
-    b_autoscale = tk.Button(label_frame_control, text='Auto Scale', width= 20, height= 2, command= lambda: mxr.autoscale())
+    b_autoscale = tk.Button(label_frame_control, text='Auto Scale', width= 18, height= 2, command= lambda: mxr.autoscale())
     b_autoscale.config(state= 'disabled')
 
-    b_default = tk.Button(label_frame_control, text='Default', width= 20, height= 2, command= lambda: mxr.default())
+    b_default = tk.Button(label_frame_control, text='Default', width= 18, height= 2, command= lambda: mxr.default())
     b_default.config(state= 'disabled')
 
-    b_trigger = tk.Button(label_frame_control, text='Trigger Type', width= 20, height= 2, command= lambda: mxr.trig_type())
+    b_trigger = tk.Button(label_frame_control, text='Trigger Type', width= 18, height= 2, command= lambda: mxr.trig_type())
 
-    b_del = tk.Button(label_frame_control, text='Delete item', width= 20, height= 2, command= lambda: mxr.delete_item())
+    b_del = tk.Button(label_frame_control, text='Delete item', width= 18, height= 2, command= lambda: mxr.delete_item())
 
-    b_add_marker = tk.Button(label_frame_control, text='Add Marker', width= 20, height= 2, command= lambda: mxr.add_marker())
+    b_add_marker = tk.Button(label_frame_control, text='Add Marker', width= 18, height= 2, command= lambda: mxr.add_marker())
 
-    b_del_marker = tk.Button(label_frame_control, text='Del Marker', width= 20, height= 2, command= lambda: mxr.delete_marker())
+    b_del_marker = tk.Button(label_frame_control, text='Del Marker', width= 18, height= 2, command= lambda: mxr.delete_marker())
 
     b_trig_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 8, height= 2, command= lambda: mxr.trig_slope())
 
@@ -1796,14 +1873,14 @@ def main_window(scope_ip):
 
     label_frame_chan= tk.LabelFrame(window, text= 'Channel', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 1, bookmark= str_label_1.get(), choose_type= int_label_type.get()))
-    b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 2, bookmark= str_label_2.get(), choose_type= int_label_type.get()))
-    b_Chan3 = tk.Button(label_frame_chan, text='Chan3', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 3, bookmark= str_label_3.get(), choose_type= int_label_type.get()))
-    b_Chan4 = tk.Button(label_frame_chan, text='Chan4', width= 20, height= 2, command= lambda: mxr.display_Chan(chan= 4, bookmark= str_label_4.get(), choose_type= int_label_type.get()))
-    b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 1, bookmark= str_label_5.get(), choose_type= int_label_type.get()))
-    b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 2, bookmark= str_label_6.get(), choose_type= int_label_type.get()))
-    b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 3, bookmark= str_label_7.get(), choose_type= int_label_type.get()))
-    b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 20, height= 2, command= lambda: mxr.display_WMemory(chan= 4, bookmark= str_label_8.get(), choose_type= int_label_type.get()))
+    b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 1, bookmark= str_label_1.get(), choose_type= int_label_type.get()))
+    b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 2, bookmark= str_label_2.get(), choose_type= int_label_type.get()))
+    b_Chan3 = tk.Button(label_frame_chan, text='Chan3', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 3, bookmark= str_label_3.get(), choose_type= int_label_type.get()))
+    b_Chan4 = tk.Button(label_frame_chan, text='Chan4', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 4, bookmark= str_label_4.get(), choose_type= int_label_type.get()))
+    b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 1, bookmark= str_label_5.get(), choose_type= int_label_type.get()))
+    b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 2, bookmark= str_label_6.get(), choose_type= int_label_type.get()))
+    b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 3, bookmark= str_label_7.get(), choose_type= int_label_type.get()))
+    b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 4, bookmark= str_label_8.get(), choose_type= int_label_type.get()))
 
     int_ch = tk.IntVar()    
     rb_ch_single = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
@@ -1819,17 +1896,6 @@ def main_window(scope_ip):
     l_ch_delta_stop = tk.Label(label_frame_chan, text= 'Chan', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_stop = tk.IntVar()
     cb_ch_delta_stop = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_stop, values= [1, 2, 3, 4])
-
-    b_get_results = tk.Button(label_frame_chan, text= 'Get Results\n(只能取3個)', width= 10, command= lambda: mxr.get_results())
-    l_meas_name_1 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_1 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_1.config(state=tk.DISABLED)
-    l_meas_name_2 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_2 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_2.config(state=tk.DISABLED)
-    l_meas_name_3 = tk.Label(label_frame_chan, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_3 = tk.Text(label_frame_chan, width= 20, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_3.config(state=tk.DISABLED)
 
     b_chan_switch = tk.Button(label_frame_chan, text= 'Delta Chan Switch', height= 1, command= lambda: switch_string(var_1= int_ch_delta_start, var_2= int_ch_delta_stop))
 
@@ -1904,39 +1970,110 @@ def main_window(scope_ip):
     str_WMe1 = tk.StringVar()
     e_WMe1 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe1)
 
-    b_WMe1_load = tk.Button(label_frame_load_wme, text= 'load WMemory1', command= lambda: mxr.load_wmemory(chan= 1, folder= str_WMe_folder.get(), wme_name= str_WMe1.get(), file_path_choice = int_wme_path_choice.get()))
+    b_WMe1_load = tk.Button(label_frame_load_wme, text= 'load WMemory1', width= 16, command= lambda: mxr.load_wmemory(chan= 1, folder= str_WMe_folder.get(), wme_name= str_WMe1.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear1 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 1, string= str_WMe1))
 
     str_WMe2 = tk.StringVar()
     e_WMe2 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe2)
     
-    b_WMe2_load = tk.Button(label_frame_load_wme, text= 'load WMemory2', command= lambda: mxr.load_wmemory(chan= 2, folder= str_WMe_folder.get(), wme_name= str_WMe2.get(), file_path_choice = int_wme_path_choice.get()))
+    b_WMe2_load = tk.Button(label_frame_load_wme, text= 'load WMemory2', width= 16, command= lambda: mxr.load_wmemory(chan= 2, folder= str_WMe_folder.get(), wme_name= str_WMe2.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear2 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 2, string= str_WMe2))
 
     str_WMe3 = tk.StringVar()
     e_WMe3 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe3)
 
-    b_WMe3_load = tk.Button(label_frame_load_wme, text= 'load WMemory3', command= lambda: mxr.load_wmemory(chan= 3, folder= str_WMe_folder.get(), wme_name= str_WMe3.get(), file_path_choice = int_wme_path_choice.get()))
+    b_WMe3_load = tk.Button(label_frame_load_wme, text= 'load WMemory3', width= 16, command= lambda: mxr.load_wmemory(chan= 3, folder= str_WMe_folder.get(), wme_name= str_WMe3.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear3 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 3, string= str_WMe3))
 
     str_WMe4 = tk.StringVar()
     e_WMe4 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe4)
     
-    b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get(), file_path_choice = int_wme_path_choice.get()))
+    b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', width= 16, command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear4 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 4, string= str_WMe4))
 
     str_setup = tk.StringVar()
     e_setup = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_setup)
     
-    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', command= lambda: mxr.load_setup(folder= str_WMe_folder.get(), setup_name= str_setup.get(), scale= str_time_scale.get(), position= str_time_offset.get(), choose_type= int_label_type.get(), file_path_choice = int_wme_path_choice.get()))
+    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 16, command= lambda: mxr.load_setup(
+        folder= str_WMe_folder.get(), setup_name= str_setup.get(), 
+        time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
+        choose_type= int_label_type.get(), 
+        file_path_choice = int_wme_path_choice.get(), 
+        volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
+        trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
+        g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), 
+        g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
+        rf_top= cbb_rf_top.get(),  rf_base= cbb_rf_base.get(), 
+        rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get()
+        ))
 
     boolvar_setup_timebase = tk.BooleanVar()    
-    cb_setup_timebase= tk.Checkbutton(label_frame_load_wme, text= 'Timebase', variable= boolvar_setup_timebase, background= bg_color_1, fg= '#0D325C')
+    cb_setup_timebase= tk.Checkbutton(label_frame_load_wme, text= 'Time', variable= boolvar_setup_timebase, background= bg_color_1, fg= '#0D325C')
     cb_setup_timebase.select()
 
     boolvar_setup_label = tk.BooleanVar()    
     cb_setup_label= tk.Checkbutton(label_frame_load_wme, text= 'Label', variable= boolvar_setup_label, background= bg_color_1, fg= '#0D325C')
     cb_setup_label.select()
+
+    boolvar_setup_volt = tk.BooleanVar()    
+    cb_setup_volt= tk.Checkbutton(label_frame_load_wme, text= 'Volt', variable= boolvar_setup_volt, background= bg_color_1, fg= '#0D325C')
+    cb_setup_volt.select()
+
+
+    # Extract Results Frame ===================================================================================================================================
+
+    label_frame_extract_result= tk.LabelFrame(window, text= 'Extract Results', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
+
+    b_get_results = tk.Button(label_frame_extract_result, text= 'Get Results\n(最多取12個)', width= 20, height= 2, command= lambda: mxr.get_results())
+    
+    l_meas_name_1 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_1 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_1.config(state=tk.DISABLED)
+    
+    l_meas_name_2 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_2 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_2.config(state=tk.DISABLED)
+    
+    l_meas_name_3 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_3 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_3.config(state=tk.DISABLED)
+    
+    l_meas_name_4 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_4 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_4.config(state=tk.DISABLED)
+    
+    l_meas_name_5 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_5 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_5.config(state=tk.DISABLED)
+    
+    l_meas_name_6 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_6 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_6.config(state=tk.DISABLED)
+    
+    l_meas_name_7 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_7 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_7.config(state=tk.DISABLED)
+    
+    l_meas_name_8 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_8 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_8.config(state=tk.DISABLED)
+    
+    l_meas_name_9 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_9 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_9.config(state=tk.DISABLED)
+    
+    l_meas_name_10 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_10 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_10.config(state=tk.DISABLED)
+    
+    l_meas_name_11 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_11 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_11.config(state=tk.DISABLED)
+    
+    l_meas_name_12 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_mean_12 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_mean_12.config(state=tk.DISABLED)
+    
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
@@ -1950,6 +2087,8 @@ def main_window(scope_ip):
     label_frame_chan.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'nsew')
     label_frame_save.grid(row= 2, column= 2, padx= 5, pady= 2, sticky= 'nsew')
     label_frame_load_wme.grid(row= 3, column= 2, padx= 5, pady= 2, rowspan= 2, sticky= 'nsew')
+    
+    label_frame_extract_result.grid(row= 0, column= 3, padx= 5, pady= 2, rowspan= 5, sticky= 'nsew')
 
     # Meas grid
     b_freq.grid(row= 0, column= 0, padx= 5, pady= 4)
@@ -2101,19 +2240,12 @@ def main_window(scope_ip):
     b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
     rb_ch_single.grid(row= 4, column= 0, sticky= 'e')
     cb_ch_single.grid(row= 4, column= 1, sticky= 'w')
-    b_chan_switch.grid(row= 5, column= 0, rowspan=2, columnspan= 2)
     rb_ch_delta.grid(row= 4, column= 2, sticky= 'e')
     cb_ch_delta_start.grid(row= 4, column= 3, sticky= 'w')
     l_arrow.grid(row= 5, column= 2, sticky= 'e')
     l_ch_delta_stop.grid(row= 6, column= 2, sticky= 'e')
     cb_ch_delta_stop.grid(row= 6, column= 3, sticky= 'w')
-    b_get_results.grid(row= 4, column= 4, rowspan= 2)
-    l_meas_name_1.grid(row= 4, column= 5, sticky= 'w')
-    text_mean_1.grid(row= 4, column= 6, sticky= 'w')
-    l_meas_name_2.grid(row= 5, column= 5, sticky= 'w')
-    text_mean_2.grid(row= 5, column= 6, sticky= 'w')
-    l_meas_name_3.grid(row= 6, column= 5, sticky= 'w')
-    text_mean_3.grid(row= 6, column= 6, sticky= 'w')
+    b_chan_switch.grid(row= 5, column= 4,  sticky= 'e')
 
     # Save grid
     e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 1)
@@ -2146,23 +2278,50 @@ def main_window(scope_ip):
     b_other_file_save_pc.grid(row= 7, column= 3, padx= 5, pady= 1, sticky= 'w')
     
     #LoadWMe grid
-    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2)
-    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 2, columnspan= 2)
-    b_wme_clear1.grid(row= 0, column= 3, padx= 5, pady= 2)
-    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 2)
-    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 2, columnspan= 2)
-    b_wme_clear2.grid(row= 1, column= 3, padx= 5, pady= 2)
-    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 2)
-    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 2, columnspan= 2)
-    b_wme_clear3.grid(row= 2, column= 3, padx= 5, pady= 2)
-    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 2)
-    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 2, columnspan= 2)
-    b_wme_clear4.grid(row= 3, column= 3, padx= 5, pady= 2)
-    e_setup.grid(row= 4, column= 0, padx= 5, pady= 2)
+    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'w')
+    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear1.grid(row= 0, column= 3, padx= 5, pady= 2, sticky= 'w')
+    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'w')
+    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear2.grid(row= 1, column= 3, padx= 5, pady= 2, sticky= 'w')
+    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'w')
+    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear3.grid(row= 2, column= 3, padx= 5, pady= 2, sticky= 'w')
+    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'w')
+    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear4.grid(row= 3, column= 3, padx= 5, pady= 2, sticky= 'w')
+    e_setup.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
     b_setup_load.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
-    cb_setup_timebase.grid(row= 4, column= 2, padx= 5, pady= 2, columnspan= 2)
-    cb_setup_label.grid(row= 4, column= 4, padx= 5, pady= 2)
+    cb_setup_timebase.grid(row= 4, column= 3, padx= 3, pady= 2, sticky= 'w')
+    cb_setup_label.grid(row= 4, column= 4, padx= 3, pady= 2, sticky= 'w')
+    cb_setup_volt.grid(row= 4, column= 5, padx= 3, pady= 2, sticky= 'w')
 
+    #Extract Results grid
+    b_get_results.grid(row= 0, column= 0, padx= 5, pady=2)
+    l_meas_name_1.grid(row= 1, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_1.grid(row= 2, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_2.grid(row= 3, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_2.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_3.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_3.grid(row= 6, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_4.grid(row= 7, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_4.grid(row= 8, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_5.grid(row= 9, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_5.grid(row= 10, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_6.grid(row= 11, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_6.grid(row= 12, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_7.grid(row= 13, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_7.grid(row= 14, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_8.grid(row= 15, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_8.grid(row= 16, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_9.grid(row= 17, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_9.grid(row= 18, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_10.grid(row= 19, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_10.grid(row= 20, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_11.grid(row= 21, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_11.grid(row= 22, column= 0, sticky= 'w', padx= 5, pady=2)
+    l_meas_name_12.grid(row= 23, column= 0, sticky= 'w', padx= 5, pady=2)
+    text_mean_12.grid(row= 24, column= 0, sticky= 'w', padx= 5, pady=2)
 
     # ToolTip(b_tSU, 'Channel記得勾對欸')
     ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
@@ -2171,10 +2330,10 @@ def main_window(scope_ip):
     ToolTip(b_wfm_intensity, '可用滑鼠滾輪調整數字大小')
     ToolTip(cb_start_rf, '嗚啦!')
     ToolTip(cb_start_num, '呀哈!')
-    ToolTip(cb_start_pos, '噗嚕!')
+    # ToolTip(cb_start_pos, '噗嚕!')
     ToolTip(cb_stop_rf, '噗嚕!')
-    ToolTip(cb_stop_num, '嗚啦!')
-    ToolTip(cb_stop_pos, '呀哈!')
+    # ToolTip(cb_stop_num, '嗚啦!')
+    # ToolTip(cb_stop_pos, '呀哈!')
     ToolTip(cbb_gen_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_gen_mid_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_gen_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
@@ -2191,13 +2350,13 @@ def main_window(scope_ip):
     ToolTip(b_clear_display, '嗚嚕嗚啦')
     ToolTip(b_default, '6666')
     ToolTip(cb_marker_2, '防塵套不要亂丟!')
+    ToolTip(cb_marker_9, '花椒串')
     # ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
     ToolTip(cb_ch_single, '累')
     ToolTip(cb_ch_delta_start, '隨波逐流的')
     ToolTip(cb_ch_delta_stop, '人生')
-    ToolTip(text_mean_3, '好忙好忙')
     ToolTip(e_image_folder, '自己打字，按按鈕會幫你新增資料夾')
-    ToolTip(e_image, '蛤~~~!')
+    ToolTip(e_image, '嗚哩哩')
     # ToolTip(b_image_save_scope, '會幫你新增資料夾')
     ToolTip(e_image_pc_folder, '可以直接存電腦啦~')
     ToolTip(e_WMe_folder, '自己打字，按按鈕會幫你新增資料夾')
@@ -2207,6 +2366,10 @@ def main_window(scope_ip):
     # ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
     ToolTip(e_WMe2, '呀哈呀哈')
     ToolTip(e_WMe4, '噗嚕!')
+    ToolTip(text_mean_3, '好忙好忙')
+    ToolTip(text_mean_7, '四捨五入')
+    ToolTip(text_mean_9, '芭樂綠茶')
+    ToolTip(text_mean_12, '多多檢查有助身心健康')
 
     initialize()
 
