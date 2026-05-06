@@ -559,11 +559,11 @@ def main_window(scope_ip):
             
             color_list= [
                 '#FFFF8A00',  # 橘
-                '#FFFFE4C4',  # 膚
-                '#FFFFA8BD',  # 粉
-                '#FF99DAE8',  # 淡藍
-                '#FFC0C0C0',  # 灰
-                '#FF8FBC8F',  # 灰綠
+                '#FFFDF5E6',  # 淡膚
+                '#FFFF00FF',  # 亮粉
+                '#FF00FFFF',  # 水藍
+                '#FFE6E6FA',  # 灰
+                '#FFB8FFBA',  # 淡綠
 
                 '#FFFF8A00',  # 橘
                 '#FFFFE4C4',  # 膚
