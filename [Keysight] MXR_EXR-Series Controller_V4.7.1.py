@@ -12,7 +12,7 @@ from PIL import Image
 import random
 import string
 
-window_name= '[Keysight] MXR/EXR-Series Controller_v4.7.0'
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.7.1'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -557,14 +557,7 @@ def main_window(scope_ip):
             # ans= self.inst.query(':MARKer2:COLor?')
             # print(ans)
             
-            color_list= [
-                '#FFFF8A00',  # 橘
-                '#FFFDF5E6',  # 淡膚
-                '#FFFF00FF',  # 亮粉
-                '#FF00FFFF',  # 水藍
-                '#FFE6E6FA',  # 灰
-                '#FFB8FFBA',  # 淡綠
-
+            multe_color_list= [
                 '#FFFF8A00',  # 橘
                 '#FFFFE4C4',  # 膚
                 '#FFFFA8BD',  # 粉
@@ -572,26 +565,33 @@ def main_window(scope_ip):
                 '#FFC0C0C0',  # 灰
                 '#FF8FBC8F'  # 灰綠
 
-                # '#FFFFC0CB', # 粉 (系統)   
-                # '#FF99DAE8', # 淡藍 (系統) 
-                # '#FFFF2674', # 桃紅 (系統) 
-                # '#FF0000FF', # 藍 (系統)   
-                # '#FFEEE8AA', # 淺金菊黃    
-                # '#FFE0FFFF', # 淡青        
-
-                # '#FFFFB6C1', # 淡粉        
-                # '#FF98FB98', # 淡綠        
-                # '#FFBA55D3', # 紫          
-                # '#FF5F9EA0', # 灰藍        
-                # '#FFDAA520', # 金黃        
-                # '#FF008B8B', # 深青        
-
-                # # '#FFADD8E6', # 粉藍      
-                # # '#FFAFEEEE', # 淡藍綠    
-                # # '#FFFF69B4', # 桃紅      
-                # # '#FF9932CC', # 暗紫      
-                # # '#FFA9A9A9', # 深灰      
+                '#FFFF8A00',  # 橘
+                '#FFFDF5E6',  # 淡膚
+                '#FFFF00FF',  # 亮粉
+                '#FF00FFFF',  # 水藍
+                '#FFE6E6FA',  # 灰
+                '#FFB8FFBA',  # 淡綠
             ]
+            single_color_list= [
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00'  # 橘
+
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00',  # 橘
+                "#FFFF8A00",  # 橘
+                '#FFFF8A00',  # 橘
+                '#FFFF8A00',  # 橘
+            ]
+
+            if boolvar_marker_color.get() == True:
+                color_list= multe_color_list
+            else:
+                color_list= single_color_list
 
             for i, boolvar in enumerate(tuple_marker):
                 self.inst.write(f':MARKer:MEASurement:MEASurement MEAS{i+1},OFF')
@@ -1797,7 +1797,7 @@ def main_window(scope_ip):
 
     b_single = tk.Button(label_frame_control, text='SINGLE', width= 18, height= 2, command= lambda: mxr.single())
 
-    b_clear_display = tk.Button(label_frame_control, text='Clear', width= 8, height= 2, command= lambda: mxr.clear_diaplay())
+    b_clear_display = tk.Button(label_frame_control, text='Clear', width= 18, height= 2, command= lambda: mxr.clear_diaplay())
     b_clear_display.config(state= 'disabled')
 
     b_autoscale = tk.Button(label_frame_control, text='Auto Scale', width= 18, height= 2, command= lambda: mxr.autoscale())
@@ -1814,7 +1814,7 @@ def main_window(scope_ip):
 
     b_del_marker = tk.Button(label_frame_control, text='Del Marker', width= 18, height= 2, command= lambda: mxr.delete_marker())
 
-    b_trig_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 8, height= 2, command= lambda: mxr.trig_slope())
+    b_trig_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 18, height= 2, command= lambda: mxr.trig_slope())
 
     def disable_button():
         if b_autoscale["state"] == 'normal':
@@ -1830,7 +1830,7 @@ def main_window(scope_ip):
         else:
             b_clear_display.config(state="normal")
 
-    b_button_disable = tk.Button(label_frame_control, text= 'Disable\nButton', width= 8, height=2, command= disable_button)
+    b_button_disable = tk.Button(label_frame_control, text= 'Disable\nButton', width= 18, height=2, command= disable_button)
 
     boolvar_marker_1 = tk.BooleanVar()    
     cb_marker_1= tk.Checkbutton(label_frame_control, text= 'Meas 1', variable= boolvar_marker_1, background= bg_color_2, fg= '#0D325C')
@@ -1868,6 +1868,8 @@ def main_window(scope_ip):
     boolvar_marker_12 = tk.BooleanVar()    
     cb_marker_12= tk.Checkbutton(label_frame_control, text= 'Meas12', variable= boolvar_marker_12, background= bg_color_2, fg= '#0D325C')
 
+    boolvar_marker_color = tk.BooleanVar()    
+    cb_marker_color= tk.Checkbutton(label_frame_control, text= 'Multi-Marker Color', variable= boolvar_marker_color, background= bg_color_2, fg= '#0D325C', font= ('Calibri', 11, 'bold'))
 
     # Channel Frame ===================================================================================================================================
 
@@ -2207,15 +2209,15 @@ def main_window(scope_ip):
     b_run.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2)
     b_stop.grid(row= 0, column= 1, padx= 5, pady= 3, rowspan= 2)
     b_single.grid(row= 0, column= 2, padx= 5, pady= 3, rowspan= 2)
-    b_clear_display.grid(row= 0, column= 3, padx= 5, pady= 3, rowspan= 2)
     b_autoscale.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2)
     b_default.grid(row= 2, column= 1, padx= 5, pady= 3, rowspan= 2)
-    b_trigger.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2)
-    b_del.grid(row= 4, column= 0, padx= 5, pady= 3, rowspan= 2)
-    b_add_marker.grid(row= 4, column= 1, padx= 5, pady= 3, rowspan= 2)
-    b_del_marker.grid(row= 4, column= 2, padx= 5, pady= 3, rowspan= 2)
-    b_trig_slope.grid(row= 2, column= 3, padx= 5, pady= 3, rowspan= 2)
-    b_button_disable.grid(row= 4, column= 3, padx= 5, pady= 3, rowspan= 2)
+    b_clear_display.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2)
+    b_trigger.grid(row= 4, column= 0, padx= 5, pady= 3, rowspan= 2)
+    b_trig_slope.grid(row= 4, column= 1, padx= 5, pady= 3, rowspan= 2)
+    b_button_disable.grid(row= 4, column= 2, padx= 5, pady= 3, rowspan= 2)
+    b_del.grid(row= 6, column= 0, padx= 5, pady= 3, rowspan= 2)
+    b_add_marker.grid(row= 6, column= 1, padx= 5, pady= 3, rowspan= 2)
+    b_del_marker.grid(row= 6, column= 2, padx= 5, pady= 3, rowspan= 2)
     cb_marker_1.grid(row= 0, column= 4, padx= 5) 
     cb_marker_2.grid(row= 1, column= 4, padx= 5) 
     cb_marker_3.grid(row= 2, column= 4, padx= 5) 
@@ -2228,6 +2230,7 @@ def main_window(scope_ip):
     cb_marker_10.grid(row= 3, column= 5, sticky= 'w',) 
     cb_marker_11.grid(row= 4, column= 5, sticky= 'w',) 
     cb_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
+    cb_marker_color.grid(row= 7, column= 4, padx= 5, pady= 3, columnspan= 2, sticky= 'w')
 
     # Chan grid
     b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
@@ -2292,9 +2295,9 @@ def main_window(scope_ip):
     b_wme_clear4.grid(row= 3, column= 3, padx= 5, pady= 2, sticky= 'w')
     e_setup.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
     b_setup_load.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
-    cb_setup_timebase.grid(row= 4, column= 3, padx= 3, pady= 2, sticky= 'w')
+    cb_setup_volt.grid(row= 2, column= 4, padx= 3, pady= 2, sticky= 'w')
+    cb_setup_timebase.grid(row= 3, column= 4, padx= 3, pady= 2, sticky= 'w')
     cb_setup_label.grid(row= 4, column= 4, padx= 3, pady= 2, sticky= 'w')
-    cb_setup_volt.grid(row= 4, column= 5, padx= 3, pady= 2, sticky= 'w')
 
     #Extract Results grid
     b_get_results.grid(row= 0, column= 0, padx= 5, pady=2)
