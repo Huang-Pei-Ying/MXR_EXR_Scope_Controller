@@ -12,7 +12,7 @@ from PIL import Image
 import random
 import string
 
-window_name= '[Keysight] MXR/EXR-Series Controller_v4.7.1'
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.0'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -996,7 +996,8 @@ def main_window(scope_ip):
         ### Result Related ###
         def get_results(self):
             meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
-            mean= ['', '', '', '', '', '', '', '', '', '', '', '']
+            result1= ['', '', '', '', '', '', '', '', '', '', '', '']
+            result2= ['', '', '', '', '', '', '', '', '', '', '', '']
             all_results= self.inst.query(f':MEASure:RESults?')
             time.sleep(0.05)
             for index, value in enumerate(all_results.split(',')):
@@ -1019,97 +1020,192 @@ def main_window(scope_ip):
                         continue
                     else:
                         measurement_type = 1
-                if divmod(index, 7)[1] == 2:
-                    if measurement_type == 0:
-                        final_result= self.judge_volt_unit(value= value)
-                    elif measurement_type == 1:
-                        slew= False
-                        final_result= self.judge_time_unit(value= value, slew= slew)
-                    elif measurement_type == 2:
-                        slew= True
-                        final_result= self.judge_time_unit(value= value, slew= slew)
-                    elif measurement_type == 3:
-                        final_result= self.judge_freq_unit(value= value)
-                    elif measurement_type == 4:
-                        final_result = f"{float(value):.2f}"+' %'
+                
+                if intvar_result_type.get() == 1:  # 選擇Mean Value
+                    if divmod(index, 7)[1] == 4:
+                        if measurement_type == 0:
+                            final_result_1= self.judge_volt_unit(value= value)
+                            final_result_2= ''
+                        elif measurement_type == 1:
+                            slew= False
+                            final_result_1= self.judge_time_unit(value= value, slew= slew)
+                            final_result_2= ''
+                        elif measurement_type == 2:
+                            slew= True
+                            final_result_1= self.judge_time_unit(value= value, slew= slew)
+                            final_result_2= ''
+                        elif measurement_type == 3:
+                            final_result_1= self.judge_freq_unit(value= value)
+                            final_result_2= ''
+                        elif measurement_type == 4:
+                            final_result_1 = f"{float(value):.3f}"+' %'
+                            final_result_2= ''
 
-                    try:
-                        mean[divmod(index, 7)[0]]= final_result
-                    except:
-                        continue
+                        try:
+                            result1[divmod(index, 7)[0]]= final_result_1
+                            result2[divmod(index, 7)[0]]= final_result_2
+                        except:
+                            continue
+
+                elif intvar_result_type.get() == 2:  # 選擇Min & Max Value
+                    if divmod(index, 7)[1] == 2:
+                        if measurement_type == 0:
+                            final_result_1= self.judge_volt_unit(value= value)
+                        elif measurement_type == 1:
+                            slew= False
+                            final_result_1= self.judge_time_unit(value= value, slew= slew)
+                        elif measurement_type == 2:
+                            slew= True
+                            final_result_1= self.judge_time_unit(value= value, slew= slew)
+                        elif measurement_type == 3:
+                            final_result_1= self.judge_freq_unit(value= value)
+                        elif measurement_type == 4:
+                            final_result_1 = f"{float(value):.3f}"+' %'
+
+                        try:
+                            result1[divmod(index, 7)[0]]= final_result_1
+                        except:
+                            continue
+
+                    if divmod(index, 7)[1] == 3:
+                        if measurement_type == 0:
+                            final_result_2= self.judge_volt_unit(value= value)
+                        elif measurement_type == 1:
+                            slew= False
+                            final_result_2= self.judge_time_unit(value= value, slew= slew)
+                        elif measurement_type == 2:
+                            slew= True
+                            final_result_2= self.judge_time_unit(value= value, slew= slew)
+                        elif measurement_type == 3:
+                            final_result_2= self.judge_freq_unit(value= value)
+                        elif measurement_type == 4:
+                            final_result_2 = f"{float(value):.3f}"+' %'
+
+                        try:
+                            result2[divmod(index, 7)[0]]= final_result_2
+                        except:
+                            continue
 
             l_meas_name_1.config(text=f'{meas_name[0]}')
-            text_mean_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_1.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_1.insert(tk.END, f"{mean[0]}")
-            text_mean_1.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result1_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_1.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_1.insert(tk.END, f"{result1[0]}")
+            text_result1_1.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_1.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_1.insert(tk.END, f"{result2[0]}")
+            text_result2_1.config(state=tk.DISABLED)  # 設置為只讀狀態
 
             l_meas_name_2.config(text=f'{meas_name[1]}')
-            text_mean_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_2.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_2.insert(tk.END, f"{mean[1]}")
-            text_mean_2.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_2.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_2.insert(tk.END, f"{result1[1]}")
+            text_result1_2.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_2.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_2.insert(tk.END, f"{result2[1]}")
+            text_result2_2.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_3.config(text=f'{meas_name[2]}')
-            text_mean_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_3.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_3.insert(tk.END, f"{mean[2]}")
-            text_mean_3.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_3.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_3.insert(tk.END, f"{result1[2]}")
+            text_result1_3.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_3.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_3.insert(tk.END, f"{result2[2]}")
+            text_result2_3.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_4.config(text=f'{meas_name[3]}')
-            text_mean_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_4.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_4.insert(tk.END, f"{mean[3]}")
-            text_mean_4.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_4.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_4.insert(tk.END, f"{result1[3]}")
+            text_result1_4.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_4.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_4.insert(tk.END, f"{result2[3]}")
+            text_result2_4.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_5.config(text=f'{meas_name[4]}')
-            text_mean_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_5.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_5.insert(tk.END, f"{mean[4]}")
-            text_mean_5.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_5.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_5.insert(tk.END, f"{result1[4]}")
+            text_result1_5.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_5.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_5.insert(tk.END, f"{result2[4]}")
+            text_result2_5.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_6.config(text=f'{meas_name[5]}')
-            text_mean_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_6.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_6.insert(tk.END, f"{mean[5]}")
-            text_mean_6.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_6.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_6.insert(tk.END, f"{result1[5]}")
+            text_result1_6.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_6.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_6.insert(tk.END, f"{result2[5]}")
+            text_result2_6.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_7.config(text=f'{meas_name[6]}')
-            text_mean_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_7.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_7.insert(tk.END, f"{mean[6]}")
-            text_mean_7.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_7.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_7.insert(tk.END, f"{result1[6]}")
+            text_result1_7.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_7.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_7.insert(tk.END, f"{result2[6]}")
+            text_result2_7.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_8.config(text=f'{meas_name[7]}')
-            text_mean_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_8.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_8.insert(tk.END, f"{mean[7]}")
-            text_mean_8.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_8.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_8.insert(tk.END, f"{result1[7]}")
+            text_result1_8.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_8.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_8.insert(tk.END, f"{result2[7]}")
+            text_result2_8.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_9.config(text=f'{meas_name[8]}')
-            text_mean_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_9.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_9.insert(tk.END, f"{mean[8]}")
-            text_mean_9.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_9.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_9.insert(tk.END, f"{result1[8]}")
+            text_result1_9.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_9.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_9.insert(tk.END, f"{result2[8]}")
+            text_result2_9.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_10.config(text=f'{meas_name[9]}')
-            text_mean_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_10.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_10.insert(tk.END, f"{mean[9]}")
-            text_mean_10.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_10.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_10.insert(tk.END, f"{result1[9]}")
+            text_result1_10.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_10.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_10.insert(tk.END, f"{result2[9]}")
+            text_result2_10.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_11.config(text=f'{meas_name[10]}')
-            text_mean_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_11.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_11.insert(tk.END, f"{mean[10]}")
-            text_mean_11.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_11.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_11.insert(tk.END, f"{result1[10]}")
+            text_result1_11.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_11.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_11.insert(tk.END, f"{result2[10]}")
+            text_result2_11.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
             l_meas_name_12.config(text=f'{meas_name[11]}')
-            text_mean_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_mean_12.delete(1.0, tk.END)  # 清空當前內容
-            text_mean_12.insert(tk.END, f"{mean[11]}")
-            text_mean_12.config(state=tk.DISABLED)  # 設置為只讀狀態
-
+            text_result1_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result1_12.delete(1.0, tk.END)  # 清空當前內容
+            text_result1_12.insert(tk.END, f"{result1[11]}")
+            text_result1_12.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result2_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result2_12.delete(1.0, tk.END)  # 清空當前內容
+            text_result2_12.insert(tk.END, f"{result2[11]}")
+            text_result2_12.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
         ### Unit Related ###
         def judge_time_unit(self, value, slew):
             pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
@@ -1459,6 +1555,61 @@ def main_window(scope_ip):
         composed = Image.alpha_composite(bg, img).convert('RGB')
         composed.save(out_path, format='PNG')
 
+    def select1_change_label_text():
+        l_result_type_1.config(text= "Mean")
+        l_result_type_2.config(text= "--")
+        text_result1_1.config(width= 22)
+        text_result2_1.config(width= 0)
+        text_result1_2.config(width= 22)
+        text_result2_2.config(width= 0)
+        text_result1_3.config(width= 22)
+        text_result2_3.config(width= 0)
+        text_result1_4.config(width= 22)
+        text_result2_4.config(width= 0)
+        text_result1_5.config(width= 22)
+        text_result2_5.config(width= 0)
+        text_result1_6.config(width= 22)
+        text_result2_6.config(width= 0)
+        text_result1_7.config(width= 22)
+        text_result2_7.config(width= 0)
+        text_result1_8.config(width= 22)
+        text_result2_8.config(width= 0)
+        text_result1_9.config(width= 22)
+        text_result2_9.config(width= 0)
+        text_result1_10.config(width= 22)
+        text_result2_10.config(width= 0)
+        text_result1_11.config(width= 22)
+        text_result2_11.config(width= 0)
+        text_result1_12.config(width= 22)
+        text_result2_12.config(width= 0)
+
+    def select2_change_label_text():
+        l_result_type_1.config(text= "Min")
+        l_result_type_2.config(text= "Max")   
+        text_result1_1.config(width= 22)
+        text_result2_1.config(width= 22)
+        text_result1_2.config(width= 22)
+        text_result2_2.config(width= 22)
+        text_result1_3.config(width= 22)
+        text_result2_3.config(width= 22)
+        text_result1_4.config(width= 22)
+        text_result2_4.config(width= 22)
+        text_result1_5.config(width= 22)
+        text_result2_5.config(width= 22)
+        text_result1_6.config(width= 22)
+        text_result2_6.config(width= 22)
+        text_result1_7.config(width= 22)
+        text_result2_7.config(width= 22)
+        text_result1_8.config(width= 22)
+        text_result2_8.config(width= 22)
+        text_result1_9.config(width= 22)
+        text_result2_9.config(width= 22)
+        text_result1_10.config(width= 22)
+        text_result2_10.config(width= 22)
+        text_result1_11.config(width= 22)
+        text_result2_11.config(width= 22)
+        text_result1_12.config(width= 22)
+        text_result2_12.config(width= 22)
 
     class ToolTip:
         def __init__(self, widget, text):
@@ -1468,13 +1619,11 @@ def main_window(scope_ip):
             self.widget.bind("<Enter>", self.show_tip)
             self.widget.bind("<Leave>", self.hide_tip)
 
-        def show_tip(self, event=None):
+        def show_tip(self, event= None):
             "Display text in tooltip window"
             if self.tip_window or not self.text:
                 return
             x, y, cx, cy = self.widget.bbox("insert")
-            x += self.widget.winfo_rootx() + 57
-            y += self.widget.winfo_rooty() + 21
             self.tip_window = tw = tk.Toplevel(self.widget)
             tw.wm_overrideredirect(True)
             tw.wm_geometry("+%d+%d" % (x, y))
@@ -2026,55 +2175,89 @@ def main_window(scope_ip):
 
     label_frame_extract_result= tk.LabelFrame(window, text= 'Extract Results', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_get_results = tk.Button(label_frame_extract_result, text= 'Get Results\n(最多取12個)', width= 20, height= 2, command= lambda: mxr.get_results())
+    intvar_result_type = tk.IntVar()   
+    rb_mean_result = tk.Radiobutton(label_frame_extract_result, text= 'Mean', variable= intvar_result_type, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 10,), command= lambda: select1_change_label_text())
+    rb_minmax_result = tk.Radiobutton(label_frame_extract_result, text= 'Min & Max', variable= intvar_result_type, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 10,), command= lambda: select2_change_label_text())
+    intvar_result_type.set(value= 1)
+
+    b_get_results = tk.Button(label_frame_extract_result, text= 'Get Results (最多取12個)', width= 20, height= 2, command= lambda: mxr.get_results())
     
+    l_result_type_1 = tk.Label(label_frame_extract_result, text= 'Mean', background= bg_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
+    l_result_type_2 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
+
+    l_result_dividing_line = tk.Label(label_frame_extract_result, text= '-------------------------------------------------', background= bg_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
+
     l_meas_name_1 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_1 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_1.config(state=tk.DISABLED)
+    text_result1_1 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_1.config(state=tk.DISABLED)
+    text_result2_1 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_1.config(state=tk.DISABLED)
     
     l_meas_name_2 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_2 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_2.config(state=tk.DISABLED)
+    text_result1_2 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_2.config(state=tk.DISABLED)
+    text_result2_2 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_2.config(state=tk.DISABLED)
     
     l_meas_name_3 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_3 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_3.config(state=tk.DISABLED)
+    text_result1_3 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_3.config(state=tk.DISABLED)
+    text_result2_3 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_3.config(state=tk.DISABLED)
     
     l_meas_name_4 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_4 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_4.config(state=tk.DISABLED)
+    text_result1_4 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_4.config(state=tk.DISABLED)
+    text_result2_4 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_4.config(state=tk.DISABLED)
     
     l_meas_name_5 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_5 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_5.config(state=tk.DISABLED)
+    text_result1_5 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_5.config(state=tk.DISABLED)
+    text_result2_5 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_5.config(state=tk.DISABLED)
     
     l_meas_name_6 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_6 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_6.config(state=tk.DISABLED)
+    text_result1_6 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_6.config(state=tk.DISABLED)
+    text_result2_6 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_6.config(state=tk.DISABLED)
     
     l_meas_name_7 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_7 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_7.config(state=tk.DISABLED)
+    text_result1_7 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_7.config(state=tk.DISABLED)
+    text_result2_7 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_7.config(state=tk.DISABLED)
     
     l_meas_name_8 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_8 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_8.config(state=tk.DISABLED)
+    text_result1_8 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_8.config(state=tk.DISABLED)
+    text_result2_8 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_8.config(state=tk.DISABLED)
     
     l_meas_name_9 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_9 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_9.config(state=tk.DISABLED)
+    text_result1_9 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_9.config(state=tk.DISABLED)
+    text_result2_9 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_9.config(state=tk.DISABLED)
     
     l_meas_name_10 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_10 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_10.config(state=tk.DISABLED)
+    text_result1_10 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_10.config(state=tk.DISABLED)
+    text_result2_10 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_10.config(state=tk.DISABLED)
     
     l_meas_name_11 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_11 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_11.config(state=tk.DISABLED)
+    text_result1_11 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_11.config(state=tk.DISABLED)
+    text_result2_11 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_11.config(state=tk.DISABLED)
     
     l_meas_name_12 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_mean_12 = tk.Text(label_frame_extract_result, width= 25, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_mean_12.config(state=tk.DISABLED)
+    text_result1_12 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result1_12.config(state=tk.DISABLED)
+    text_result2_12 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result2_12.config(state=tk.DISABLED)
     
 
     # Grid ===================================================================================================================================
@@ -2300,31 +2483,48 @@ def main_window(scope_ip):
     cb_setup_label.grid(row= 4, column= 4, padx= 3, pady= 2, sticky= 'w')
 
     #Extract Results grid
-    b_get_results.grid(row= 0, column= 0, padx= 5, pady=2)
-    l_meas_name_1.grid(row= 1, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_1.grid(row= 2, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_2.grid(row= 3, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_2.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_3.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_3.grid(row= 6, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_4.grid(row= 7, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_4.grid(row= 8, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_5.grid(row= 9, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_5.grid(row= 10, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_6.grid(row= 11, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_6.grid(row= 12, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_7.grid(row= 13, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_7.grid(row= 14, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_8.grid(row= 15, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_8.grid(row= 16, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_9.grid(row= 17, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_9.grid(row= 18, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_10.grid(row= 19, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_10.grid(row= 20, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_11.grid(row= 21, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_11.grid(row= 22, column= 0, sticky= 'w', padx= 5, pady=2)
-    l_meas_name_12.grid(row= 23, column= 0, sticky= 'w', padx= 5, pady=2)
-    text_mean_12.grid(row= 24, column= 0, sticky= 'w', padx= 5, pady=2)
+    rb_mean_result.grid(row= 0, column= 0, padx= 5, pady= 2)
+    rb_minmax_result.grid(row= 0, column= 1, padx= 5, pady= 2)
+    b_get_results.grid(row= 1, column= 0, padx= 5, pady= 2, columnspan= 2)
+    l_result_type_1.grid(row= 2, column= 0)
+    l_result_type_2.grid(row= 2, column= 1)
+    # l_result_dividing_line.grid(row= 3, column= 0, columnspan= 2)
+    l_meas_name_1.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_1.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_1.grid(row= 5, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_2.grid(row= 6, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_2.grid(row= 7, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_2.grid(row= 7, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_3.grid(row= 8, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_3.grid(row= 9, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_3.grid(row= 9, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_4.grid(row= 10, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_4.grid(row= 11, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_4.grid(row= 11, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_5.grid(row= 12, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_5.grid(row= 13, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_5.grid(row= 13, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_6.grid(row= 14, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_6.grid(row= 15, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_6.grid(row= 15, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_7.grid(row= 16, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_7.grid(row= 17, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_7.grid(row= 17, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_8.grid(row= 18, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_8.grid(row= 19, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_8.grid(row= 19, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_9.grid(row= 20, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_9.grid(row= 21, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_9.grid(row= 21, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_10.grid(row= 22, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_10.grid(row= 23, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_10.grid(row= 23, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_11.grid(row= 24, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_11.grid(row= 25, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_11.grid(row= 25, column= 1, sticky= 'w', padx= 5, pady= 2)
+    l_meas_name_12.grid(row= 26, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result1_12.grid(row= 27, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result2_12.grid(row= 27, column= 1, sticky= 'w', padx= 5, pady= 2)
 
     # ToolTip(b_tSU, 'Channel記得勾對欸')
     ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
@@ -2369,10 +2569,10 @@ def main_window(scope_ip):
     # ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
     ToolTip(e_WMe2, '呀哈呀哈')
     ToolTip(e_WMe4, '噗嚕!')
-    ToolTip(text_mean_3, '好忙好忙')
-    ToolTip(text_mean_7, '四捨五入')
-    ToolTip(text_mean_9, '芭樂綠茶')
-    ToolTip(text_mean_12, '多多檢查有助身心健康')
+    ToolTip(text_result1_3, '好忙好忙')
+    ToolTip(text_result1_7, '四捨五入')
+    ToolTip(text_result1_9, '芭樂綠茶')
+    ToolTip(text_result1_12, '多多檢查有助身心健康')
 
     initialize()
 
