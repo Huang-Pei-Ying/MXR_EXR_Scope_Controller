@@ -12,7 +12,7 @@ from PIL import Image
 import random
 import string
 
-window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.0'
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.1'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -1624,13 +1624,18 @@ def main_window(scope_ip):
             if self.tip_window or not self.text:
                 return
             x, y, cx, cy = self.widget.bbox("insert")
-            self.tip_window = tw = tk.Toplevel(self.widget)
-            tw.wm_overrideredirect(True)
-            tw.wm_geometry("+%d+%d" % (x, y))
-            label = tk.Label(tw, text=self.text, justify=tk.LEFT,
-                            background="#ffffe0", relief=tk.SOLID, borderwidth=1,
-                            font=("tahoma", "8", "normal"))
-            label.pack(ipadx=1)
+            if not x == None:
+                x += self.widget.winfo_rootx() + 57
+                y += self.widget.winfo_rooty() + 21
+                self.tip_window = tw = tk.Toplevel(self.widget)
+                tw.wm_overrideredirect(True)
+                tw.wm_geometry("+%d+%d" % (x, y))
+                label = tk.Label(tw, text=self.text, justify=tk.LEFT,
+                                background="#ffffe0", relief=tk.SOLID, borderwidth=1,
+                                font=("tahoma", "8", "normal"))
+                label.pack(ipadx=1)
+            else:
+                return
 
         def hide_tip(self, event=None):
             if self.tip_window:
@@ -2526,17 +2531,13 @@ def main_window(scope_ip):
     text_result1_12.grid(row= 27, column= 0, sticky= 'w', padx= 5, pady= 2)
     text_result2_12.grid(row= 27, column= 1, sticky= 'w', padx= 5, pady= 2)
 
-    # ToolTip(b_tSU, 'Channel記得勾對欸')
     ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_volt_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(b_wfm_intensity, '可用滑鼠滾輪調整數字大小')
     ToolTip(cb_start_rf, '嗚啦!')
     ToolTip(cb_start_num, '呀哈!')
-    # ToolTip(cb_start_pos, '噗嚕!')
     ToolTip(cb_stop_rf, '噗嚕!')
-    # ToolTip(cb_stop_num, '嗚啦!')
-    # ToolTip(cb_stop_pos, '呀哈!')
     ToolTip(cbb_gen_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_gen_mid_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
     ToolTip(cbb_gen_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
@@ -2552,27 +2553,24 @@ def main_window(scope_ip):
     ToolTip(b_autoscale, '好的不得了')
     ToolTip(b_clear_display, '嗚嚕嗚啦')
     ToolTip(b_default, '6666')
-    ToolTip(cb_marker_2, '防塵套不要亂丟!')
+    ToolTip(cb_marker_2, '防塵套不要亂丟')
     ToolTip(cb_marker_9, '花椒串')
-    # ToolTip(cb_marker_5, '不要亂動我的程式ˋˊ')
     ToolTip(cb_ch_single, '累')
     ToolTip(cb_ch_delta_start, '隨波逐流的')
     ToolTip(cb_ch_delta_stop, '人生')
     ToolTip(e_image_folder, '自己打字，按按鈕會幫你新增資料夾')
     ToolTip(e_image, '嗚哩哩')
-    # ToolTip(b_image_save_scope, '會幫你新增資料夾')
     ToolTip(e_image_pc_folder, '可以直接存電腦啦~')
     ToolTip(e_WMe_folder, '自己打字，按按鈕會幫你新增資料夾')
     ToolTip(e_other_file, 'Channel要選對欸')
-    # ToolTip(b_WMe_save_scpoe, '會幫你新增資料夾')
     ToolTip(e_WMe_pc_folder, '示波器有沒有先存檔ㄏㄚˋ')
-    # ToolTip(e_WMe1, '嗚!嗚啦啦一嗚啦~~')
     ToolTip(e_WMe2, '呀哈呀哈')
     ToolTip(e_WMe4, '噗嚕!')
-    ToolTip(text_result1_3, '好忙好忙')
-    ToolTip(text_result1_7, '四捨五入')
-    ToolTip(text_result1_9, '芭樂綠茶')
-    ToolTip(text_result1_12, '多多檢查有助身心健康')
+
+    ToolTip(text_result1_3, '取小數點後三位')
+    ToolTip(text_result2_7, '無條件捨去')
+    ToolTip(text_result2_9, '芭樂綠茶')
+    ToolTip(text_result1_12, '多多檢查')
 
     initialize()
 
