@@ -12,7 +12,7 @@ from PIL import Image
 import random
 import string
 
-window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.1'
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.2'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -656,14 +656,47 @@ def main_window(scope_ip):
             self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
 
-        def load_setup(self, folder, setup_name, time_scale, time_position, choose_type, file_path_choice, volt_scale, volt_offset, trig_chan, trig_level, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
+        def load_setup(self, folder, setup_name, choose_type, file_path_choice, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
             if file_path_choice == 2:
                 total_folder_path = folder
             else:
                 total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
+
+            # 記錄示波器timebase設定
+            time_position= self.inst.query(':TIMebase:POSition?')
+            time.sleep(0.05)
+            time_scale= self.inst.query(':TIMebase:SCALe?')
+            time.sleep(0.05)
+
+            # 記錄示波器voltage設定
+            temp_voltscale_dict= {}
+            temp_voltoffset_dict= {}
+            display_dict= self.judge_chan_wme()
+            for chan in display_dict['CHANnel']:
+                volt_scale= self.inst.query(f':CHANnel{chan}:SCALe?')
+                time.sleep(0.05)
+                temp_voltscale_dict[chan]= volt_scale
+                volt_offset= self.inst.query(f':CHANnel{chan}:OFFSet?')
+                time.sleep(0.05)
+                temp_voltoffset_dict[chan]= volt_offset
+            for wme in display_dict['WMEMory']:
+                volt_scale= self.inst.query(f':WMEMory{wme}:YRANge?')
+                time.sleep(0.05)
+                temp_voltscale_dict[wme]= volt_scale
+                volt_offset= self.inst.query(f':WMEMory{wme}:YOFFset?')
+                time.sleep(0.05)
+                temp_voltoffset_dict[wme]= volt_offset
+
+            # 記錄示波器trigger設定
+            trig_chan= self.inst.query(f':TRIGger:EDGE:SOURce?')
+            time.sleep(0.05)
+            trig_level= self.inst.query(f':TRIGger:LEVel? CHANnel{trig_chan}')
+            time.sleep(0.05)
+
             self.inst.write(f':DISK:LOAD "{total_folder_path}/{setup_name}.set"')
             time.sleep(0.05)
             if boolvar_setup_timebase.get() == True:
+                # 依照示波器畫面的timebase
                 self.timebase_scale_check(scale= time_scale)
                 self.timebase_position_check(position= time_position)
             if boolvar_setup_label.get() == True:
@@ -674,8 +707,35 @@ def main_window(scope_ip):
                 for i in range(8):
                     self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), chan= i+1)
             if boolvar_setup_volt.get() == True:
-                self.volt_check(scale= volt_scale, offset= volt_offset)
-                self.trig_check(chan= trig_chan, level= trig_level)
+                display_dict= self.judge_chan_wme()
+                # 依照示波器畫面的Voltage
+                for chan in display_dict['CHANnel']:
+                    self.inst.write(f':CHANnel{chan}:SCALe {temp_voltscale_dict[chan]}')
+                    time.sleep(0.05)
+                    self.inst.write(f':CHANnel{chan}:OFFSet {temp_voltoffset_dict[chan]}')
+                    time.sleep(0.05)
+                for wme in display_dict['WMEMory']:
+                    self.inst.write(f':WMEMory{wme}:YRANge {float(temp_voltscale_dict[wme])*8}')
+                    time.sleep(0.05)
+                    self.inst.write(f':WMEMory{wme}:YOFFset {temp_voltoffset_dict[wme]}')
+                    time.sleep(0.05)
+
+                # 依照示波器畫面的trigger
+                res= self.inst.query(f':CHANnel{trig_chan}:DISPlay?')
+                time.sleep(0.05)
+                if not res == '1\n':
+                    self.inst.write(f':CHANnel{trig_chan}:DISPlay ON')
+                    time.sleep(0.05)
+                self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{trig_chan}')
+                time.sleep(0.05)
+                self.inst.write(f':TRIGger:LEVel CHANnel{trig_chan},{trig_level}')
+                time.sleep(0.05)
+                if not res == '1\n':
+                    self.inst.write(f':CHANnel{trig_chan}:DISPlay OFF')
+                    time.sleep(0.05)
+
+                # self.volt_check(scale= volt_scale, offset= volt_offset)
+                # self.trig_check(chan= trig_chan, level= trig_level)
                 self.gen_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
                 self.RF_threshold(rf_top= rf_top, rf_base= rf_base, rf_top_percent= rf_top_percent, rf_base_percent= rf_base_percent)
 
@@ -2152,11 +2212,11 @@ def main_window(scope_ip):
     
     b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 16, command= lambda: mxr.load_setup(
         folder= str_WMe_folder.get(), setup_name= str_setup.get(), 
-        time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
+        # time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
         choose_type= int_label_type.get(), 
         file_path_choice = int_wme_path_choice.get(), 
-        volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
-        trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
+        # volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
+        # trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
         g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), 
         g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
         rf_top= cbb_rf_top.get(),  rf_base= cbb_rf_base.get(), 
