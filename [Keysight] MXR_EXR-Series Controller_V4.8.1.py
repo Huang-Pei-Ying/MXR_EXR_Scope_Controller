@@ -99,7 +99,19 @@ def main_window(scope_ip):
         LoadWMe2 = config_initial['Load_WMemory_Setup_Config']['LoadWMe2']
         LoadWMe3 = config_initial['Load_WMemory_Setup_Config']['LoadWMe3']
         LoadWMe4 = config_initial['Load_WMemory_Setup_Config']['LoadWMe4']
+
+        setupfile_interface_list = []
+        for i in range(len(config_initial['Setupfile_Interface'])):
+            setupfile_interface_list.append(config_initial['Setupfile_Interface'][f'Interface_{i}'])
+        setupfile_interface_list.append('')
+
+        SetupFileInterface = config_initial['Load_WMemory_Setup_Config']['SetupFileInterface']
+        SetupFileClass = config_initial['Load_WMemory_Setup_Config']['SetupFileClass']
         LoadSetup = config_initial['Load_WMemory_Setup_Config']['LoadSetup']
+
+        ScopeSegment = config_initial['Scope_Server_Segment']['ScopeSegment']
+        PCSegment = config_initial['Scope_Server_Segment']['PCSegment']
+        Segment= [ScopeSegment, PCSegment]
 
         str_volt_scale.set(value= select_VoltScale)
         str_volt_offset.set(value= select_VoltOffset)
@@ -155,7 +167,11 @@ def main_window(scope_ip):
         str_WMe2.set(value= LoadWMe2)
         str_WMe3.set(value= LoadWMe3)
         str_WMe4.set(value= LoadWMe4)
+        str_setupfile_interface.set(value= SetupFileInterface)
+        str_setupfile_class.set(value= SetupFileClass)
         str_setup.set(value= LoadSetup)
+    
+        return setupfile_interface_list, Segment
 
 
     class MXR:
@@ -657,15 +673,23 @@ def main_window(scope_ip):
             time.sleep(0.05)
 
         def load_setup(self, folder, setup_name, choose_type, file_path_choice, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
+            
             if file_path_choice == 2:
-                total_folder_path = folder
+                
+                if str_setupfile_interface.get() == 'User':
+                    total_folder_path = folder
+                elif str_setupfile_interface.get() == '':
+                    total_folder_path = folder
+                else: 
+                    total_folder_path = folder + '/' + str_setupfile_interface.get() + '/' + str_setupfile_class.get()
+
             else:
                 total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
 
             # 記錄示波器timebase設定
-            time_position= self.inst.query(':TIMebase:POSition?')
+            time_position= self.inst.query(':TIMebase:POSition?').rstrip('\n')
             time.sleep(0.05)
-            time_scale= self.inst.query(':TIMebase:SCALe?')
+            time_scale= self.inst.query(':TIMebase:SCALe?').rstrip('\n')
             time.sleep(0.05)
 
             # 記錄示波器voltage設定
@@ -680,32 +704,29 @@ def main_window(scope_ip):
                 time.sleep(0.05)
                 temp_voltoffset_dict[chan]= volt_offset
             for wme in display_dict['WMEMory']:
-                volt_scale= self.inst.query(f':WMEMory{wme}:YRANge?')
+                volt_scale= self.inst.query(f':WMEMory{wme}:YRANge?').rstrip('\n')
                 time.sleep(0.05)
-                temp_voltscale_dict[wme]= volt_scale
-                volt_offset= self.inst.query(f':WMEMory{wme}:YOFFset?')
+                temp_voltscale_dict[wme]= float(volt_scale)/8
+                volt_offset= self.inst.query(f':WMEMory{wme}:YOFFset?').rstrip('\n')
                 time.sleep(0.05)
                 temp_voltoffset_dict[wme]= volt_offset
 
             # 記錄示波器trigger設定
-            trig_chan= self.inst.query(f':TRIGger:EDGE:SOURce?')
+            trig_chan= self.inst.query(f':TRIGger:EDGE:SOURce?').rstrip('\n')
             time.sleep(0.05)
-            trig_level= self.inst.query(f':TRIGger:LEVel? CHANnel{trig_chan}')
+            trig_chan= trig_chan.lstrip("CHAN")
+            trig_level= self.inst.query(f':TRIGger:LEVel? CHANnel{trig_chan}').rstrip('\n')
             time.sleep(0.05)
 
+            # 呼叫設定檔
             self.inst.write(f':DISK:LOAD "{total_folder_path}/{setup_name}.set"')
             time.sleep(0.05)
+
+            # 依據勾選狀態修改數值
             if boolvar_setup_timebase.get() == True:
                 # 依照示波器畫面的timebase
                 self.timebase_scale_check(scale= time_scale)
                 self.timebase_position_check(position= time_position)
-            if boolvar_setup_label.get() == True:
-                label_content = [
-                    str_label_1, str_label_2, str_label_3, str_label_4, 
-                    str_label_5, str_label_6, str_label_7, str_label_8, 
-                    ]
-                for i in range(8):
-                    self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), chan= i+1)
             if boolvar_setup_volt.get() == True:
                 display_dict= self.judge_chan_wme()
                 # 依照示波器畫面的Voltage
@@ -733,11 +754,23 @@ def main_window(scope_ip):
                 if not res == '1\n':
                     self.inst.write(f':CHANnel{trig_chan}:DISPlay OFF')
                     time.sleep(0.05)
-
+ 
                 # self.volt_check(scale= volt_scale, offset= volt_offset)
                 # self.trig_check(chan= trig_chan, level= trig_level)
+                
+                # 依照GUI的threshold
                 self.gen_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
                 self.RF_threshold(rf_top= rf_top, rf_base= rf_base, rf_top_percent= rf_top_percent, rf_base_percent= rf_base_percent)
+
+            if boolvar_setup_label.get() == True:
+                # 依照GUI的label
+                label_content = [
+                    str_label_1, str_label_2, str_label_3, str_label_4, 
+                    str_label_5, str_label_6, str_label_7, str_label_8, 
+                    ]
+                for i in range(8):
+                    self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), chan= i+1)
+
 
         def clear_wmemory(self, chan, string):
             self.inst.write(f':WMEMory{chan}:CLEar')
@@ -1458,6 +1491,8 @@ def main_window(scope_ip):
             config.set('Load_WMemory_Setup_Config', 'LoadWMe2', str_WMe2.get())
             config.set('Load_WMemory_Setup_Config', 'LoadWMe3', str_WMe3.get())
             config.set('Load_WMemory_Setup_Config', 'LoadWMe4', str_WMe4.get())
+            config.set('Load_WMemory_Setup_Config', 'SetupFileInterface', str_setupfile_interface.get())
+            config.set('Load_WMemory_Setup_Config', 'SetupFileClass', str_setupfile_class.get())
             config.set('Load_WMemory_Setup_Config', 'LoadSetup', str_setup.get())
 
             config.write(open(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), 'w'))
@@ -1670,6 +1705,63 @@ def main_window(scope_ip):
         text_result2_11.config(width= 22)
         text_result1_12.config(width= 22)
         text_result2_12.config(width= 22)
+
+    def setupfile_interface_select(event, segment):
+        
+        target_interface_subfolder= []
+
+        if str_setupfile_interface.get() == 'User':
+            str_setupfile_class.set(value= '')
+            cbb_setupfile_class.config(state= 'disabled')
+        elif str_setupfile_interface.get() == '':
+            str_setupfile_class.set(value= '')
+            cbb_setupfile_class.config(state= 'disabled')
+        else: 
+            cbb_setupfile_class.config(state= 'readonly')
+
+            setupfile_interface_folderpath = fr'{segment[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
+            str_WMe_folder.set(value= setupfile_interface_folderpath)
+
+            pc_setupfile_interface_folderpath = fr'{segment[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
+
+            # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
+            for root, dirs, files in os.walk(pc_setupfile_interface_folderpath):
+                for dir_name in dirs:
+                    # 取得子資料夾的絕對路徑
+                    dir_path = os.path.join(root, dir_name)
+                    target_interface_subfolder.append(os.path.basename(dir_path))
+
+            cbb_setupfile_class.config(values= target_interface_subfolder)
+            adjust_entry(entry= e_WMe_folder)
+    
+    def setupfile_class_select(event, segment):
+
+        target_class_files= []
+
+        setupfile_class_folderpath = fr'{segment[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
+        str_WMe_folder.set(value= setupfile_class_folderpath)
+
+        pc_setupfile_class_folderpath = fr'{segment[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
+
+        # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
+        for root, dirs, files in os.walk(pc_setupfile_class_folderpath):
+            for file in files:
+                # 篩選.set
+                if file.endswith('.set'):
+                    # 取得設定檔的絕對路徑
+                    file_path = os.path.join(root, file)
+                    target_class_files.append((os.path.basename(file_path)).rstrip('.set'))
+
+        cbb_setup.config(values= target_class_files)
+        adjust_entry(entry= e_WMe_folder)
+
+    def adjust_entry(entry):
+        """將 Entry 的內容視圖滾動到最後，並設置游標到最後一位"""
+        entry.focus()           # 設置 Entry 欄位獲取焦點
+        entry.icursor(tk.END)   # 將游標移動到文本的最後一位
+        entry.xview_moveto(1)   # 滾動視圖到最後一部分，1 表比例最右邊
+
+
 
     class ToolTip:
         def __init__(self, widget, text):
@@ -2207,8 +2299,14 @@ def main_window(scope_ip):
     b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', width= 16, command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get(), file_path_choice = int_wme_path_choice.get()))
     b_wme_clear4 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 4, string= str_WMe4))
 
+    str_setupfile_interface = tk.StringVar()
+    cbb_setupfile_interface = ttk.Combobox(label_frame_load_wme, width= 5, textvariable= str_setupfile_interface)
+
+    str_setupfile_class = tk.StringVar()
+    cbb_setupfile_class = ttk.Combobox(label_frame_load_wme, width= 18, textvariable= str_setupfile_class)
+
     str_setup = tk.StringVar()
-    e_setup = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_setup)
+    cbb_setup = ttk.Combobox(label_frame_load_wme, width= 15, textvariable= str_setup)
     
     b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 16, command= lambda: mxr.load_setup(
         folder= str_WMe_folder.get(), setup_name= str_setup.get(), 
@@ -2529,23 +2627,25 @@ def main_window(scope_ip):
     b_other_file_save_pc.grid(row= 7, column= 3, padx= 5, pady= 1, sticky= 'w')
     
     #LoadWMe grid
-    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'w')
-    b_WMe1_load.grid(row=0, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear1.grid(row= 0, column= 3, padx= 5, pady= 2, sticky= 'w')
-    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'w')
-    b_WMe2_load.grid(row=1, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear2.grid(row= 1, column= 3, padx= 5, pady= 2, sticky= 'w')
-    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'w')
-    b_WMe3_load.grid(row=2, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear3.grid(row= 2, column= 3, padx= 5, pady= 2, sticky= 'w')
-    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'w')
-    b_WMe4_load.grid(row=3, column= 1, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear4.grid(row= 3, column= 3, padx= 5, pady= 2, sticky= 'w')
-    e_setup.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
-    b_setup_load.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
-    cb_setup_volt.grid(row= 2, column= 4, padx= 3, pady= 2, sticky= 'w')
-    cb_setup_timebase.grid(row= 3, column= 4, padx= 3, pady= 2, sticky= 'w')
-    cb_setup_label.grid(row= 4, column= 4, padx= 3, pady= 2, sticky= 'w')
+    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    b_WMe1_load.grid(row=0, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear1.grid(row= 0, column= 4, padx= 5, pady= 2, sticky= 'w')
+    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    b_WMe2_load.grid(row=1, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear2.grid(row= 1, column= 4, padx= 5, pady= 2, sticky= 'w')
+    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    b_WMe3_load.grid(row=2, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear3.grid(row= 2, column= 4, padx= 5, pady= 2, sticky= 'w')
+    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    b_WMe4_load.grid(row=3, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    b_wme_clear4.grid(row= 3, column= 4, padx= 5, pady= 2, sticky= 'w')
+    cbb_setupfile_interface.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
+    cbb_setupfile_class.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
+    cbb_setup.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'w')
+    b_setup_load.grid(row= 4, column= 3, padx= 5, pady= 2, sticky= 'w')
+    cb_setup_volt.grid(row= 2, column= 5, padx= 3, pady= 2, sticky= 'w')
+    cb_setup_timebase.grid(row= 3, column= 5, padx= 3, pady= 2, sticky= 'w')
+    cb_setup_label.grid(row= 4, column= 5, padx= 3, pady= 2, sticky= 'w')
 
     #Extract Results grid
     rb_mean_result.grid(row= 0, column= 0, padx= 5, pady= 2)
@@ -2632,7 +2732,11 @@ def main_window(scope_ip):
     ToolTip(text_result2_9, '芭樂綠茶')
     ToolTip(text_result1_12, '多多檢查')
 
-    initialize()
+    setupfile_interface_list, segment_list= initialize()
+    
+    cbb_setupfile_interface.config(values= setupfile_interface_list)
+    cbb_setupfile_interface.bind("<<ComboboxSelected>>", lambda e: setupfile_interface_select(e, segment= segment_list))
+    cbb_setupfile_class.bind("<<ComboboxSelected>>", lambda e: setupfile_class_select(e, segment= segment_list))
 
     window.protocol('WM_DELETE_WINDOW', close_window)
 
