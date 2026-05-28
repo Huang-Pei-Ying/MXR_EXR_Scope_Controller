@@ -12,7 +12,7 @@ from PIL import Image
 import random
 import string
 
-window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.2'
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.3'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -170,6 +170,9 @@ def main_window(scope_ip):
         str_setupfile_interface.set(value= SetupFileInterface)
         str_setupfile_class.set(value= SetupFileClass)
         str_setup.set(value= LoadSetup)
+
+        adjust_entry(entry= e_WMe_folder)
+        adjust_entry(entry= e_WMe_pc_folder)
     
         return setupfile_interface_list, Segment
 
@@ -672,18 +675,18 @@ def main_window(scope_ip):
             self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
 
-        def load_setup(self, folder, setup_name, choose_type, file_path_choice, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
+        def load_setup(self, folder, scope_segment, setup_name, choose_type, file_path_choice, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
             
-            if file_path_choice == 2:
+            if file_path_choice == 2: # Server
                 
                 if str_setupfile_interface.get() == 'User':
                     total_folder_path = folder
                 elif str_setupfile_interface.get() == '':
                     total_folder_path = folder
                 else: 
-                    total_folder_path = folder + '/' + str_setupfile_interface.get() + '/' + str_setupfile_class.get()
+                    total_folder_path = f'{scope_segment}:/#_Eric Team/02_Penny/Setup_Files_Collection/{str_setupfile_interface.get()}/{str_setupfile_class.get()}'
 
-            else:
+            else: # Desktop
                 total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
 
             # 記錄示波器timebase設定
@@ -1706,7 +1709,7 @@ def main_window(scope_ip):
         text_result1_12.config(width= 22)
         text_result2_12.config(width= 22)
 
-    def setupfile_interface_select(event, segment):
+    def setupfile_interface_select(event, segment_list):
         
         target_interface_subfolder= []
 
@@ -1719,10 +1722,12 @@ def main_window(scope_ip):
         else: 
             cbb_setupfile_class.config(state= 'readonly')
 
-            setupfile_interface_folderpath = fr'{segment[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
-            str_WMe_folder.set(value= setupfile_interface_folderpath)
+            # 示波器folder路徑
+            setupfile_interface_folderpath = fr'{segment_list[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
+            # str_WMe_folder.set(value= setupfile_interface_folderpath)
 
-            pc_setupfile_interface_folderpath = fr'{segment[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
+            # PC folder路徑
+            pc_setupfile_interface_folderpath = fr'{segment_list[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
 
             # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
             for root, dirs, files in os.walk(pc_setupfile_interface_folderpath):
@@ -1732,16 +1737,18 @@ def main_window(scope_ip):
                     target_interface_subfolder.append(os.path.basename(dir_path))
 
             cbb_setupfile_class.config(values= target_interface_subfolder)
-            adjust_entry(entry= e_WMe_folder)
+            # adjust_entry(entry= e_WMe_folder)
     
-    def setupfile_class_select(event, segment):
+    def setupfile_class_select(event, segment_list):
 
         target_class_files= []
 
-        setupfile_class_folderpath = fr'{segment[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
-        str_WMe_folder.set(value= setupfile_class_folderpath)
+        # 示波器folder路徑
+        setupfile_class_folderpath = fr'{segment_list[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
+        # str_WMe_folder.set(value= setupfile_class_folderpath)
 
-        pc_setupfile_class_folderpath = fr'{segment[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
+        # PC folder路徑
+        pc_setupfile_class_folderpath = fr'{segment_list[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
 
         # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
         for root, dirs, files in os.walk(pc_setupfile_class_folderpath):
@@ -1753,7 +1760,7 @@ def main_window(scope_ip):
                     target_class_files.append((os.path.basename(file_path)).rstrip('.set'))
 
         cbb_setup.config(values= target_class_files)
-        adjust_entry(entry= e_WMe_folder)
+        # adjust_entry(entry= e_WMe_folder)
 
     def adjust_entry(entry):
         """將 Entry 的內容視圖滾動到最後，並設置游標到最後一位"""
@@ -1806,12 +1813,13 @@ def main_window(scope_ip):
         combobox.bind('<Return>', lambda event: add_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
         combobox.bind('<Delete>', lambda event: delete_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
 
-    def select_folder(entry_var):
+    def select_folder(entry_var, target_entry):
         # 打開檔案瀏覽器以選擇資料夾
         folder_selected = filedialog.askdirectory()
         # 將選擇的資料夾路徑填入 Entry
         entry_var.set(folder_selected)
 
+        adjust_entry(entry= target_entry)
 
 
     window = tk.Tk()
@@ -2226,7 +2234,7 @@ def main_window(scope_ip):
 
     l_image_pc_folder = tk.Label(label_frame_save, text= 'Image PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_image_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_image_pc_folder))
+    b_image_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_image_pc_folder, target_entry= e_image_pc_folder))
     
     str_image = tk.StringVar()
     e_image = tk.Entry(label_frame_save, width= 40, textvariable= str_image)
@@ -2260,7 +2268,7 @@ def main_window(scope_ip):
 
     l_WMe_pc_folder = tk.Label(label_frame_save, text= 'PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder))
+    b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder, e_image_pc_folder= e_WMe_pc_folder))
 
     str_other_file = tk.StringVar()
     e_other_file = tk.Entry(label_frame_save, width= 40, textvariable= str_other_file)
@@ -2308,19 +2316,6 @@ def main_window(scope_ip):
     str_setup = tk.StringVar()
     cbb_setup = ttk.Combobox(label_frame_load_wme, width= 15, textvariable= str_setup)
     
-    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 16, command= lambda: mxr.load_setup(
-        folder= str_WMe_folder.get(), setup_name= str_setup.get(), 
-        # time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
-        choose_type= int_label_type.get(), 
-        file_path_choice = int_wme_path_choice.get(), 
-        # volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
-        # trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
-        g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), 
-        g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
-        rf_top= cbb_rf_top.get(),  rf_base= cbb_rf_base.get(), 
-        rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get()
-        ))
-
     boolvar_setup_timebase = tk.BooleanVar()    
     cb_setup_timebase= tk.Checkbutton(label_frame_load_wme, text= 'Time', variable= boolvar_setup_timebase, background= bg_color_1, fg= '#0D325C')
     cb_setup_timebase.select()
@@ -2642,7 +2637,6 @@ def main_window(scope_ip):
     cbb_setupfile_interface.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
     cbb_setupfile_class.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
     cbb_setup.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'w')
-    b_setup_load.grid(row= 4, column= 3, padx= 5, pady= 2, sticky= 'w')
     cb_setup_volt.grid(row= 2, column= 5, padx= 3, pady= 2, sticky= 'w')
     cb_setup_timebase.grid(row= 3, column= 5, padx= 3, pady= 2, sticky= 'w')
     cb_setup_label.grid(row= 4, column= 5, padx= 3, pady= 2, sticky= 'w')
@@ -2734,9 +2728,24 @@ def main_window(scope_ip):
 
     setupfile_interface_list, segment_list= initialize()
     
+    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 16, command= lambda: mxr.load_setup(
+        folder= str_WMe_folder.get(), setup_name= str_setup.get(), 
+        scope_segment= segment_list[0],
+        # time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
+        choose_type= int_label_type.get(), 
+        file_path_choice = int_wme_path_choice.get(), 
+        # volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
+        # trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
+        g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), 
+        g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
+        rf_top= cbb_rf_top.get(),  rf_base= cbb_rf_base.get(), 
+        rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get()
+        ))
+    b_setup_load.grid(row= 4, column= 3, padx= 5, pady= 2, sticky= 'w')
+    
     cbb_setupfile_interface.config(values= setupfile_interface_list)
-    cbb_setupfile_interface.bind("<<ComboboxSelected>>", lambda e: setupfile_interface_select(e, segment= segment_list))
-    cbb_setupfile_class.bind("<<ComboboxSelected>>", lambda e: setupfile_class_select(e, segment= segment_list))
+    cbb_setupfile_interface.bind("<<ComboboxSelected>>", lambda e: setupfile_interface_select(e, segment_list= segment_list))
+    cbb_setupfile_class.bind("<<ComboboxSelected>>", lambda e: setupfile_class_select(e, segment_list= segment_list))
 
     window.protocol('WM_DELETE_WINDOW', close_window)
 
