@@ -2268,7 +2268,7 @@ def main_window(scope_ip):
 
     l_WMe_pc_folder = tk.Label(label_frame_save, text= 'PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder, e_image_pc_folder= e_WMe_pc_folder))
+    b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder, target_entry= e_WMe_pc_folder))
 
     str_other_file = tk.StringVar()
     e_other_file = tk.Entry(label_frame_save, width= 40, textvariable= str_other_file)
