@@ -170,11 +170,17 @@ def main_window(scope_ip):
         str_setupfile_interface.set(value= SetupFileInterface)
         str_setupfile_class.set(value= SetupFileClass)
         str_setup.set(value= LoadSetup)
+        # if SetupFileInterface == '' or SetupFileInterface == 'User':
+        #     cbb_setupfile_class.config(state= 'disabled')
+            # cbb_setup.config(state= 'disabled')
+        cbb_setupfile_interface.config(values= setupfile_interface_list)
+        setupfile_interface_select(event= cbb_setupfile_interface.bind("<<ComboboxSelected>>"), segment_list= Segment)
+        setupfile_class_select(event= cbb_setupfile_class.bind("<<ComboboxSelected>>"), segment_list= Segment)
 
         adjust_entry(entry= e_WMe_folder)
         adjust_entry(entry= e_WMe_pc_folder)
     
-        return setupfile_interface_list, Segment
+        return Segment
 
 
     class MXR:
@@ -434,7 +440,7 @@ def main_window(scope_ip):
             }            
             self.called_meas_function(chan= chan, command_templates= command_templates)              
 
-        def tSU_tHO(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop):
+        def tSU_tHO(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop, timing_name):
             displayed_dict= self.judge_chan_wme()
             for format in displayed_dict:
                 for channel in displayed_dict[format]:
@@ -448,6 +454,20 @@ def main_window(scope_ip):
                 time.sleep(0.05)
                 self.inst.write(f':MEASure:DELTatime {res_start}{chan_start}, {res_stop}{chan_stop}')
                 time.sleep(0.05)
+                
+                if 'CHAN' in res_start and 'CHAN' in res_stop:
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-{chan_stop})"')
+                    time.sleep(0.05)
+                elif 'CHAN' in res_start and 'WMEM' in res_stop:
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-m{chan_stop})"')
+                    time.sleep(0.05)
+                elif 'WMEM' in res_start and 'CHAN' in res_stop:
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-{chan_stop})"')
+                    time.sleep(0.05)
+                else:
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-m{chan_stop})"')
+                    time.sleep(0.05)
+                
             else:
                 pass
 
@@ -1713,6 +1733,8 @@ def main_window(scope_ip):
         
         target_interface_subfolder= []
 
+        str_setupfile_class.set(value= '')
+
         if str_setupfile_interface.get() == 'User':
             str_setupfile_class.set(value= '')
             cbb_setupfile_class.config(state= 'disabled')
@@ -1742,6 +1764,8 @@ def main_window(scope_ip):
     def setupfile_class_select(event, segment_list):
 
         target_class_files= []
+
+        str_setup.set(value= '')
 
         # 示波器folder路徑
         setupfile_class_folderpath = fr'{segment_list[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
@@ -1843,7 +1867,7 @@ def main_window(scope_ip):
     b_freq = tk.Button(label_frame_meas_item, text='Frequency', width= 20, height= 2, command= lambda: mxr.freq(chan= int_ch_single.get()))
     b_period = tk.Button(label_frame_meas_item, text='Period', width= 20, height= 2, command= lambda: mxr.period(chan= int_ch_single.get()))
     b_dutycycle = tk.Button(label_frame_meas_item, text='Duty Cycle', width= 20, height= 2, command= lambda: mxr.dutycycle(chan= int_ch_single.get()))
-    b_tSU = tk.Button(label_frame_meas_item, text='Delta Time', width= 20, height= 2, command= lambda: mxr.tSU_tHO(edge_1= start_rf.get(), num_1= start_num.get(), pos_1= start_pos.get(), edge_2= stop_rf.get(), num_2= stop_num.get(), pos_2= stop_pos.get(), chan= int_ch.get(), chan_start= int_ch_delta_start.get(), chan_stop= int_ch_delta_stop.get()))
+    b_tSU = tk.Button(label_frame_meas_item, text='Delta Time', width= 20, height= 2, command= lambda: mxr.tSU_tHO(edge_1= start_rf.get(), num_1= start_num.get(), pos_1= start_pos.get(), edge_2= stop_rf.get(), num_2= stop_num.get(), pos_2= stop_pos.get(), chan= int_ch.get(), chan_start= int_ch_delta_start.get(), chan_stop= int_ch_delta_stop.get(), timing_name= str_delta_name.get()))
     b_tH = tk.Button(label_frame_meas_item, text='tH', width= 20, height= 2, command= lambda: mxr.tH(chan= int_ch_single.get()))
     b_tL = tk.Button(label_frame_meas_item, text='tL', width= 20, height= 2, command= lambda: mxr.tL(chan= int_ch_single.get()))
     b_tR = tk.Button(label_frame_meas_item, text='tR', width= 20, height= 2, command= lambda: mxr.tR(chan= int_ch_single.get()))
@@ -2212,6 +2236,11 @@ def main_window(scope_ip):
     l_ch_delta_stop = tk.Label(label_frame_chan, text= 'Chan', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
     int_ch_delta_stop = tk.IntVar()
     cb_ch_delta_stop = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_stop, values= [1, 2, 3, 4])
+
+    l_delta_name = tk.Label(label_frame_chan, text= 'Delta Name', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    str_delta_name = tk.StringVar()
+    cb_delta_name = ttk.Combobox(label_frame_chan, width= 10, textvariable= str_delta_name, values= ['Setup Time', 'Hold Time'])
+    cb_delta_name.set(value= 'Setup Time')
 
     b_chan_switch = tk.Button(label_frame_chan, text= 'Delta Chan Switch', height= 1, command= lambda: switch_string(var_1= int_ch_delta_start, var_2= int_ch_delta_stop))
 
@@ -2582,14 +2611,16 @@ def main_window(scope_ip):
     b_WMe2.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
     b_WMe3.grid(row= 2, column= 4, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
     b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    rb_ch_single.grid(row= 4, column= 0, sticky= 'e')
-    cb_ch_single.grid(row= 4, column= 1, sticky= 'w')
-    rb_ch_delta.grid(row= 4, column= 2, sticky= 'e')
-    cb_ch_delta_start.grid(row= 4, column= 3, sticky= 'w')
-    l_arrow.grid(row= 5, column= 2, sticky= 'e')
-    l_ch_delta_stop.grid(row= 6, column= 2, sticky= 'e')
-    cb_ch_delta_stop.grid(row= 6, column= 3, sticky= 'w')
-    b_chan_switch.grid(row= 5, column= 4,  sticky= 'e')
+    l_delta_name.grid(row= 4, column= 2, padx= 5, pady= 3)
+    cb_delta_name.grid(row= 4, column= 3, pady= 3, sticky= 'w', columnspan= 2)
+    rb_ch_single.grid(row= 5, column= 0, sticky= 'e')
+    cb_ch_single.grid(row= 5, column= 1, sticky= 'w')
+    rb_ch_delta.grid(row= 5, column= 2, sticky= 'e')
+    cb_ch_delta_start.grid(row= 5, column= 3, sticky= 'w')
+    l_arrow.grid(row= 6, column= 2, sticky= 'e')
+    l_ch_delta_stop.grid(row= 7, column= 2, sticky= 'e')
+    cb_ch_delta_stop.grid(row= 7, column= 3, sticky= 'w')
+    b_chan_switch.grid(row= 6, column= 4,  sticky= 'e')
 
     # Save grid
     e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 1)
@@ -2637,9 +2668,9 @@ def main_window(scope_ip):
     cbb_setupfile_interface.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
     cbb_setupfile_class.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
     cbb_setup.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'w')
-    cb_setup_volt.grid(row= 2, column= 5, padx= 3, pady= 2, sticky= 'w')
-    cb_setup_timebase.grid(row= 3, column= 5, padx= 3, pady= 2, sticky= 'w')
-    cb_setup_label.grid(row= 4, column= 5, padx= 3, pady= 2, sticky= 'w')
+    cb_setup_timebase.grid(row= 4, column= 4, pady= 2, sticky= 'w')
+    cb_setup_label.grid(row= 4, column= 5, pady= 2, sticky= 'w')
+    cb_setup_volt.grid(row= 4, column= 6, pady= 2, sticky= 'w')
 
     #Extract Results grid
     rb_mean_result.grid(row= 0, column= 0, padx= 5, pady= 2)
@@ -2726,9 +2757,9 @@ def main_window(scope_ip):
     ToolTip(text_result2_9, '芭樂綠茶')
     ToolTip(text_result1_12, '多多檢查')
 
-    setupfile_interface_list, segment_list= initialize()
+    segment_list= initialize()
     
-    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 16, command= lambda: mxr.load_setup(
+    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 10, command= lambda: mxr.load_setup(
         folder= str_WMe_folder.get(), setup_name= str_setup.get(), 
         scope_segment= segment_list[0],
         # time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
@@ -2743,7 +2774,7 @@ def main_window(scope_ip):
         ))
     b_setup_load.grid(row= 4, column= 3, padx= 5, pady= 2, sticky= 'w')
     
-    cbb_setupfile_interface.config(values= setupfile_interface_list)
+    # cbb_setupfile_interface.config(values= setupfile_interface_list)
     cbb_setupfile_interface.bind("<<ComboboxSelected>>", lambda e: setupfile_interface_select(e, segment_list= segment_list))
     cbb_setupfile_class.bind("<<ComboboxSelected>>", lambda e: setupfile_class_select(e, segment_list= segment_list))
 
