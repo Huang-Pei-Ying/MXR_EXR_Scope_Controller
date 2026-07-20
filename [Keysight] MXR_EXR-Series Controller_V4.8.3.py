@@ -440,6 +440,24 @@ def main_window(scope_ip):
             }            
             self.called_meas_function(chan= chan, command_templates= command_templates)              
 
+        def VPP(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:VPP CHANnel{}',
+                'WMEMory': ':MEASure:VPP WMEMory{}'
+            }            
+            self.called_meas_function(chan= chan, command_templates= command_templates)         
+
+        def NCJitter(self, chan, direction):
+            display_dict= self.judge_chan_wme()
+            for cha in display_dict['CHANnel']:
+                if cha == chan:
+                    self.inst.write(f':MEASure:NCJitter CHANnel{cha},{direction},1,1')
+                    time.sleep(0.05)
+            for wme in display_dict['WMEMory']:
+                if wme == chan:
+                    self.inst.write(f':MEASure:NCJitter WMEMory{cha},{direction},1,1')
+                    time.sleep(0.05)
+
         def tSU_tHO(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop, modify_name, timing_name):
             displayed_dict= self.judge_chan_wme()
             for format in displayed_dict:
@@ -521,7 +539,7 @@ def main_window(scope_ip):
         ### Measurement Related (label) ###
         def delete_item(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
-                            # boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
+                            boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
                             )
             for i, boolvar in enumerate(tuple_marker):
                 if boolvar.get():
@@ -650,7 +668,7 @@ def main_window(scope_ip):
 
         def delete_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
-                            # boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
+                            boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
                             )
         
             for i, boolvar in enumerate(tuple_marker):
@@ -1852,6 +1870,7 @@ def main_window(scope_ip):
     # window.geometry('1500x760+2+2')
     window.geometry('+2+2')
     window.configure(bg= '#E9F4FF')
+    # window.resizable(True, True)
 
     bg_color_1= '#c4cdd8'
     bg_color_2= '#b0c8db'
@@ -1889,7 +1908,8 @@ def main_window(scope_ip):
     b_VIL= tk.Button(label_frame_meas_item, text='VIL', width= 20, height= 2, command= lambda: mxr.VIL(chan= int_ch_single.get()))
     b_slewrate_tR = tk.Button(label_frame_meas_item, text='Slew Rate tR', width= 20, height= 2, command= lambda: mxr.slewrate(chan= int_ch_single.get(), direction= 'RISing'))
     b_slewrate_tF = tk.Button(label_frame_meas_item, text='Slew Rate tF', width= 20, height= 2, command= lambda: mxr.slewrate(chan= int_ch_single.get(), direction= 'FALLing'))
-
+    b_VPP = tk.Button(label_frame_meas_item, text='VPP', width= 20, height= 2, command= lambda: mxr.VPP(chan= int_ch_single.get()))
+    b_PeriodtoPeriod =  tk.Button(label_frame_meas_item, text='1Per-Per', width= 20, height= 2, command= lambda: mxr.NCJitter(chan= int_ch_single.get(), direction= 'RISing'))
 
     # Scale / Offset Frame ===================================================================================================================================
 
@@ -1949,7 +1969,8 @@ def main_window(scope_ip):
     e_wfm_intensity.bind("<Button-4>", lambda e: on_mouse_wheel(type("Event", (), {"delta": 120})))
     e_wfm_intensity.bind("<Button-5>", lambda e: on_mouse_wheel(type("Event", (), {"delta": -120})))
 
-    b_meas_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: OFF', height= 1, command= lambda: mxr.meas_all_edge())
+    b_meas_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: OFF', height= 1, command= lambda: mxr.meas_all_edge(), 
+                                state= 'disabled')
 
     # Delta Setup Frame ===================================================================================================================================
 
@@ -2080,7 +2101,7 @@ def main_window(scope_ip):
     rb_label= tk.Radiobutton(label_frame_label, text= 'Label', variable= int_label_type, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
 
     rb_bookmark= tk.Radiobutton(label_frame_label, text= 'Bookmark', variable= int_label_type, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
-    rb_bookmark.select()
+    rb_label.select()
 
     str_label_1 = tk.StringVar()
     e_label_1 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_1)
@@ -2489,6 +2510,8 @@ def main_window(scope_ip):
     b_VIL.grid(row= 2, column= 1, padx= 5, pady= 4)
     b_slewrate_tR.grid(row= 2, column= 2, padx= 5, pady= 4)
     b_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 4)
+    b_VPP.grid(row= 3, column= 0, padx= 5, pady= 4)
+    b_PeriodtoPeriod.grid(row= 3, column= 1, padx= 5, pady= 4)
 
     # Scale grid
     l_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'w') 
@@ -2512,7 +2535,7 @@ def main_window(scope_ip):
     b_wfm_intensity.grid(row= 4, column= 3, padx= 5, pady= 4, sticky= 'e')
     b_set_intensity_50.grid(row= 5, column= 3, padx= 5, pady= 4, sticky= 'e')
 
-    b_meas_all_edge.grid(row= 5, column= 2, padx= 5, pady= 4)
+    # b_meas_all_edge.grid(row= 5, column= 2, padx= 5, pady= 4)
 
     # Delta grid
     l_start.grid(row= 0, column= 0, padx= 5, pady= 5)
