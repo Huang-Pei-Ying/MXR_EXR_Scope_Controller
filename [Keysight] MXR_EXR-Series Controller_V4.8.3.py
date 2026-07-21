@@ -12,7 +12,7 @@ from PIL import Image
 import random
 import string
 
-window_name= '[Keysight] MXR/EXR-Series Controller_v4.8.3'
+window_name= '[Keysight] MXR/EXR-Series Controller_v4.9.0'
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -86,8 +86,8 @@ def main_window(scope_ip):
         ChanStart = config_initial['Chan_Delta']['ChanStart']
         ChanStop = config_initial['Chan_Delta']['ChanStop']
 
-        SaveImgFolder = config_initial['Save_Setup_Config']['SaveImgFolder']
-        SaveImgLocation = config_initial['Save_Setup_Config']['SaveImgLocation']
+        # SaveImgFolder = config_initial['Save_Setup_Config']['SaveImgFolder']
+        # SaveImgLocation = config_initial['Save_Setup_Config']['SaveImgLocation']
         SaveImgPCFolder = config_initial['Save_Setup_Config']['SaveImgPCFolder']
         SaveImgName = config_initial['Save_Setup_Config']['SaveImgName']
         SaveWMeFolder = config_initial['Save_Setup_Config']['SaveWMeFolder']
@@ -113,72 +113,72 @@ def main_window(scope_ip):
         PCSegment = config_initial['Scope_Server_Segment']['PCSegment']
         Segment= [ScopeSegment, PCSegment]
 
-        str_volt_scale.set(value= select_VoltScale)
-        str_volt_offset.set(value= select_VoltOffset)
-        str_time_scale.set(value= TimebaseScale)
-        str_time_offset.set(value= TimebaseOffset)
-        str_trigger_level.set(value= select_TriggerLevel)
-        str_trigger_chan.set(value= TriggerChan)
-        str_wfm_intensity.set(value= WfmIntensity)
+        strvar_voltage_scale.set(value= select_VoltScale)
+        strvar_voltage_offset.set(value= select_VoltOffset)
+        strvar_timebase_scale.set(value= TimebaseScale)
+        strvar_timebase_offset.set(value= TimebaseOffset)
+        strvar_trigger_level.set(value= select_TriggerLevel)
+        strvar_trigger_channel.set(value= TriggerChan)
+        strvar_waveform_intensity.set(value= WfmIntensity)
 
-        start_rf.set(value= DeltaStartEdge)
-        start_num.set(value= DeltaStartNum)
-        start_pos.set(value= DeltaStartPosition)
-        stop_rf.set(value= DeltaStopEdge)
-        stop_num.set(value= DeltaStopNum)
-        stop_pos.set(value= DeltaStopPosition)
+        strvar_start_risefall.set(value= DeltaStartEdge)
+        strvar_start_N_edge.set(value= DeltaStartNum)
+        strvar_start_position.set(value= DeltaStartPosition)
+        strvar_stop_risefall.set(value= DeltaStopEdge)
+        strvar_stop_N_edge.set(value= DeltaStopNum)
+        strvar_stop_position.set(value= DeltaStopPosition)
 
-        str_gen_top_percent.set(value= select_GeneralTopPercent)
-        str_gen_mid_percent.set(value= select_GeneralMiddlePercent)
-        str_gen_base_percent.set(value= select_GeneralBasePercent)
-        str_gen_top.set(value= select_GeneralTop)
-        str_gen_mid.set(value= select_GeneralMiddle)
-        str_gen_base.set(value= select_GeneralBase)
-        str_rf_top_percent.set(value= select_RFTopPercent)
-        str_rf_base_percent.set(value= select_RFBasePercent)
-        str_rf_top.set(value= select_RFTop)
-        str_rf_base.set(value= select_RFBase)
-        str_sampling_rate.set(value= SamplingRate)
-        str_memory_depth.set(value= MemoryDepth)
+        strvar_general_percent_top.set(value= select_GeneralTopPercent)
+        strvar_general_percent_middle.set(value= select_GeneralMiddlePercent)
+        strvar_general_percent_base.set(value= select_GeneralBasePercent)
+        strvar_general_value_top.set(value= select_GeneralTop)
+        strvar_general_value_middle.set(value= select_GeneralMiddle)
+        strvar_general_value_base.set(value= select_GeneralBase)
+        strvar_risefall_percent_top.set(value= select_RFTopPercent)
+        strvar_risefall_percent_base.set(value= select_RFBasePercent)
+        strvar_risefall_value_top.set(value= select_RFTop)
+        strvar_risefall_value_base.set(value= select_RFBase)
+        strvar_sampling_rate.set(value= SamplingRate)
+        strvar_memory_depth.set(value= MemoryDepth)
 
-        str_label_1.set(value= ChanLabel1)
-        str_label_2.set(value= ChanLabel2)
-        str_label_3.set(value= ChanLabel3)
-        str_label_4.set(value= ChanLabel4)
-        str_label_5.set(value= WMeLabel1)
-        str_label_6.set(value= WMeLabel2)
-        str_label_7.set(value= WMeLabel3)
-        str_label_8.set(value= WMeLabel4)
+        strvar_label_1.set(value= ChanLabel1)
+        strvar_label_2.set(value= ChanLabel2)
+        strvar_label_3.set(value= ChanLabel3)
+        strvar_label_4.set(value= ChanLabel4)
+        strvar_label_5.set(value= WMeLabel1)
+        strvar_label_6.set(value= WMeLabel2)
+        strvar_label_7.set(value= WMeLabel3)
+        strvar_label_8.set(value= WMeLabel4)
 
-        int_ch_single.set(value= int(ChanSingle))
-        int_ch_delta_start.set(value= int(ChanStart))
-        int_ch_delta_stop.set(value= int(ChanStop))
+        intvar_channel_single.set(value= int(ChanSingle))
+        intvar_channel_delta_start.set(value= int(ChanStart))
+        intvar_channel_delta_stop.set(value= int(ChanStop))
 
-        str_image_folder.set(value= SaveImgFolder)
-        int_img_path_choice.set(value= SaveImgLocation)
-        str_image_pc_folder.set(value= SaveImgPCFolder)
-        str_image.set(value= SaveImgName)
-        str_WMe_folder.set(value= SaveWMeFolder)
-        int_wme_path_choice.set(value= SaveWMeLocation)
-        str_WMe_pc_folder.set(value= SaveWMePCFolder)
-        str_other_file.set(value= SaveWMeName)
+        # str_image_folder.set(value= SaveImgFolder)
+        # int_img_path_choice.set(value= SaveImgLocation)
+        strvar_image_pc_folder.set(value= SaveImgPCFolder)
+        strvar_image.set(value= SaveImgName)
+        strvar_wmemory_folder.set(value= SaveWMeFolder)
+        intvar_wmemory_path_choice.set(value= SaveWMeLocation)
+        strvar_wmemory_pc_folder.set(value= SaveWMePCFolder)
+        strvar_other_file.set(value= SaveWMeName)
 
-        str_WMe1.set(value= LoadWMe1)
-        str_WMe2.set(value= LoadWMe2)
-        str_WMe3.set(value= LoadWMe3)
-        str_WMe4.set(value= LoadWMe4)
-        str_setupfile_interface.set(value= SetupFileInterface)
-        str_setupfile_class.set(value= SetupFileClass)
-        str_setup.set(value= LoadSetup)
+        strvar_wmemory_1.set(value= LoadWMe1)
+        strvar_wmemory_2.set(value= LoadWMe2)
+        strvar_wmemory_3.set(value= LoadWMe3)
+        strvar_wmemory_4.set(value= LoadWMe4)
+        strvar_setupfile_interface.set(value= SetupFileInterface)
+        strvar_setupfile_class.set(value= SetupFileClass)
+        strvar_setup.set(value= LoadSetup)
         # if SetupFileInterface == '' or SetupFileInterface == 'User':
         #     cbb_setupfile_class.config(state= 'disabled')
             # cbb_setup.config(state= 'disabled')
-        cbb_setupfile_interface.config(values= setupfile_interface_list)
-        setupfile_interface_select(event= cbb_setupfile_interface.bind("<<ComboboxSelected>>"), segment_list= Segment)
-        setupfile_class_select(event= cbb_setupfile_class.bind("<<ComboboxSelected>>"), segment_list= Segment)
+        combobox_setupfile_interface.config(values= setupfile_interface_list)
+        select_setupfile_interface(event= combobox_setupfile_interface.bind("<<ComboboxSelected>>"), segment_list= Segment)
+        select_setupfile_class(event= combobox_setupfile_class.bind("<<ComboboxSelected>>"), segment_list= Segment)
 
-        adjust_entry(entry= e_WMe_folder)
-        adjust_entry(entry= e_WMe_pc_folder)
+        move_mouse_entry_end(entry= entry_wmemory_folder)
+        move_mouse_entry_end(entry= entry_wmemory_pc_folder)
     
         return Segment
 
@@ -202,349 +202,14 @@ def main_window(scope_ip):
                 connection_fail = messagebox.showinfo("Error", f"Connection Failed.")
                 close_window()
                 # sys.exit()
-                
-        ### Acquisition Related ###
-        def sampling_rate_acquire(self, rate): # 科學記號
+
+        def acquire_sampling_rate(self, rate): # 科學記號
             self.inst.write(f':ACQuire:SRATe:ANALog {rate}')
             time.sleep(0.05)
 
-        def memory_depth_acquire(self, points_value: int):
+        def acquire_memory_depth(self, points_value: int):
             self.inst.write(f':ACQuire:POINts:ANALog {points_value}')
             time.sleep(0.05)
-
-        def meas_all_edge(self):
-            ans= self.inst.query(':ANALyze:AEDGes?')
-            time.sleep(0.05)
-            if ans == '0\n':
-                b_meas_all_edge['text'] = "Meas All Edge: ON"
-                self.inst.write(f':ANALyze:AEDGes 1')
-                time.sleep(0.05)
-            else:
-                b_meas_all_edge['text'] = "Meas All Edge: OFF"
-                self.inst.write(f':ANALyze:AEDGes 0')
-                time.sleep(0.05)
-        
-        ### Threshold Reslated ###
-        def RF_threshold(self, rf_top, rf_base, rf_top_percent, rf_base_percent):
-            if int_rf_thres.get() == 1:
-                self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
-                time.sleep(0.05)
-                self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{rf_top_percent},{(float(rf_top_percent)+float(rf_base_percent))/2},{rf_base_percent}')
-                time.sleep(0.05)
-            elif int_rf_thres.get() == 2:
-                self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,ABSolute')
-                time.sleep(0.05)
-                self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{rf_top},{(float(rf_top)+float(rf_base))/2},{rf_base}')
-                time.sleep(0.05)
-
-        def gen_threshold(self, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent):
-            if int_gen_thres.get() == 1:
-                do_the_judge= False
-                if float(g_top_percent) <= float(g_middle_percent):
-                    g_top_percent= Decimal(g_middle_percent) + Decimal('0.1')
-                    cbb_gen_top_percent.config(foreground= 'red')
-                    cbb_gen_mid_percent.config(foreground= 'red')
-                    do_the_judge= True
-                if float(g_middle_percent) <= float(g_base_percent):
-                    g_base_percent= Decimal(g_middle_percent) - Decimal('0.1')
-                    cbb_gen_base_percent.config(foreground= 'red')
-                    cbb_gen_mid_percent.config(foreground= 'red')
-                    do_the_judge= True
-                if not do_the_judge:
-                    cbb_gen_top_percent.config(foreground= 'black')
-                    cbb_gen_mid_percent.config(foreground= 'black')
-                    cbb_gen_base_percent.config(foreground= 'black')
-
-                self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
-                time.sleep(0.05)
-                self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{g_top_percent},{g_middle_percent},{g_base_percent}')
-                time.sleep(0.05)
-            elif int_gen_thres.get() == 2:
-                do_the_judge= False
-                if float(g_top) <= float(g_middle):
-                    g_top= Decimal(g_middle) + Decimal('0.01')
-                    cbb_gen_top.config(foreground= 'red')
-                    cbb_gen_mid.config(foreground= 'red')
-                    do_the_judge= True
-                if float(g_middle) <= float(g_base):
-                    g_base= Decimal(g_middle) - Decimal('0.01')
-                    cbb_gen_base.config(foreground= 'red')
-                    cbb_gen_mid.config(foreground= 'red')
-                    do_the_judge= True
-                if not do_the_judge:
-                    cbb_gen_top.config(foreground= 'black')
-                    cbb_gen_mid.config(foreground= 'black')
-                    cbb_gen_base.config(foreground= 'black')
-
-                self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
-                time.sleep(0.05)
-                self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
-                time.sleep(0.05)
-
-        ### Scale Related ###
-        def volt_check(self, scale, offset): # 科學記號
-            display_dict= self.judge_chan_wme()
-            for chan in display_dict['CHANnel']:
-                self.inst.write(f':CHANnel{chan}:SCALe {scale}')
-                time.sleep(0.05)
-                self.inst.write(f':CHANnel{chan}:OFFSet {offset}')
-                time.sleep(0.05)
-            for wme in display_dict['WMEMory']:
-                self.inst.write(f':WMEMory{wme}:YRANge {float(scale)*8}')
-                time.sleep(0.05)
-                self.inst.write(f':WMEMory{wme}:YOFFset {offset}')
-                time.sleep(0.05)
-
-        def timebase_position_check(self, position): # 科學記號
-            self.inst.write(f':TIMebase:POSition {position}')
-            time.sleep(0.05)
-
-        def timebase_scale_check(self, scale): # 科學記號
-            self.inst.write(f':TIMebase:SCALe {scale}')
-            time.sleep(0.05)
-
-        def trig_check(self, chan, level):
-            res= self.inst.query(f':CHANnel{chan}:DISPlay?')
-            time.sleep(0.05)
-            if not res == '1\n':
-                self.inst.write(f':CHANnel{chan}:DISPlay ON')
-                time.sleep(0.05)
-            self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{chan}')
-            time.sleep(0.05)
-            self.inst.write(f':TRIGger:LEVel CHANnel{chan},{level}')
-            time.sleep(0.05)
-            if not res == '1\n':
-                self.inst.write(f':CHANnel{chan}:DISPlay OFF')
-                time.sleep(0.05)
-
-        def intensity_check(self, intensity_value):
-            self.inst.write(f'SYSTem:CONTrol "WaveformBrt -1 {intensity_value}"')
-            time.sleep(0.05)
-
-        ### Display Related ###
-        def display_Chan(self, chan, bookmark, choose_type):
-            res= self.inst.query(f':CHANnel{chan}:DISPlay?')
-            time.sleep(0.05)
-            if res == '1\n':
-                self.inst.write(f':CHANnel{chan}:DISPlay OFF')
-                time.sleep(0.05)
-                try:
-                    self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
-                    time.sleep(0.05)
-                except:
-                    pass
-            else:
-                self.inst.write(f':CHANnel{chan}:DISPlay ON')
-                time.sleep(0.05)
-                self.add_bookmark(choose_type= choose_type,bookmark= bookmark, chan= chan)
-
-        def display_WMemory(self, chan, bookmark, choose_type):
-            res= self.inst.query(f':WMEMory{chan}:DISPlay?')
-            time.sleep(0.05)
-            if res == '1\n':
-                self.inst.write(f':WMEMory{chan}:DISPlay OFF')
-                time.sleep(0.05)
-                try:
-                    self.inst.write(f':DISPlay:BOOKmark{chan+4}:DELete')
-                    time.sleep(0.05)
-                except:
-                    pass
-            else:
-                self.inst.write(f':WMEMory{chan}:DISPlay ON')
-                time.sleep(0.05)
-                self.add_bookmark(choose_type= choose_type, bookmark= bookmark, chan= chan+4)
-        
-        ### Measurement Related ###
-        def called_meas_function(self, chan, command_templates: dict):
-            display_dict= self.judge_chan_wme()
-            for key in command_templates:
-                if chan in display_dict[key]:
-                    self.inst.write(command_templates[key].format(chan))
-                    time.sleep(0.05)            
-        
-        def freq(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:FREQuency CHANnel{}',
-                'WMEMory': ':MEASure:FREQuency WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)
-
-        def period(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:PERiod CHANnel{}',
-                'WMEMory': ':MEASure:PERiod WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)
-    
-        def dutycycle(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:DUTYcycle CHANnel{}',
-                'WMEMory': ':MEASure:DUTYcycle WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)
-
-        def slewrate(self, chan, direction):
-            display_dict= self.judge_chan_wme()
-            for cha in display_dict['CHANnel']:
-                if cha == chan:
-                    self.inst.write(f':MEASure:SLEWrate CHANnel{cha},{direction}')
-                    time.sleep(0.05)
-                    self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({cha})"')
-                    time.sleep(0.05)
-            for wme in display_dict['WMEMory']:
-                if wme == chan:
-                    self.inst.write(f':MEASure:SLEWrate WMEMory{wme},{direction}')
-                    time.sleep(0.05)
-                    self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate(m{wme})"')
-                    time.sleep(0.05)
-
-        def tH(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:PWIDth CHANnel{}',
-                'WMEMory': ':MEASure:PWIDth WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)  
-
-        def tL(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:NWIDth CHANnel{}',
-                'WMEMory': ':MEASure:NWIDth WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)  
-
-        def tR(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:RISetime CHANnel{}',
-                'WMEMory': ':MEASure:RISetime WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)              
-
-        def tF(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:FALLtime CHANnel{}',
-                'WMEMory': ':MEASure:FALLtime WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)              
-
-        def VIH(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:VTOP CHANnel{}',
-                'WMEMory': ':MEASure:VTOP WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)              
-
-        def VIL(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:VBASe CHANnel{}',
-                'WMEMory': ':MEASure:VBASe WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)              
-
-        def VPP(self, chan):
-            command_templates = {
-                'CHANnel': ':MEASure:VPP CHANnel{}',
-                'WMEMory': ':MEASure:VPP WMEMory{}'
-            }            
-            self.called_meas_function(chan= chan, command_templates= command_templates)         
-
-        def NCJitter(self, chan, direction):
-            display_dict= self.judge_chan_wme()
-            for cha in display_dict['CHANnel']:
-                if cha == chan:
-                    self.inst.write(f':MEASure:NCJitter CHANnel{cha},{direction},1,1')
-                    time.sleep(0.05)
-            for wme in display_dict['WMEMory']:
-                if wme == chan:
-                    self.inst.write(f':MEASure:NCJitter WMEMory{cha},{direction},1,1')
-                    time.sleep(0.05)
-
-        def tSU_tHO(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop, modify_name, timing_name):
-            displayed_dict= self.judge_chan_wme()
-            for format in displayed_dict:
-                for channel in displayed_dict[format]:
-                    if chan_start == channel:
-                        res_start= f'{format}'
-                    if chan_stop == channel:
-                        res_stop= f'{format}'
-
-            if chan == 2:
-                self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
-                time.sleep(0.05)
-                self.inst.write(f':MEASure:DELTatime {res_start}{chan_start}, {res_stop}{chan_stop}')
-                time.sleep(0.05)
-                
-                if modify_name:
-                    if 'CHAN' in res_start and 'CHAN' in res_stop:
-                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-{chan_stop})"')
-                        time.sleep(0.05)
-                    elif 'CHAN' in res_start and 'WMEM' in res_stop:
-                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-m{chan_stop})"')
-                        time.sleep(0.05)
-                    elif 'WMEM' in res_start and 'CHAN' in res_stop:
-                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-{chan_stop})"')
-                        time.sleep(0.05)
-                    else:
-                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-m{chan_stop})"')
-                        time.sleep(0.05)
-                
-            else:
-                pass
-
-        ### Control Related ###
-        def run(self):
-            self.inst.write(':RUN')
-            time.sleep(0.05)
-
-        def stop(self):
-            self.inst.write(':STOP')
-            time.sleep(0.05)
-
-        def single(self):
-            self.inst.write(':SINGLE')
-            time.sleep(0.05)
-
-        def autoscale(self):
-            self.inst.write(':AUToscale')
-            time.sleep(0.05)
-
-        def clear_diaplay(self):
-            self.inst.write(':CDISplay')
-            time.sleep(0.05)
-
-        def default(self):
-            self.inst.write(':SYSTem:PRESet DEFault')
-            time.sleep(0.05)
-
-        ### Trigger Related ###
-        def trig_type(self):
-            res= self.inst.query(f':TRIGger:SWEep?')
-            time.sleep(0.05)
-            if res == 'AUTO\n':
-                self.inst.write(':TRIGger:SWEep TRIGgered')
-                time.sleep(0.05)
-            else:
-                self.inst.write(':TRIGger:SWEep AUTO')
-                time.sleep(0.05)
-
-        def trig_slope(self):
-            res= self.inst.query(f':TRIGger:EDGE:SLOPe?')
-            time.sleep(0.05)
-            if res == 'POS\n':
-                self.inst.write(':TRIGger:EDGE:SLOPe NEGative')
-                time.sleep(0.05)
-            else:
-                self.inst.write(':TRIGger:EDGE:SLOPe POSitive')
-                time.sleep(0.05)
-        
-        ### Measurement Related (label) ###
-        def delete_item(self):
-            tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
-                            boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
-                            )
-            for i, boolvar in enumerate(tuple_marker):
-                if boolvar.get():
-                    self.inst.write(f'MEASurement{i+1}:CLEar')
-                    time.sleep(0.05)
 
         def add_bookmark(self, choose_type, bookmark, chan):
             if choose_type == 1:
@@ -559,7 +224,7 @@ def main_window(scope_ip):
                     self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
 
                 else:
-                    display_dict= self.judge_chan_wme()    
+                    display_dict= self.judge_channal_wmemory()    
                     try:
                         is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
                         time.sleep(0.05)
@@ -599,13 +264,22 @@ def main_window(scope_ip):
                             time.sleep(0.05)
                         count+=1
 
-        def delete_bookmark(self, chan, choose_type):
-            if choose_type == 1:
+        def add_label(self, chan, label):
+            display_dict= self.judge_channal_wmemory()
+            if label == '':
                 self.inst.write(f':DISPlay:LABel OFF')
                 time.sleep(0.05)
             else:
-                self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                self.inst.write(f':DISPlay:LABel ON')
                 time.sleep(0.05)
+                for cha in display_dict['CHANnel']:
+                    if cha == chan:
+                        self.inst.write(f':CHANnel{chan}:LABel "{label}"')
+                        time.sleep(0.05)
+                for wme in display_dict['WMEMory']:
+                    if wme == chan-4:
+                        self.inst.write(f':WMEMory{chan-4}:LABel "{label}"')
+                        time.sleep(0.05)
 
         def add_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -658,6 +332,10 @@ def main_window(scope_ip):
             c=0
             for i, boolvar in enumerate(tuple_marker):
                 if boolvar.get():
+                    self.inst.write(f"SYSTem:CONTrol 'MeasSetupSrc1EdgeByRef -{i+1} on'")
+                    time.sleep(0.05)
+                    self.inst.write(f"SYSTem:CONTrol 'DoMeas -{i+1}'")
+                    time.sleep(0.05)
                     self.inst.write(f':MARKer:MEASurement:MEASurement MEAS{i+1},ON')
                     time.sleep(0.05)
                     self.inst.write(f':MARKer{2*c+1}:COLor "{color_list[c]}"')
@@ -665,6 +343,235 @@ def main_window(scope_ip):
                     self.inst.write(f':MARKer{2*c+2}:COLor "{color_list[c]}"')
                     time.sleep(0.05)
                     c+=1
+
+        def autoscale(self):
+            self.inst.write(':AUToscale')
+            time.sleep(0.05)
+
+        def call_measurement_delta_time(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop, modify_name, timing_name):
+            displayed_dict= self.judge_channal_wmemory()
+            for format in displayed_dict:
+                for channel in displayed_dict[format]:
+                    if chan_start == channel:
+                        res_start= f'{format}'
+                    if chan_stop == channel:
+                        res_stop= f'{format}'
+
+            if chan == 2:
+                self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
+                time.sleep(0.05)
+                self.inst.write(f':MEASure:DELTatime {res_start}{chan_start}, {res_stop}{chan_stop}')
+                time.sleep(0.05)
+                
+                if modify_name:
+                    if 'CHAN' in res_start and 'CHAN' in res_stop:
+                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-{chan_stop})"')
+                        time.sleep(0.05)
+                    elif 'CHAN' in res_start and 'WMEM' in res_stop:
+                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-m{chan_stop})"')
+                        time.sleep(0.05)
+                    elif 'WMEM' in res_start and 'CHAN' in res_stop:
+                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-{chan_stop})"')
+                        time.sleep(0.05)
+                    else:
+                        self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-m{chan_stop})"')
+                        time.sleep(0.05)
+                
+            else:
+                pass
+
+        def call_measurement_dutycycle(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:DUTYcycle CHANnel{}',
+                'WMEMory': ':MEASure:DUTYcycle WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)
+
+        def call_measurement_frequency(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:FREQuency CHANnel{}',
+                'WMEMory': ':MEASure:FREQuency WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)
+
+        def call_measurement_function(self, chan, command_templates: dict):
+            display_dict= self.judge_channal_wmemory()
+            for key in command_templates:
+                if chan in display_dict[key]:
+                    self.inst.write(command_templates[key].format(chan))
+                    time.sleep(0.05)            
+        
+        def call_measurement_NCJitter(self, chan, direction):
+            display_dict= self.judge_channal_wmemory()
+            for cha in display_dict['CHANnel']:
+                if cha == chan:
+                    self.inst.write(f':MEASure:NCJitter CHANnel{cha},{direction},1,1')
+                    time.sleep(0.05)
+            for wme in display_dict['WMEMory']:
+                if wme == chan:
+                    self.inst.write(f':MEASure:NCJitter WMEMory{cha},{direction},1,1')
+                    time.sleep(0.05)
+
+        def call_measurement_period(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:PERiod CHANnel{}',
+                'WMEMory': ':MEASure:PERiod WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)
+    
+        def call_measurement_slewrate(self, chan, direction):
+            display_dict= self.judge_channal_wmemory()
+            for cha in display_dict['CHANnel']:
+                if cha == chan:
+                    self.inst.write(f':MEASure:SLEWrate CHANnel{cha},{direction}')
+                    time.sleep(0.05)
+                    self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({cha})"')
+                    time.sleep(0.05)
+            for wme in display_dict['WMEMory']:
+                if wme == chan:
+                    self.inst.write(f':MEASure:SLEWrate WMEMory{wme},{direction}')
+                    time.sleep(0.05)
+                    self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate(m{wme})"')
+                    time.sleep(0.05)
+
+        def call_measurement_tH(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:PWIDth CHANnel{}',
+                'WMEMory': ':MEASure:PWIDth WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)  
+
+        def call_measurement_tL(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:NWIDth CHANnel{}',
+                'WMEMory': ':MEASure:NWIDth WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)  
+
+        def call_measurement_tR(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:RISetime CHANnel{}',
+                'WMEMory': ':MEASure:RISetime WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)              
+
+        def call_measurement_tF(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:FALLtime CHANnel{}',
+                'WMEMory': ':MEASure:FALLtime WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)              
+
+        def call_measurement_VIH(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:VTOP CHANnel{}',
+                'WMEMory': ':MEASure:VTOP WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)              
+
+        def call_measurement_VIL(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:VBASe CHANnel{}',
+                'WMEMory': ':MEASure:VBASe WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)              
+
+        def call_measurement_VPP(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:VPP CHANnel{}',
+                'WMEMory': ':MEASure:VPP WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)   
+
+        def call_measurement_VMAX(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:VMAX CHANnel{}',
+                'WMEMory': ':MEASure:VMAX WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)   
+            
+        def call_measurement_VMIN(self, chan):
+            command_templates = {
+                'CHANnel': ':MEASure:VMIN CHANnel{}',
+                'WMEMory': ':MEASure:VMIN WMEMory{}'
+            }            
+            self.call_measurement_function(chan= chan, command_templates= command_templates)   
+            
+        def check_intensity_setting(self, intensity_value):
+            self.inst.write(f'SYSTem:CONTrol "WaveformBrt -1 {intensity_value}"')
+            time.sleep(0.05)
+
+        def check_timebase_offset(self, position): # 科學記號
+            self.inst.write(f':TIMebase:POSition {position}')
+            time.sleep(0.05)
+
+        def check_timebase_scale(self, scale): # 科學記號
+            self.inst.write(f':TIMebase:SCALe {scale}')
+            time.sleep(0.05)
+
+        def check_trigger_setting(self, chan, level):
+            res= self.inst.query(f':CHANnel{chan}:DISPlay?')
+            time.sleep(0.05)
+            if not res == '1\n':
+                self.inst.write(f':CHANnel{chan}:DISPlay ON')
+                time.sleep(0.05)
+            self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{chan}')
+            time.sleep(0.05)
+            self.inst.write(f':TRIGger:LEVel CHANnel{chan},{level}')
+            time.sleep(0.05)
+            if not res == '1\n':
+                self.inst.write(f':CHANnel{chan}:DISPlay OFF')
+                time.sleep(0.05)
+
+        def check_voltage(self, scale, offset): # 科學記號
+            display_dict= self.judge_channal_wmemory()
+            for chan in display_dict['CHANnel']:
+                self.inst.write(f':CHANnel{chan}:SCALe {scale}')
+                time.sleep(0.05)
+                self.inst.write(f':CHANnel{chan}:OFFSet {offset}')
+                time.sleep(0.05)
+            for wme in display_dict['WMEMory']:
+                self.inst.write(f':WMEMory{wme}:YRANge {float(scale)*8}')
+                time.sleep(0.05)
+                self.inst.write(f':WMEMory{wme}:YOFFset {offset}')
+                time.sleep(0.05)
+
+        def clear_diaplay(self):
+            self.inst.write(':CDISplay')
+            time.sleep(0.05)
+
+        def clear_wmemory(self, chan, string):
+            self.inst.write(f':WMEMory{chan}:CLEar')
+            time.sleep(0.05)
+            string.set('')
+
+        def default(self):
+            self.inst.write(':SYSTem:PRESet DEFault')
+            time.sleep(0.05)
+
+        def delete_bookmark(self, chan, choose_type):
+            if choose_type == 1:
+                self.inst.write(f':DISPlay:LABel OFF')
+                time.sleep(0.05)
+            else:
+                self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                time.sleep(0.05)
+
+        def display_channel(self, chan, bookmark, choose_type):
+            res= self.inst.query(f':CHANnel{chan}:DISPlay?')
+            time.sleep(0.05)
+            if res == '1\n':
+                self.inst.write(f':CHANnel{chan}:DISPlay OFF')
+                time.sleep(0.05)
+                try:
+                    self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                    time.sleep(0.05)
+                except:
+                    pass
+            else:
+                self.inst.write(f':CHANnel{chan}:DISPlay ON')
+                time.sleep(0.05)
+                self.add_bookmark(choose_type= choose_type,bookmark= bookmark, chan= chan)
 
         def delete_marker(self):
             tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -676,54 +583,394 @@ def main_window(scope_ip):
                     self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},OFF')
                     time.sleep(0.05)
 
-        def add_label(self, chan, label):
-            display_dict= self.judge_chan_wme()
-            if label == '':
-                self.inst.write(f':DISPlay:LABel OFF')
-                time.sleep(0.05)
-            else:
-                self.inst.write(f':DISPlay:LABel ON')
-                time.sleep(0.05)
-                for cha in display_dict['CHANnel']:
-                    if cha == chan:
-                        self.inst.write(f':CHANnel{chan}:LABel "{label}"')
-                        time.sleep(0.05)
-                for wme in display_dict['WMEMory']:
-                    if wme == chan-4:
-                        self.inst.write(f':WMEMory{chan-4}:LABel "{label}"')
-                        time.sleep(0.05)
+        def delete_measurement(self):
+            tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
+                            boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
+                            )
+            for i, boolvar in enumerate(tuple_marker):
+                if boolvar.get():
+                    self.inst.write(f'MEASurement{i+1}:CLEar')
+                    time.sleep(0.05)
 
-        ### Save Related ###
-        def load_wmemory(self, chan, folder, wme_name, file_path_choice):
-            self.inst.write(f':WMEMory:TIETimebase 1')
+        def display_wmemory(self, chan, bookmark, choose_type):
+            res= self.inst.query(f':WMEMory{chan}:DISPlay?')
             time.sleep(0.05)
-            self.inst.write(f':DISPlay:SCOLor WMEMory1,17,100,100')
+            if res == '1\n':
+                self.inst.write(f':WMEMory{chan}:DISPlay OFF')
+                time.sleep(0.05)
+                try:
+                    self.inst.write(f':DISPlay:BOOKmark{chan+4}:DELete')
+                    time.sleep(0.05)
+                except:
+                    pass
+            else:
+                self.inst.write(f':WMEMory{chan}:DISPlay ON')
+                time.sleep(0.05)
+                self.add_bookmark(choose_type= choose_type, bookmark= bookmark, chan= chan+4)
+        
+        def extract_result(self):
+            meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
+            result1= ['', '', '', '', '', '', '', '', '', '', '', '']
+            result2= ['', '', '', '', '', '', '', '', '', '', '', '']
+            all_results= self.inst.query(f':MEASure:RESults?')
             time.sleep(0.05)
-            self.inst.write(f':DISPlay:SCOLor WMEMory2,38,100,84')
-            time.sleep(0.05)
-            self.inst.write(f':DISPlay:SCOLor WMEMory3,60,80,100')
-            time.sleep(0.05)
-            self.inst.write(f':DISPlay:SCOLor WMEMory4,94,100,100')
-            time.sleep(0.05)
+            for index, value in enumerate(all_results.split(',')):
+                if divmod(index, 7)[1] == 0:
+                    try:
+                        meas_name[divmod(index, 7)[0]]= value
+                    except:
+                        # l_meas_name_1.config(text=f'484超過3個??')
+                        continue
+                    if value[0] == 'V':  # 0: Voltage, 1: Time, 2: Slew Rate, 3: Frequency, 4: Duty cycle
+                        measurement_type = 0 
+                    elif 'Slew Rate' in value:
+                        measurement_type = 2
+                    elif 'Freq' in value:
+                        measurement_type = 3
+                    elif 'Duty cycle' in value:
+                        measurement_type = 4
+                    elif value == '\n':
+                        meas_name[divmod(index, 7)[0]] = ''
+                        continue
+                    else:
+                        measurement_type = 1
+                
+                if intvar_result_type.get() == 1:  # 選擇Mean Value
+                    if divmod(index, 7)[1] == 4:
+                        if measurement_type == 0:
+                            final_result_1= self.judge_unit_voltage(value= value)
+                            final_result_2= ''
+                        elif measurement_type == 1:
+                            slew= False
+                            final_result_1= self.judge_unit_time(value= value, slew= slew)
+                            final_result_2= ''
+                        elif measurement_type == 2:
+                            slew= True
+                            final_result_1= self.judge_unit_time(value= value, slew= slew)
+                            final_result_2= ''
+                        elif measurement_type == 3:
+                            final_result_1= self.judge_unit_frequency(value= value)
+                            final_result_2= ''
+                        elif measurement_type == 4:
+                            final_result_1 = f"{float(value):.3f}"+' %'
+                            final_result_2= ''
+
+                        try:
+                            result1[divmod(index, 7)[0]]= final_result_1
+                            result2[divmod(index, 7)[0]]= final_result_2
+                        except:
+                            continue
+
+                elif intvar_result_type.get() == 2:  # 選擇Min & Max Value
+                    if divmod(index, 7)[1] == 2:
+                        if measurement_type == 0:
+                            final_result_1= self.judge_unit_voltage(value= value)
+                        elif measurement_type == 1:
+                            slew= False
+                            final_result_1= self.judge_unit_time(value= value, slew= slew)
+                        elif measurement_type == 2:
+                            slew= True
+                            final_result_1= self.judge_unit_time(value= value, slew= slew)
+                        elif measurement_type == 3:
+                            final_result_1= self.judge_unit_frequency(value= value)
+                        elif measurement_type == 4:
+                            final_result_1 = f"{float(value):.3f}"+' %'
+
+                        try:
+                            result1[divmod(index, 7)[0]]= final_result_1
+                        except:
+                            continue
+
+                    if divmod(index, 7)[1] == 3:
+                        if measurement_type == 0:
+                            final_result_2= self.judge_unit_voltage(value= value)
+                        elif measurement_type == 1:
+                            slew= False
+                            final_result_2= self.judge_unit_time(value= value, slew= slew)
+                        elif measurement_type == 2:
+                            slew= True
+                            final_result_2= self.judge_unit_time(value= value, slew= slew)
+                        elif measurement_type == 3:
+                            final_result_2= self.judge_unit_frequency(value= value)
+                        elif measurement_type == 4:
+                            final_result_2 = f"{float(value):.3f}"+' %'
+
+                        try:
+                            result2[divmod(index, 7)[0]]= final_result_2
+                        except:
+                            continue
+
+            label_measurement_name_1.config(text=f'{meas_name[0]}')
+            text_result_mean_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_1.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_1.insert(tk.END, f"{result1[0]}")
+            text_result_mean_1.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_1.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_1.insert(tk.END, f"{result2[0]}")
+            text_result_minmax_1.config(state=tk.DISABLED)  # 設置為只讀狀態
+
+            label_measurement_name_2.config(text=f'{meas_name[1]}')
+            text_result_mean_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_2.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_2.insert(tk.END, f"{result1[1]}")
+            text_result_mean_2.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_2.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_2.insert(tk.END, f"{result2[1]}")
+            text_result_minmax_2.config(state=tk.DISABLED)  # 設置為只讀狀態
             
-            if file_path_choice == 2:
-                total_folder_path = folder
-            else:
-                total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
+            label_measurement_name_3.config(text=f'{meas_name[2]}')
+            text_result_mean_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_3.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_3.insert(tk.END, f"{result1[2]}")
+            text_result_mean_3.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_3.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_3.insert(tk.END, f"{result2[2]}")
+            text_result_minmax_3.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_4.config(text=f'{meas_name[3]}')
+            text_result_mean_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_4.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_4.insert(tk.END, f"{result1[3]}")
+            text_result_mean_4.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_4.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_4.insert(tk.END, f"{result2[3]}")
+            text_result_minmax_4.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_5.config(text=f'{meas_name[4]}')
+            text_result_mean_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_5.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_5.insert(tk.END, f"{result1[4]}")
+            text_result_mean_5.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_5.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_5.insert(tk.END, f"{result2[4]}")
+            text_result_minmax_5.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_6.config(text=f'{meas_name[5]}')
+            text_result_mean_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_6.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_6.insert(tk.END, f"{result1[5]}")
+            text_result_mean_6.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_6.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_6.insert(tk.END, f"{result2[5]}")
+            text_result_minmax_6.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_7.config(text=f'{meas_name[6]}')
+            text_result_mean_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_7.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_7.insert(tk.END, f"{result1[6]}")
+            text_result_mean_7.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_7.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_7.insert(tk.END, f"{result2[6]}")
+            text_result_minmax_7.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_8.config(text=f'{meas_name[7]}')
+            text_result_mean_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_8.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_8.insert(tk.END, f"{result1[7]}")
+            text_result_mean_8.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_8.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_8.insert(tk.END, f"{result2[7]}")
+            text_result_minmax_8.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_9.config(text=f'{meas_name[8]}')
+            text_result_mean_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_9.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_9.insert(tk.END, f"{result1[8]}")
+            text_result_mean_9.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_9.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_9.insert(tk.END, f"{result2[8]}")
+            text_result_minmax_9.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_10.config(text=f'{meas_name[9]}')
+            text_result_mean_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_10.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_10.insert(tk.END, f"{result1[9]}")
+            text_result_mean_10.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_10.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_10.insert(tk.END, f"{result2[9]}")
+            text_result_minmax_10.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_11.config(text=f'{meas_name[10]}')
+            text_result_mean_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_11.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_11.insert(tk.END, f"{result1[10]}")
+            text_result_mean_11.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_11.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_11.insert(tk.END, f"{result2[10]}")
+            text_result_minmax_11.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+            label_measurement_name_12.config(text=f'{meas_name[11]}')
+            text_result_mean_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_mean_12.delete(1.0, tk.END)  # 清空當前內容
+            text_result_mean_12.insert(tk.END, f"{result1[11]}")
+            text_result_mean_12.config(state=tk.DISABLED)  # 設置為只讀狀態
+            text_result_minmax_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
+            text_result_minmax_12.delete(1.0, tk.END)  # 清空當前內容
+            text_result_minmax_12.insert(tk.END, f"{result2[11]}")
+            text_result_minmax_12.config(state=tk.DISABLED)  # 設置為只讀狀態
+            
+        def judge_channal_wmemory(self):
+            display_dict= {'CHANnel': [],'WMEMory': []}
+            for i in range(1, 5):
+                chan_res= self.inst.query(f':CHANnel{i}:DISPlay?')
+                time.sleep(0.05)
+                wme_res= self.inst.query(f':WMEMory{i}:DISPlay?')
+                time.sleep(0.05)
 
-            self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{chan},OFF')
-            time.sleep(0.05)
+                if chan_res == '1\n' and not wme_res == '1\n':
+                    display_dict['CHANnel'].append(i)
+                    # return 'CHANnel'
+                if not chan_res == '1\n' and wme_res == '1\n':
+                    display_dict['WMEMory'].append(i)
+                    # return 'WMEMory'
+                if chan_res == '1\n' and wme_res == '1\n':
+                    display_dict['CHANnel'].append(i)
+                    display_dict['WMEMory'].append(i)
+
+            return display_dict
+
+        def judge_unit_frequency(self, value):
+            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
+            match = re.search(pattern, value)
+            # 提取基數和指數
+            base = float(match.group(1))
+            exponent = int(match.group(2))
+            # 基于不同的指数值进行不同的转换
+            if exponent == 9:
+                return f"{base} GHz"
+            elif exponent == 8:
+                return f"{base * 100} MHz"
+            elif exponent == 7:
+                return f"{base * 10} MHz"
+            elif exponent == 6:
+                return f"{base} MHz"
+            elif exponent == 5:
+                return f"{base * 100} kHz"
+            elif exponent == 4:
+                return f"{base * 10} kHz"
+            elif exponent == 3:
+                return f"{base} kHz"
+            elif exponent == 2:
+                return f"{base * 100} Hz"
+            elif exponent == 1:
+                return f"{base * 10} Hz"
+            else:
+                # 如果指数不在指定的范围内，返回原始文本
+                return f"{base} Hz"
+
+        def judge_unit_time(self, value, slew):
+            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
+            match = re.search(pattern, value)
+            # 提取基數和指數
+            base = float(match.group(1))
+            exponent = int(match.group(2))
+            if slew:
+                if exponent == 3:
+                    return f"{base} V/ms"
+                elif exponent == 4:
+                    return f"{base * 10} V/ms"
+                elif exponent == 5:
+                    return f"{base * 100} V/ms"
+                elif exponent == 6:
+                    return f"{base} V/us"
+                elif exponent == 7:
+                    return f"{base * 10} V/us"
+                elif exponent == 8:
+                    return f"{base * 100} V/us"
+                elif exponent == 9:
+                    return f"{base} V/ns"
+                elif exponent == 10:
+                    return f"{base * 10} V/ns"
+                elif exponent == 11:
+                    return f"{base * 100} V/ns"
+                elif exponent == 12:
+                    return f"{base} V/ps"
+                elif exponent == 13:
+                    return f"{base * 10} V/ps"
+                elif exponent == 14:
+                    return f"{base * 100} V/ps"
+                elif exponent == 15:
+                    return f"{base} V/fs"
+                elif exponent == 16:
+                    return f"{base * 10} V/fs"
+                elif exponent == 17:
+                    return f"{base * 100} V/fs"
+                else:
+                    # 如果指數不在指定的範圍内，返回原始字串
+                    return f"{base} V/s"
+            else:
+                if exponent == -9:
+                    return f"{base} ns"
+                elif exponent == -8:
+                    return f"{base * 10} ns"
+                elif exponent == -7:
+                    return f"{base * 100} ns"
+                elif exponent == -6:
+                    return f"{base} us"
+                elif exponent == -5:
+                    return f"{base * 10} us"
+                elif exponent == -4:
+                    return f"{base * 100} us"
+                elif exponent == -3:
+                    return f"{base} ms"
+                elif exponent == -2:
+                    return f"{base * 10} ms"
+                elif exponent == -1:
+                    return f"{base * 100} ms"
+                elif exponent == -12:
+                    return f"{base} ps"
+                elif exponent == -11:
+                    return f"{base * 10} ps"
+                elif exponent == -10:
+                    return f"{base * 100} ps"
+                elif exponent == -15:
+                    return f"{base} fs"
+                elif exponent == -14:
+                    return f"{base * 10} fs"
+                elif exponent == -13:
+                    return f"{base * 100} fs"
+                else:
+                    # 如果指數不在指定的範圍内，返回原始字串
+                    return f'{base} s'
+                
+        def judge_unit_voltage(self, value):
+            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
+            match = re.search(pattern, value)
+            # 提取基數和指數
+            base = float(match.group(1))
+            exponent = int(match.group(2))
+            # 基于不同的指数值进行不同的转换
+            if exponent == -3:
+                return f"{base} mV"
+            elif exponent == -2:
+                return f"{base * 10} mV"
+            elif exponent == -1:
+                return f"{base * 100} mV"
+            else:
+                # 如果指数不在指定的范围内，返回原始文本
+                return f"{base} V"
 
         def load_setup(self, folder, scope_segment, setup_name, choose_type, file_path_choice, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
             
             if file_path_choice == 2: # Server
                 
-                if str_setupfile_interface.get() == 'User':
+                if strvar_setupfile_interface.get() == 'User':
                     total_folder_path = folder
-                elif str_setupfile_interface.get() == '':
+                elif strvar_setupfile_interface.get() == '':
                     total_folder_path = folder
                 else: 
-                    total_folder_path = f'{scope_segment}:/#_Eric Team/02_Penny/Setup_Files_Collection/{str_setupfile_interface.get()}/{str_setupfile_class.get()}'
+                    total_folder_path = f'{scope_segment}:/#_Eric Team/02_Penny/Setup_Files_Collection/{strvar_setupfile_interface.get()}/{strvar_setupfile_class.get()}'
 
             else: # Desktop
                 total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
@@ -737,7 +984,7 @@ def main_window(scope_ip):
             # 記錄示波器voltage設定
             temp_voltscale_dict= {}
             temp_voltoffset_dict= {}
-            display_dict= self.judge_chan_wme()
+            display_dict= self.judge_channal_wmemory()
             for chan in display_dict['CHANnel']:
                 volt_scale= self.inst.query(f':CHANnel{chan}:SCALe?')
                 time.sleep(0.05)
@@ -767,10 +1014,10 @@ def main_window(scope_ip):
             # 依據勾選狀態修改數值
             if boolvar_setup_timebase.get() == True:
                 # 依照示波器畫面的timebase
-                self.timebase_scale_check(scale= time_scale)
-                self.timebase_position_check(position= time_position)
+                self.check_timebase_scale(scale= time_scale)
+                self.check_timebase_offset(position= time_position)
             if boolvar_setup_volt.get() == True:
-                display_dict= self.judge_chan_wme()
+                display_dict= self.judge_channal_wmemory()
                 # 依照示波器畫面的Voltage
                 for chan in display_dict['CHANnel']:
                     self.inst.write(f':CHANnel{chan}:SCALe {temp_voltscale_dict[chan]}')
@@ -801,144 +1048,55 @@ def main_window(scope_ip):
                 # self.trig_check(chan= trig_chan, level= trig_level)
                 
                 # 依照GUI的threshold
-                self.gen_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
-                self.RF_threshold(rf_top= rf_top, rf_base= rf_base, rf_top_percent= rf_top_percent, rf_base_percent= rf_base_percent)
+                self.set_general_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
+                self.set_risefall_threshold(rf_top= rf_top, rf_base= rf_base, rf_top_percent= rf_top_percent, rf_base_percent= rf_base_percent)
 
             if boolvar_setup_label.get() == True:
                 # 依照GUI的label
                 label_content = [
-                    str_label_1, str_label_2, str_label_3, str_label_4, 
-                    str_label_5, str_label_6, str_label_7, str_label_8, 
+                    strvar_label_1, strvar_label_2, strvar_label_3, strvar_label_4, 
+                    strvar_label_5, strvar_label_6, strvar_label_7, strvar_label_8, 
                     ]
                 for i in range(8):
                     self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), chan= i+1)
 
-
-        def clear_wmemory(self, chan, string):
-            self.inst.write(f':WMEMory{chan}:CLEar')
+        def load_wmemory(self, chan, folder, wme_name, file_path_choice):
+            self.inst.write(f':WMEMory:TIETimebase 1')
             time.sleep(0.05)
-            string.set('')
-
-        def save_image_scope(self, folder, image_name, path_choice):
-            # 清空狀態
-            self.inst.write('*CLS')
+            self.inst.write(f':DISPlay:SCOLor WMEMory1,17,100,100')
             time.sleep(0.05)
-
-            # error messenge
-                # 113 This directory is not valid.
-                # -256 File name not found
-                # -257 File name error
-                # -410 Query INTERRUPTED
-                # -420 Query UNTERMINATED
-                # 0 No error
-
-            # CDIRectory會害存圖卡死 orz
-
-            if path_choice == 2:
-                folder_total_path = folder
+            self.inst.write(f':DISPlay:SCOLor WMEMory2,38,100,84')
+            time.sleep(0.05)
+            self.inst.write(f':DISPlay:SCOLor WMEMory3,60,80,100')
+            time.sleep(0.05)
+            self.inst.write(f':DISPlay:SCOLor WMEMory4,94,100,100')
+            time.sleep(0.05)
+            
+            if file_path_choice == 2:
+                total_folder_path = folder
             else:
-                folder_total_path = f"C:/Users/Administrator/Desktop/{folder}"
+                total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
 
-            # 資料夾是否存在
-            self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
-            time.sleep(0.05)
-            error_messenge=self.inst.query(f':SYSTem:ERRor?')
-            time.sleep(0.05)
-            # print(error_messenge)
-            if error_messenge == '-256\n' or error_messenge == '113\n' or error_messenge == '-257\n':
-                ask_scp_root = tk.Tk()
-                ask_scp_root.withdraw()  # 隱藏主視窗
-                ask_scp_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
-                ask_scp_root.destroy()
-                
-                if not ask_scp_result:
-                    ask_scp_root = tk.Tk()
-                    ask_scp_root.withdraw()  # 隱藏主視窗
-                    messagebox.showinfo("Warning", f'檔案未儲存')
-                    # print("檔案未保存。")
-                    return     
-                # 新建資料夾
-                folder_total_path= folder_total_path.replace("/", "\\")
-                # print(folder_total_path)
-
-                split_folder_list= folder_total_path.split('\\')
-
-                folder= split_folder_list[0]
-                for split in split_folder_list[1:]:
-                    folder= f'{folder}\\{split}'
-                    self.inst.query(f':DISK:DIRectory? "{folder}"')
-                    time.sleep(0.05)
-                    response= self.inst.query(f':SYSTem:ERRor?')
-                    time.sleep(0.05)
-                    # print(response)
-                    if response == '-256\n' or response == '113\n' or response == '-257\n':
-                        self.inst.write(f':DISK:MDIRectory "{folder}"')
-                        time.sleep(0.05)
-
-            # 資料夾全部內容
-            folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
-            time.sleep(0.05)
-            # 使用正則表達式來匹配所有 .png 檔案名稱
-            png_files = re.findall(r'\b[\w-]+\.(?:png)\b', folder_content)
-
-            for file_name in png_files:
-                if f'{image_name}.png' == file_name:
-                    ask_scp_root = tk.Tk()
-                    ask_scp_root.withdraw()  # 隱藏主視窗
-                    ask_scp_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
-                    ask_scp_root.destroy()
-                    
-                    if not ask_scp_result:
-                        # print("檔案未保存。")
-                        ask_scp_root = tk.Tk()
-                        ask_scp_root.withdraw()  # 隱藏主視窗
-                        messagebox.showinfo("Warning", f'檔案未儲存')
-                        return     
-
-            self.inst.write(f':DISK:SAVE:IMAGe "{folder_total_path}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
+            self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{chan},OFF')
             time.sleep(0.05)
 
-        def save_waveform_pc(self, folder, pc_folder, file_name):            
-
-            full_path = rf"C:/Users/Administrator/Desktop/{folder}/{file_name}.png"
-            full_path = full_path.replace('\\', '/')
-            # print(full_path)
-            data = b''
-            message = f':DISK:GETFILE? "{full_path}"'
-            data = self.inst.query_binary_values(message=message, datatype='B', header_fmt='ieee', container=bytes)
+        def measure_all_edge(self):
+            ans= self.inst.query(':ANALyze:AEDGes?')
+            time.sleep(0.05)
+            if ans == '0\n':
+                button_measure_all_edge['text'] = "Meas All Edge: ON"
+                self.inst.write(f':ANALyze:AEDGes 1')
+                time.sleep(0.05)
+            else:
+                button_measure_all_edge['text'] = "Meas All Edge: OFF"
+                self.inst.write(f':ANALyze:AEDGes 0')
+                time.sleep(0.05)
+        
+        def run(self):
+            self.inst.write(':RUN')
             time.sleep(0.05)
 
-            if not os.path.exists(pc_folder):
-                ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗
-                ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
-                ask_root.destroy()
-                
-                if not ask_result:
-                    ask_root = tk.Tk()
-                    ask_root.withdraw()  # 隱藏主視窗
-                    messagebox.showinfo("Warning", f'檔案未儲存')
-                    # print("檔案未保存。")
-                    return     
-                os.mkdir(pc_folder) 
-
-            if os.path.exists(f"{pc_folder}/{file_name}.png"):
-                ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗
-                ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
-                ask_root.destroy()
-                
-                if not ask_result:
-                    # print("檔案未保存。")
-                    ask_root = tk.Tk()
-                    ask_root.withdraw()  # 隱藏主視窗
-                    messagebox.showinfo("Warning", f'檔案未儲存')
-                    return     
-           
-            with open(f"{pc_folder}/{file_name}.png", 'wb') as f:
-                f.write(data)
-
-        def save_image_pc(self, pc_folder, file_name):
+        def save_pc_image(self, pc_folder, file_name):
             screen_data = np.array(self.inst.query_binary_values(":DISPlay:DATA? PNG", datatype = 's', container = bytes))
             time.sleep(0.05)
 
@@ -980,7 +1138,89 @@ def main_window(scope_ip):
 
             rgba_to_rgb_composite(f"{temp_folder}/{temp_img_name}.png", f"{pc_folder}/{file_name}.png", background=(0,0,0))
 
-        def save_other_file_scope(self, chan, folder, current_file_name, ext_type, path_choice):
+        def save_pc_waveform(self, folder, pc_folder, file_name):            
+
+            full_path = rf"C:/Users/Administrator/Desktop/{folder}/{file_name}.png"
+            full_path = full_path.replace('\\', '/')
+            # print(full_path)
+            data = b''
+            message = f':DISK:GETFILE? "{full_path}"'
+            data = self.inst.query_binary_values(message=message, datatype='B', header_fmt='ieee', container=bytes)
+            time.sleep(0.05)
+
+            if not os.path.exists(pc_folder):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    # print("檔案未保存。")
+                    return     
+                os.mkdir(pc_folder) 
+
+            if os.path.exists(f"{pc_folder}/{file_name}.png"):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    # print("檔案未保存。")
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    return     
+           
+            with open(f"{pc_folder}/{file_name}.png", 'wb') as f:
+                f.write(data)
+
+        def save_pc_wmemory(self, folder, pc_folder, file_name, ext_type):
+            if ext_type == 1:
+                ext = 'h5'
+            else:
+                ext = 'set'
+
+            full_path = f"C:/Users/Administrator/Desktop/{folder}/{file_name}.{ext}"
+            data = b''
+            message = ':DISK:GETFILE? "' + full_path + '"'
+            data = self.inst.query_binary_values(message= message, datatype= 'B', header_fmt= 'ieee', container= bytes)
+            time.sleep(0.05)
+            
+            if not os.path.exists(pc_folder):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    # print("檔案未保存。")
+                    return     
+                os.mkdir(pc_folder) 
+
+            if os.path.exists(f"{pc_folder}/{file_name}.{ext}"):
+                ask_root = tk.Tk()
+                ask_root.withdraw()  # 隱藏主視窗
+                ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
+                ask_root.destroy()
+                
+                if not ask_result:
+                    # print("檔案未保存。")
+                    ask_root = tk.Tk()
+                    ask_root.withdraw()  # 隱藏主視窗
+                    messagebox.showinfo("Warning", f'檔案未儲存')
+                    return     
+           
+            with open(f"{pc_folder}/{file_name}.{ext}", 'wb') as f:
+                f.write(data)
+
+        def save_scope_file(self, chan, folder, current_file_name, ext_type, path_choice):
             # 清空狀態
             self.inst.write('*CLS')
             time.sleep(0.05)
@@ -1065,410 +1305,233 @@ def main_window(scope_ip):
             self.inst.write(command)
             time.sleep(0.05)
 
-        def save_wmemory_pc(self, folder, pc_folder, file_name, ext_type):
-            if ext_type == 1:
-                ext = 'h5'
-            else:
-                ext = 'set'
-
-            full_path = f"C:/Users/Administrator/Desktop/{folder}/{file_name}.{ext}"
-            data = b''
-            message = ':DISK:GETFILE? "' + full_path + '"'
-            data = self.inst.query_binary_values(message= message, datatype= 'B', header_fmt= 'ieee', container= bytes)
+        def save_scope_image(self, folder, image_name, path_choice):
+            # 清空狀態
+            self.inst.write('*CLS')
             time.sleep(0.05)
-            
-            if not os.path.exists(pc_folder):
-                ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗
-                ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
-                ask_root.destroy()
+
+            # error messenge
+                # 113 This directory is not valid.
+                # -256 File name not found
+                # -257 File name error
+                # -410 Query INTERRUPTED
+                # -420 Query UNTERMINATED
+                # 0 No error
+
+            # CDIRectory會害存圖卡死 orz
+
+            if path_choice == 2:
+                folder_total_path = folder
+            else:
+                folder_total_path = f"C:/Users/Administrator/Desktop/{folder}"
+
+            # 資料夾是否存在
+            self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
+            time.sleep(0.05)
+            error_messenge=self.inst.query(f':SYSTem:ERRor?')
+            time.sleep(0.05)
+            # print(error_messenge)
+            if error_messenge == '-256\n' or error_messenge == '113\n' or error_messenge == '-257\n':
+                ask_scp_root = tk.Tk()
+                ask_scp_root.withdraw()  # 隱藏主視窗
+                ask_scp_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
+                ask_scp_root.destroy()
                 
-                if not ask_result:
-                    ask_root = tk.Tk()
-                    ask_root.withdraw()  # 隱藏主視窗
+                if not ask_scp_result:
+                    ask_scp_root = tk.Tk()
+                    ask_scp_root.withdraw()  # 隱藏主視窗
                     messagebox.showinfo("Warning", f'檔案未儲存')
                     # print("檔案未保存。")
                     return     
-                os.mkdir(pc_folder) 
+                # 新建資料夾
+                folder_total_path= folder_total_path.replace("/", "\\")
+                # print(folder_total_path)
 
-            if os.path.exists(f"{pc_folder}/{file_name}.{ext}"):
-                ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗
-                ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
-                ask_root.destroy()
-                
-                if not ask_result:
-                    # print("檔案未保存。")
-                    ask_root = tk.Tk()
-                    ask_root.withdraw()  # 隱藏主視窗
-                    messagebox.showinfo("Warning", f'檔案未儲存')
-                    return     
-           
-            with open(f"{pc_folder}/{file_name}.{ext}", 'wb') as f:
-                f.write(data)
+                split_folder_list= folder_total_path.split('\\')
 
-        ### Display Related ###
-        def judge_chan_wme(self):
-            display_dict= {'CHANnel': [],'WMEMory': []}
-            for i in range(1, 5):
-                chan_res= self.inst.query(f':CHANnel{i}:DISPlay?')
-                time.sleep(0.05)
-                wme_res= self.inst.query(f':WMEMory{i}:DISPlay?')
-                time.sleep(0.05)
+                folder= split_folder_list[0]
+                for split in split_folder_list[1:]:
+                    folder= f'{folder}\\{split}'
+                    self.inst.query(f':DISK:DIRectory? "{folder}"')
+                    time.sleep(0.05)
+                    response= self.inst.query(f':SYSTem:ERRor?')
+                    time.sleep(0.05)
+                    # print(response)
+                    if response == '-256\n' or response == '113\n' or response == '-257\n':
+                        self.inst.write(f':DISK:MDIRectory "{folder}"')
+                        time.sleep(0.05)
 
-                if chan_res == '1\n' and not wme_res == '1\n':
-                    display_dict['CHANnel'].append(i)
-                    # return 'CHANnel'
-                if not chan_res == '1\n' and wme_res == '1\n':
-                    display_dict['WMEMory'].append(i)
-                    # return 'WMEMory'
-                if chan_res == '1\n' and wme_res == '1\n':
-                    display_dict['CHANnel'].append(i)
-                    display_dict['WMEMory'].append(i)
-
-            return display_dict
-
-        ### Result Related ###
-        def get_results(self):
-            meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
-            result1= ['', '', '', '', '', '', '', '', '', '', '', '']
-            result2= ['', '', '', '', '', '', '', '', '', '', '', '']
-            all_results= self.inst.query(f':MEASure:RESults?')
+            # 資料夾全部內容
+            folder_content= self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
             time.sleep(0.05)
-            for index, value in enumerate(all_results.split(',')):
-                if divmod(index, 7)[1] == 0:
-                    try:
-                        meas_name[divmod(index, 7)[0]]= value
-                    except:
-                        # l_meas_name_1.config(text=f'484超過3個??')
-                        continue
-                    if value[0] == 'V':  # 0: Voltage, 1: Time, 2: Slew Rate, 3: Frequency, 4: Duty cycle
-                        measurement_type = 0 
-                    elif 'Slew Rate' in value:
-                        measurement_type = 2
-                    elif 'Freq' in value:
-                        measurement_type = 3
-                    elif 'Duty cycle' in value:
-                        measurement_type = 4
-                    elif value == '\n':
-                        meas_name[divmod(index, 7)[0]] = ''
-                        continue
-                    else:
-                        measurement_type = 1
-                
-                if intvar_result_type.get() == 1:  # 選擇Mean Value
-                    if divmod(index, 7)[1] == 4:
-                        if measurement_type == 0:
-                            final_result_1= self.judge_volt_unit(value= value)
-                            final_result_2= ''
-                        elif measurement_type == 1:
-                            slew= False
-                            final_result_1= self.judge_time_unit(value= value, slew= slew)
-                            final_result_2= ''
-                        elif measurement_type == 2:
-                            slew= True
-                            final_result_1= self.judge_time_unit(value= value, slew= slew)
-                            final_result_2= ''
-                        elif measurement_type == 3:
-                            final_result_1= self.judge_freq_unit(value= value)
-                            final_result_2= ''
-                        elif measurement_type == 4:
-                            final_result_1 = f"{float(value):.3f}"+' %'
-                            final_result_2= ''
+            # 使用正則表達式來匹配所有 .png 檔案名稱
+            png_files = re.findall(r'\b[\w-]+\.(?:png)\b', folder_content)
 
-                        try:
-                            result1[divmod(index, 7)[0]]= final_result_1
-                            result2[divmod(index, 7)[0]]= final_result_2
-                        except:
-                            continue
+            for file_name in png_files:
+                if f'{image_name}.png' == file_name:
+                    ask_scp_root = tk.Tk()
+                    ask_scp_root.withdraw()  # 隱藏主視窗
+                    ask_scp_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
+                    ask_scp_root.destroy()
+                    
+                    if not ask_scp_result:
+                        # print("檔案未保存。")
+                        ask_scp_root = tk.Tk()
+                        ask_scp_root.withdraw()  # 隱藏主視窗
+                        messagebox.showinfo("Warning", f'檔案未儲存')
+                        return     
 
-                elif intvar_result_type.get() == 2:  # 選擇Min & Max Value
-                    if divmod(index, 7)[1] == 2:
-                        if measurement_type == 0:
-                            final_result_1= self.judge_volt_unit(value= value)
-                        elif measurement_type == 1:
-                            slew= False
-                            final_result_1= self.judge_time_unit(value= value, slew= slew)
-                        elif measurement_type == 2:
-                            slew= True
-                            final_result_1= self.judge_time_unit(value= value, slew= slew)
-                        elif measurement_type == 3:
-                            final_result_1= self.judge_freq_unit(value= value)
-                        elif measurement_type == 4:
-                            final_result_1 = f"{float(value):.3f}"+' %'
+            self.inst.write(f':DISK:SAVE:IMAGe "{folder_total_path}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
+            time.sleep(0.05)
 
-                        try:
-                            result1[divmod(index, 7)[0]]= final_result_1
-                        except:
-                            continue
+        def set_general_threshold(self, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent):
+            if intvar_general_threshold.get() == 1:
+                do_the_judge= False
+                if float(g_top_percent) <= float(g_middle_percent):
+                    g_top_percent= Decimal(g_middle_percent) + Decimal('0.1')
+                    combobox_general_percent_top.config(foreground= 'red')
+                    combobox_general_percent_middle.config(foreground= 'red')
+                    do_the_judge= True
+                if float(g_middle_percent) <= float(g_base_percent):
+                    g_base_percent= Decimal(g_middle_percent) - Decimal('0.1')
+                    combobox_general_percent_base.config(foreground= 'red')
+                    combobox_general_percent_middle.config(foreground= 'red')
+                    do_the_judge= True
+                if not do_the_judge:
+                    combobox_general_percent_top.config(foreground= 'black')
+                    combobox_general_percent_middle.config(foreground= 'black')
+                    combobox_general_percent_base.config(foreground= 'black')
 
-                    if divmod(index, 7)[1] == 3:
-                        if measurement_type == 0:
-                            final_result_2= self.judge_volt_unit(value= value)
-                        elif measurement_type == 1:
-                            slew= False
-                            final_result_2= self.judge_time_unit(value= value, slew= slew)
-                        elif measurement_type == 2:
-                            slew= True
-                            final_result_2= self.judge_time_unit(value= value, slew= slew)
-                        elif measurement_type == 3:
-                            final_result_2= self.judge_freq_unit(value= value)
-                        elif measurement_type == 4:
-                            final_result_2 = f"{float(value):.3f}"+' %'
+                self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
+                time.sleep(0.05)
+                self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{g_top_percent},{g_middle_percent},{g_base_percent}')
+                time.sleep(0.05)
+            elif intvar_general_threshold.get() == 2:
+                do_the_judge= False
+                if float(g_top) <= float(g_middle):
+                    g_top= Decimal(g_middle) + Decimal('0.01')
+                    combobox_general_value_top.config(foreground= 'red')
+                    combobox_general_value_middle.config(foreground= 'red')
+                    do_the_judge= True
+                if float(g_middle) <= float(g_base):
+                    g_base= Decimal(g_middle) - Decimal('0.01')
+                    combobox_general_value_base.config(foreground= 'red')
+                    combobox_general_value_middle.config(foreground= 'red')
+                    do_the_judge= True
+                if not do_the_judge:
+                    combobox_general_value_top.config(foreground= 'black')
+                    combobox_general_value_middle.config(foreground= 'black')
+                    combobox_general_value_base.config(foreground= 'black')
 
-                        try:
-                            result2[divmod(index, 7)[0]]= final_result_2
-                        except:
-                            continue
+                self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
+                time.sleep(0.05)
+                self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
+                time.sleep(0.05)
 
-            l_meas_name_1.config(text=f'{meas_name[0]}')
-            text_result1_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_1.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_1.insert(tk.END, f"{result1[0]}")
-            text_result1_1.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_1.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_1.insert(tk.END, f"{result2[0]}")
-            text_result2_1.config(state=tk.DISABLED)  # 設置為只讀狀態
+        def set_risefall_threshold(self, rf_top, rf_base, rf_top_percent, rf_base_percent):
+            if intvar_risefall_threshold.get() == 1:
+                self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
+                time.sleep(0.05)
+                self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{rf_top_percent},{(float(rf_top_percent)+float(rf_base_percent))/2},{rf_base_percent}')
+                time.sleep(0.05)
+            elif intvar_risefall_threshold.get() == 2:
+                self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,ABSolute')
+                time.sleep(0.05)
+                self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{rf_top},{(float(rf_top)+float(rf_base))/2},{rf_base}')
+                time.sleep(0.05)
 
-            l_meas_name_2.config(text=f'{meas_name[1]}')
-            text_result1_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_2.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_2.insert(tk.END, f"{result1[1]}")
-            text_result1_2.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_2.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_2.insert(tk.END, f"{result2[1]}")
-            text_result2_2.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_3.config(text=f'{meas_name[2]}')
-            text_result1_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_3.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_3.insert(tk.END, f"{result1[2]}")
-            text_result1_3.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_3.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_3.insert(tk.END, f"{result2[2]}")
-            text_result2_3.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_4.config(text=f'{meas_name[3]}')
-            text_result1_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_4.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_4.insert(tk.END, f"{result1[3]}")
-            text_result1_4.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_4.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_4.insert(tk.END, f"{result2[3]}")
-            text_result2_4.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_5.config(text=f'{meas_name[4]}')
-            text_result1_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_5.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_5.insert(tk.END, f"{result1[4]}")
-            text_result1_5.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_5.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_5.insert(tk.END, f"{result2[4]}")
-            text_result2_5.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_6.config(text=f'{meas_name[5]}')
-            text_result1_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_6.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_6.insert(tk.END, f"{result1[5]}")
-            text_result1_6.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_6.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_6.insert(tk.END, f"{result2[5]}")
-            text_result2_6.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_7.config(text=f'{meas_name[6]}')
-            text_result1_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_7.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_7.insert(tk.END, f"{result1[6]}")
-            text_result1_7.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_7.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_7.insert(tk.END, f"{result2[6]}")
-            text_result2_7.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_8.config(text=f'{meas_name[7]}')
-            text_result1_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_8.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_8.insert(tk.END, f"{result1[7]}")
-            text_result1_8.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_8.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_8.insert(tk.END, f"{result2[7]}")
-            text_result2_8.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_9.config(text=f'{meas_name[8]}')
-            text_result1_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_9.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_9.insert(tk.END, f"{result1[8]}")
-            text_result1_9.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_9.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_9.insert(tk.END, f"{result2[8]}")
-            text_result2_9.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_10.config(text=f'{meas_name[9]}')
-            text_result1_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_10.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_10.insert(tk.END, f"{result1[9]}")
-            text_result1_10.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_10.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_10.insert(tk.END, f"{result2[9]}")
-            text_result2_10.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_11.config(text=f'{meas_name[10]}')
-            text_result1_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_11.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_11.insert(tk.END, f"{result1[10]}")
-            text_result1_11.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_11.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_11.insert(tk.END, f"{result2[10]}")
-            text_result2_11.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-            l_meas_name_12.config(text=f'{meas_name[11]}')
-            text_result1_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result1_12.delete(1.0, tk.END)  # 清空當前內容
-            text_result1_12.insert(tk.END, f"{result1[11]}")
-            text_result1_12.config(state=tk.DISABLED)  # 設置為只讀狀態
-            text_result2_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-            text_result2_12.delete(1.0, tk.END)  # 清空當前內容
-            text_result2_12.insert(tk.END, f"{result2[11]}")
-            text_result2_12.config(state=tk.DISABLED)  # 設置為只讀狀態
-            
-        ### Unit Related ###
-        def judge_time_unit(self, value, slew):
-            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
-            match = re.search(pattern, value)
-            # 提取基數和指數
-            base = float(match.group(1))
-            exponent = int(match.group(2))
-            if slew:
-                if exponent == 3:
-                    return f"{base} V/ms"
-                elif exponent == 4:
-                    return f"{base * 10} V/ms"
-                elif exponent == 5:
-                    return f"{base * 100} V/ms"
-                elif exponent == 6:
-                    return f"{base} V/us"
-                elif exponent == 7:
-                    return f"{base * 10} V/us"
-                elif exponent == 8:
-                    return f"{base * 100} V/us"
-                elif exponent == 9:
-                    return f"{base} V/ns"
-                elif exponent == 10:
-                    return f"{base * 10} V/ns"
-                elif exponent == 11:
-                    return f"{base * 100} V/ns"
-                elif exponent == 12:
-                    return f"{base} V/ps"
-                elif exponent == 13:
-                    return f"{base * 10} V/ps"
-                elif exponent == 14:
-                    return f"{base * 100} V/ps"
-                elif exponent == 15:
-                    return f"{base} V/fs"
-                elif exponent == 16:
-                    return f"{base * 10} V/fs"
-                elif exponent == 17:
-                    return f"{base * 100} V/fs"
-                else:
-                    # 如果指數不在指定的範圍内，返回原始字串
-                    return f"{base} V/s"
+        def set_trigger_type(self):
+            res= self.inst.query(f':TRIGger:SWEep?')
+            time.sleep(0.05)
+            if res == 'AUTO\n':
+                self.inst.write(':TRIGger:SWEep TRIGgered')
+                time.sleep(0.05)
             else:
-                if exponent == -9:
-                    return f"{base} ns"
-                elif exponent == -8:
-                    return f"{base * 10} ns"
-                elif exponent == -7:
-                    return f"{base * 100} ns"
-                elif exponent == -6:
-                    return f"{base} us"
-                elif exponent == -5:
-                    return f"{base * 10} us"
-                elif exponent == -4:
-                    return f"{base * 100} us"
-                elif exponent == -3:
-                    return f"{base} ms"
-                elif exponent == -2:
-                    return f"{base * 10} ms"
-                elif exponent == -1:
-                    return f"{base * 100} ms"
-                elif exponent == -12:
-                    return f"{base} ps"
-                elif exponent == -11:
-                    return f"{base * 10} ps"
-                elif exponent == -10:
-                    return f"{base * 100} ps"
-                elif exponent == -15:
-                    return f"{base} fs"
-                elif exponent == -14:
-                    return f"{base * 10} fs"
-                elif exponent == -13:
-                    return f"{base * 100} fs"
-                else:
-                    # 如果指數不在指定的範圍内，返回原始字串
-                    return f'{base} s'
-                
-        def judge_volt_unit(self, value):
-            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
-            match = re.search(pattern, value)
-            # 提取基數和指數
-            base = float(match.group(1))
-            exponent = int(match.group(2))
-            # 基于不同的指数值进行不同的转换
-            if exponent == -3:
-                return f"{base} mV"
-            elif exponent == -2:
-                return f"{base * 10} mV"
-            elif exponent == -1:
-                return f"{base * 100} mV"
-            else:
-                # 如果指数不在指定的范围内，返回原始文本
-                return f"{base} V"
+                self.inst.write(':TRIGger:SWEep AUTO')
+                time.sleep(0.05)
 
-        def judge_freq_unit(self, value):
-            pattern = r'([+-]?\d*\.?\d+)E([+-]?\d+)'
-            match = re.search(pattern, value)
-            # 提取基數和指數
-            base = float(match.group(1))
-            exponent = int(match.group(2))
-            # 基于不同的指数值进行不同的转换
-            if exponent == 9:
-                return f"{base} GHz"
-            elif exponent == 8:
-                return f"{base * 100} MHz"
-            elif exponent == 7:
-                return f"{base * 10} MHz"
-            elif exponent == 6:
-                return f"{base} MHz"
-            elif exponent == 5:
-                return f"{base * 100} kHz"
-            elif exponent == 4:
-                return f"{base * 10} kHz"
-            elif exponent == 3:
-                return f"{base} kHz"
-            elif exponent == 2:
-                return f"{base * 100} Hz"
-            elif exponent == 1:
-                return f"{base * 10} Hz"
+        def set_trigger_slope(self):
+            res= self.inst.query(f':TRIGger:EDGE:SLOPe?')
+            time.sleep(0.05)
+            if res == 'POS\n':
+                self.inst.write(':TRIGger:EDGE:SLOPe NEGative')
+                time.sleep(0.05)
             else:
-                # 如果指数不在指定的范围内，返回原始文本
-                return f"{base} Hz"
+                self.inst.write(':TRIGger:EDGE:SLOPe POSitive')
+                time.sleep(0.05)
+        
+        def single(self):
+            self.inst.write(':SINGLE')
+            time.sleep(0.05)
+
+        def stop(self):
+            self.inst.write(':STOP')
+            time.sleep(0.05)
+
 
     ### Others ###
-    def switch_string(var_1, var_2):
-        string_1= var_1.get()
-        string_2= var_2.get()
-        var_1.set(string_2)
-        var_2.set(string_1)
+    def add_combobox_option(combobox, combobox_value, options, config_file, section, key, selected_section):
+        new_option = combobox_value.get().strip()
+        if new_option and new_option not in options:
+            options.append(new_option)
+            combobox['values'] = options
+            save_option_to_ini(config_file, section, key, options, selected_section, combobox.get())
+
+    def change_label_text_mean_result():
+        label_result_tag_1.config(text= "Mean")
+        label_result_tag_2.config(text= "--")
+        text_result_mean_1.config(width= 22)
+        text_result_minmax_1.config(width= 0)
+        text_result_mean_2.config(width= 22)
+        text_result_minmax_2.config(width= 0)
+        text_result_mean_3.config(width= 22)
+        text_result_minmax_3.config(width= 0)
+        text_result_mean_4.config(width= 22)
+        text_result_minmax_4.config(width= 0)
+        text_result_mean_5.config(width= 22)
+        text_result_minmax_5.config(width= 0)
+        text_result_mean_6.config(width= 22)
+        text_result_minmax_6.config(width= 0)
+        text_result_mean_7.config(width= 22)
+        text_result_minmax_7.config(width= 0)
+        text_result_mean_8.config(width= 22)
+        text_result_minmax_8.config(width= 0)
+        text_result_mean_9.config(width= 22)
+        text_result_minmax_9.config(width= 0)
+        text_result_mean_10.config(width= 22)
+        text_result_minmax_10.config(width= 0)
+        text_result_mean_11.config(width= 22)
+        text_result_minmax_11.config(width= 0)
+        text_result_mean_12.config(width= 22)
+        text_result_minmax_12.config(width= 0)
+
+    def change_label_text_minmax_result():
+        label_result_tag_1.config(text= "Min")
+        label_result_tag_2.config(text= "Max")   
+        text_result_mean_1.config(width= 22)
+        text_result_minmax_1.config(width= 22)
+        text_result_mean_2.config(width= 22)
+        text_result_minmax_2.config(width= 22)
+        text_result_mean_3.config(width= 22)
+        text_result_minmax_3.config(width= 22)
+        text_result_mean_4.config(width= 22)
+        text_result_minmax_4.config(width= 22)
+        text_result_mean_5.config(width= 22)
+        text_result_minmax_5.config(width= 22)
+        text_result_mean_6.config(width= 22)
+        text_result_minmax_6.config(width= 22)
+        text_result_mean_7.config(width= 22)
+        text_result_minmax_7.config(width= 22)
+        text_result_mean_8.config(width= 22)
+        text_result_minmax_8.config(width= 22)
+        text_result_mean_9.config(width= 22)
+        text_result_minmax_9.config(width= 22)
+        text_result_mean_10.config(width= 22)
+        text_result_minmax_10.config(width= 22)
+        text_result_mean_11.config(width= 22)
+        text_result_minmax_11.config(width= 22)
+        text_result_mean_12.config(width= 22)
+        text_result_minmax_12.config(width= 22)
 
     def clear(string):
         string.set('')
@@ -1479,63 +1542,63 @@ def main_window(scope_ip):
             config.optionxform = str
             config.read( os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), encoding='utf-8',)
             
-            config.set('Scale_Offset_Selected_Values', 'VoltScale', str_volt_scale.get())
-            config.set('Scale_Offset_Selected_Values', 'VoltOffset', str_volt_offset.get())
-            config.set('Scale_Offset_Config', 'TimebaseScale', str_time_scale.get())
-            config.set('Scale_Offset_Config', 'TimebaseOffset', str_time_offset.get())
-            config.set('Scale_Offset_Selected_Values', 'TriggerLevel', str_trigger_level.get())
-            config.set('Scale_Offset_Config', 'TriggerChan', str_trigger_chan.get())
-            config.set('Scale_Offset_Config', 'WfmIntensity', str_wfm_intensity.get())
+            config.set('Scale_Offset_Selected_Values', 'VoltScale', strvar_voltage_scale.get())
+            config.set('Scale_Offset_Selected_Values', 'VoltOffset', strvar_voltage_offset.get())
+            config.set('Scale_Offset_Config', 'TimebaseScale', strvar_timebase_scale.get())
+            config.set('Scale_Offset_Config', 'TimebaseOffset', strvar_timebase_offset.get())
+            config.set('Scale_Offset_Selected_Values', 'TriggerLevel', strvar_trigger_level.get())
+            config.set('Scale_Offset_Config', 'TriggerChan', strvar_trigger_channel.get())
+            config.set('Scale_Offset_Config', 'WfmIntensity', strvar_waveform_intensity.get())
             
-            config.set('Delta_Setup_Config', 'DeltaStartEdge', start_rf.get())
-            config.set('Delta_Setup_Config', 'DeltaStartNum', start_num.get())
-            config.set('Delta_Setup_Config', 'DeltaStartPosition', start_pos.get())
-            config.set('Delta_Setup_Config', 'DeltaStopEdge', stop_rf.get())
-            config.set('Delta_Setup_Config', 'DeltaStopNum', stop_num.get())
-            config.set('Delta_Setup_Config', 'DeltaStopPosition', stop_pos.get())
+            config.set('Delta_Setup_Config', 'DeltaStartEdge', strvar_start_risefall.get())
+            config.set('Delta_Setup_Config', 'DeltaStartNum', strvar_start_N_edge.get())
+            config.set('Delta_Setup_Config', 'DeltaStartPosition', strvar_start_position.get())
+            config.set('Delta_Setup_Config', 'DeltaStopEdge', strvar_stop_risefall.get())
+            config.set('Delta_Setup_Config', 'DeltaStopNum', strvar_stop_N_edge.get())
+            config.set('Delta_Setup_Config', 'DeltaStopPosition', strvar_stop_position.get())
 
-            config.set('Threshold_Selected_Values', 'GeneralTopPercent', str_gen_top_percent.get())
-            config.set('Threshold_Selected_Values', 'GeneralMiddlePercent', str_gen_mid_percent.get())
-            config.set('Threshold_Selected_Values', 'GeneralBasePercent', str_gen_base_percent.get())
-            config.set('Threshold_Selected_Values', 'GeneralTop', str_gen_top.get())
-            config.set('Threshold_Selected_Values', 'GeneralMiddle', str_gen_mid.get())
-            config.set('Threshold_Selected_Values', 'GeneralBase', str_gen_base.get())
-            config.set('Threshold_Selected_Values', 'RFTopPercent', str_rf_top_percent.get())
-            config.set('Threshold_Selected_Values', 'RFBasePercent', str_rf_base_percent.get())
-            config.set('Threshold_Selected_Values', 'RFTop', str_rf_top.get())
-            config.set('Threshold_Selected_Values', 'RFBase', str_rf_base.get())
-            config.set('Acquisition', 'SamplingRate', str_sampling_rate.get())
-            config.set('Acquisition', 'MemoryDepth', str_memory_depth.get())
+            config.set('Threshold_Selected_Values', 'GeneralTopPercent', strvar_general_percent_top.get())
+            config.set('Threshold_Selected_Values', 'GeneralMiddlePercent', strvar_general_percent_middle.get())
+            config.set('Threshold_Selected_Values', 'GeneralBasePercent', strvar_general_percent_base.get())
+            config.set('Threshold_Selected_Values', 'GeneralTop', strvar_general_value_top.get())
+            config.set('Threshold_Selected_Values', 'GeneralMiddle', strvar_general_value_middle.get())
+            config.set('Threshold_Selected_Values', 'GeneralBase', strvar_general_value_base.get())
+            config.set('Threshold_Selected_Values', 'RFTopPercent', strvar_risefall_percent_top.get())
+            config.set('Threshold_Selected_Values', 'RFBasePercent', strvar_risefall_percent_base.get())
+            config.set('Threshold_Selected_Values', 'RFTop', strvar_risefall_value_top.get())
+            config.set('Threshold_Selected_Values', 'RFBase', strvar_risefall_value_base.get())
+            config.set('Acquisition', 'SamplingRate', strvar_sampling_rate.get())
+            config.set('Acquisition', 'MemoryDepth', strvar_memory_depth.get())
 
-            config.set('Lable_Setup_Config', 'ChanLabel1', str_label_1.get())
-            config.set('Lable_Setup_Config', 'ChanLabel2', str_label_2.get())
-            config.set('Lable_Setup_Config', 'ChanLabel3', str_label_3.get())
-            config.set('Lable_Setup_Config', 'ChanLabel4', str_label_4.get())
-            config.set('Lable_Setup_Config', 'WMeLabel1', str_label_5.get())
-            config.set('Lable_Setup_Config', 'WMeLabel2', str_label_6.get())
-            config.set('Lable_Setup_Config', 'WMeLabel3', str_label_7.get())
-            config.set('Lable_Setup_Config', 'WMeLabel4', str_label_8.get())
+            config.set('Lable_Setup_Config', 'ChanLabel1', strvar_label_1.get())
+            config.set('Lable_Setup_Config', 'ChanLabel2', strvar_label_2.get())
+            config.set('Lable_Setup_Config', 'ChanLabel3', strvar_label_3.get())
+            config.set('Lable_Setup_Config', 'ChanLabel4', strvar_label_4.get())
+            config.set('Lable_Setup_Config', 'WMeLabel1', strvar_label_5.get())
+            config.set('Lable_Setup_Config', 'WMeLabel2', strvar_label_6.get())
+            config.set('Lable_Setup_Config', 'WMeLabel3', strvar_label_7.get())
+            config.set('Lable_Setup_Config', 'WMeLabel4', strvar_label_8.get())
 
-            config.set('Chan_Delta', 'ChanSingle', str(int_ch_single.get()))
-            config.set('Chan_Delta', 'ChanStart', str(int_ch_delta_start.get()))
-            config.set('Chan_Delta', 'ChanStop', str(int_ch_delta_stop.get()))
+            config.set('Chan_Delta', 'ChanSingle', str(intvar_channel_single.get()))
+            config.set('Chan_Delta', 'ChanStart', str(intvar_channel_delta_start.get()))
+            config.set('Chan_Delta', 'ChanStop', str(intvar_channel_delta_stop.get()))
 
-            config.set('Save_Setup_Config', 'SaveImgFolder', str_image_folder.get())
-            config.set('Save_Setup_Config', 'SaveImgLocation', str(int_img_path_choice.get()))
-            config.set('Save_Setup_Config', 'SaveImgPCFolder', str_image_pc_folder.get())
-            config.set('Save_Setup_Config', 'SaveImgName', str_image.get())
-            config.set('Save_Setup_Config', 'SaveWMeFolder', str_WMe_folder.get())
-            config.set('Save_Setup_Config', 'SaveWMeLocation', str(int_wme_path_choice.get()))
-            config.set('Save_Setup_Config', 'SaveWMePCFolder', str_WMe_pc_folder.get())
-            config.set('Save_Setup_Config', 'SaveWMeName', str_other_file.get())
+            # config.set('Save_Setup_Config', 'SaveImgFolder', str_image_folder.get())
+            # config.set('Save_Setup_Config', 'SaveImgLocation', str(int_img_path_choice.get()))
+            config.set('Save_Setup_Config', 'SaveImgPCFolder', strvar_image_pc_folder.get())
+            config.set('Save_Setup_Config', 'SaveImgName', strvar_image.get())
+            config.set('Save_Setup_Config', 'SaveWMeFolder', strvar_wmemory_folder.get())
+            config.set('Save_Setup_Config', 'SaveWMeLocation', str(intvar_wmemory_path_choice.get()))
+            config.set('Save_Setup_Config', 'SaveWMePCFolder', strvar_wmemory_pc_folder.get())
+            config.set('Save_Setup_Config', 'SaveWMeName', strvar_other_file.get())
 
-            config.set('Load_WMemory_Setup_Config', 'LoadWMe1', str_WMe1.get())
-            config.set('Load_WMemory_Setup_Config', 'LoadWMe2', str_WMe2.get())
-            config.set('Load_WMemory_Setup_Config', 'LoadWMe3', str_WMe3.get())
-            config.set('Load_WMemory_Setup_Config', 'LoadWMe4', str_WMe4.get())
-            config.set('Load_WMemory_Setup_Config', 'SetupFileInterface', str_setupfile_interface.get())
-            config.set('Load_WMemory_Setup_Config', 'SetupFileClass', str_setupfile_class.get())
-            config.set('Load_WMemory_Setup_Config', 'LoadSetup', str_setup.get())
+            config.set('Load_WMemory_Setup_Config', 'LoadWMe1', strvar_wmemory_1.get())
+            config.set('Load_WMemory_Setup_Config', 'LoadWMe2', strvar_wmemory_2.get())
+            config.set('Load_WMemory_Setup_Config', 'LoadWMe3', strvar_wmemory_3.get())
+            config.set('Load_WMemory_Setup_Config', 'LoadWMe4', strvar_wmemory_4.get())
+            config.set('Load_WMemory_Setup_Config', 'SetupFileInterface', strvar_setupfile_interface.get())
+            config.set('Load_WMemory_Setup_Config', 'SetupFileClass', strvar_setupfile_class.get())
+            config.set('Load_WMemory_Setup_Config', 'LoadSetup', strvar_setup.get())
 
             config.write(open(os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini'), 'w'))
 
@@ -1544,8 +1607,37 @@ def main_window(scope_ip):
             window.destroy()
             sys.exit()
 
-    
-    def combo_ini():
+    def delete_combobox_option(combobox, combobox_value, options, config_file, section, key, selected_section):
+        selected_option = combobox_value.get().strip()
+        if selected_option in options:
+            options.remove(selected_option)
+            combobox['values'] = options
+            combobox_value.set('')  # 清空當前選擇
+            save_option_to_ini(config_file, section, key, options, selected_section, combobox.get())
+
+    def move_mouse_entry_end(entry):
+        """將 Entry 的內容視圖滾動到最後，並設置游標到最後一位"""
+        entry.focus()           # 設置 Entry 欄位獲取焦點
+        entry.icursor(tk.END)   # 將游標移動到文本的最後一位
+        entry.xview_moveto(1)   # 滾動視圖到最後一部分，1 表比例最右邊
+
+    def on_mouse_wheel(event):
+        try:
+            value = int(entry_waveform_intensity.get())
+        except ValueError:
+            value = 0
+
+        if event.delta > 0:
+            value += waveform_intensity_step
+        else:
+            value -= waveform_intensity_step
+
+        value = max(waveform_intensity_min_value, min(waveform_intensity_max_value, value))
+        entry_waveform_intensity.delete(0, tk.END)
+        entry_waveform_intensity.insert(0, str(value))
+        update_intensity_color(value)
+
+    def recall_combobox_option_from_inifile():
         config_initial = configparser.ConfigParser()
         config_initial.optionxform = str
         config_file = os.path.join(os.path.dirname(__file__), 'InitConfig_setup.ini')
@@ -1602,22 +1694,18 @@ def main_window(scope_ip):
                 }        
         }
 
-    def add_option(combobox, combobox_value, options, config_file, section, key, selected_section):
-        new_option = combobox_value.get().strip()
-        if new_option and new_option not in options:
-            options.append(new_option)
-            combobox['values'] = options
-            save_to_ini(config_file, section, key, options, selected_section, combobox.get())
+    def rgba_to_rgb_composite(in_path, out_path, background=(0, 0, 0)):
+        img = Image.open(in_path)
+        # 確保有 alpha 通道用 RGBA
+        if img.mode != 'RGBA':
+            img = img.convert('RGBA')
+        # 建一個同尺寸的背景（含不透明 alpha）
+        bg = Image.new('RGBA', img.size, background + (255,))
+        # 將原圖疊在背景上，並去掉 alpha
+        composed = Image.alpha_composite(bg, img).convert('RGB')
+        composed.save(out_path, format='PNG')
 
-    def delete_option(combobox, combobox_value, options, config_file, section, key, selected_section):
-        selected_option = combobox_value.get().strip()
-        if selected_option in options:
-            options.remove(selected_option)
-            combobox['values'] = options
-            combobox_value.set('')  # 清空當前選擇
-            save_to_ini(config_file, section, key, options, selected_section, combobox.get())
-
-    def save_to_ini(config_file, section, key, updated_options, selected_section, selected_value):
+    def save_option_to_ini(config_file, section, key, updated_options, selected_section, selected_value):
         config = configparser.ConfigParser()
         config.optionxform = str  # 保持大小寫
         config.read(config_file)
@@ -1636,162 +1724,26 @@ def main_window(scope_ip):
         with open(config_file, 'w') as configfile:
             config.write(configfile)
 
-    def update_color(value):
-        """根據數值改變文字顏色"""
-        if value == 50:
-            e_wfm_intensity.config(fg="black")
-        else:
-            e_wfm_intensity.config(fg="red")
+    def select_folder(entry_var, target_entry):
+        # 打開檔案瀏覽器以選擇資料夾
+        folder_selected = filedialog.askdirectory()
+        # 將選擇的資料夾路徑填入 Entry
+        entry_var.set(folder_selected)
 
-    def validate_number(new_value):
-        """限制只能輸入數字 (允許空白)"""
-        if new_value == "":  # 空白允許
-            e_wfm_intensity.config(fg="red")
-            return True
-        if new_value.isdigit():
-            num = int(new_value)
-            # 限制範圍
-            if wfm_intensity_MIN_VALUE <= num <= wfm_intensity_MAX_VALUE:
-                update_color(num)
-            else:
-                e_wfm_intensity.config(fg="red")
-            return True
-        return False  # 阻擋非數字字元
+        move_mouse_entry_end(entry= target_entry)
 
-    def on_mouse_wheel(event):
-        try:
-            value = int(e_wfm_intensity.get())
-        except ValueError:
-            value = 0
-
-        if event.delta > 0:
-            value += wfm_intensity_STEP
-        else:
-            value -= wfm_intensity_STEP
-
-        value = max(wfm_intensity_MIN_VALUE, min(wfm_intensity_MAX_VALUE, value))
-        e_wfm_intensity.delete(0, tk.END)
-        e_wfm_intensity.insert(0, str(value))
-        update_color(value)
-
-    def set_to_50():
-        value = 50
-        e_wfm_intensity.delete(0, tk.END)
-        e_wfm_intensity.insert(0, str(value))
-        update_color(value)
-        mxr.intensity_check(intensity_value= 50)
-
-    def rgba_to_rgb_composite(in_path, out_path, background=(0, 0, 0)):
-        img = Image.open(in_path)
-        # 確保有 alpha 通道用 RGBA
-        if img.mode != 'RGBA':
-            img = img.convert('RGBA')
-        # 建一個同尺寸的背景（含不透明 alpha）
-        bg = Image.new('RGBA', img.size, background + (255,))
-        # 將原圖疊在背景上，並去掉 alpha
-        composed = Image.alpha_composite(bg, img).convert('RGB')
-        composed.save(out_path, format='PNG')
-
-    def select1_change_label_text():
-        l_result_type_1.config(text= "Mean")
-        l_result_type_2.config(text= "--")
-        text_result1_1.config(width= 22)
-        text_result2_1.config(width= 0)
-        text_result1_2.config(width= 22)
-        text_result2_2.config(width= 0)
-        text_result1_3.config(width= 22)
-        text_result2_3.config(width= 0)
-        text_result1_4.config(width= 22)
-        text_result2_4.config(width= 0)
-        text_result1_5.config(width= 22)
-        text_result2_5.config(width= 0)
-        text_result1_6.config(width= 22)
-        text_result2_6.config(width= 0)
-        text_result1_7.config(width= 22)
-        text_result2_7.config(width= 0)
-        text_result1_8.config(width= 22)
-        text_result2_8.config(width= 0)
-        text_result1_9.config(width= 22)
-        text_result2_9.config(width= 0)
-        text_result1_10.config(width= 22)
-        text_result2_10.config(width= 0)
-        text_result1_11.config(width= 22)
-        text_result2_11.config(width= 0)
-        text_result1_12.config(width= 22)
-        text_result2_12.config(width= 0)
-
-    def select2_change_label_text():
-        l_result_type_1.config(text= "Min")
-        l_result_type_2.config(text= "Max")   
-        text_result1_1.config(width= 22)
-        text_result2_1.config(width= 22)
-        text_result1_2.config(width= 22)
-        text_result2_2.config(width= 22)
-        text_result1_3.config(width= 22)
-        text_result2_3.config(width= 22)
-        text_result1_4.config(width= 22)
-        text_result2_4.config(width= 22)
-        text_result1_5.config(width= 22)
-        text_result2_5.config(width= 22)
-        text_result1_6.config(width= 22)
-        text_result2_6.config(width= 22)
-        text_result1_7.config(width= 22)
-        text_result2_7.config(width= 22)
-        text_result1_8.config(width= 22)
-        text_result2_8.config(width= 22)
-        text_result1_9.config(width= 22)
-        text_result2_9.config(width= 22)
-        text_result1_10.config(width= 22)
-        text_result2_10.config(width= 22)
-        text_result1_11.config(width= 22)
-        text_result2_11.config(width= 22)
-        text_result1_12.config(width= 22)
-        text_result2_12.config(width= 22)
-
-    def setupfile_interface_select(event, segment_list):
-        
-        target_interface_subfolder= []
-
-        str_setupfile_class.set(value= '')
-
-        if str_setupfile_interface.get() == 'User':
-            str_setupfile_class.set(value= '')
-            cbb_setupfile_class.config(state= 'disabled')
-        elif str_setupfile_interface.get() == '':
-            str_setupfile_class.set(value= '')
-            cbb_setupfile_class.config(state= 'disabled')
-        else: 
-            cbb_setupfile_class.config(state= 'readonly')
-
-            # 示波器folder路徑
-            setupfile_interface_folderpath = fr'{segment_list[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
-            # str_WMe_folder.set(value= setupfile_interface_folderpath)
-
-            # PC folder路徑
-            pc_setupfile_interface_folderpath = fr'{segment_list[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}'
-
-            # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
-            for root, dirs, files in os.walk(pc_setupfile_interface_folderpath):
-                for dir_name in dirs:
-                    # 取得子資料夾的絕對路徑
-                    dir_path = os.path.join(root, dir_name)
-                    target_interface_subfolder.append(os.path.basename(dir_path))
-
-            cbb_setupfile_class.config(values= target_interface_subfolder)
-            # adjust_entry(entry= e_WMe_folder)
-    
-    def setupfile_class_select(event, segment_list):
+    def select_setupfile_class(event, segment_list):
 
         target_class_files= []
 
-        str_setup.set(value= '')
+        strvar_setup.set(value= '')
 
         # 示波器folder路徑
-        setupfile_class_folderpath = fr'{segment_list[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
+        setupfile_class_folderpath = fr'{segment_list[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_setupfile_interface.get()}\{strvar_setupfile_class.get()}'
         # str_WMe_folder.set(value= setupfile_class_folderpath)
 
         # PC folder路徑
-        pc_setupfile_class_folderpath = fr'{segment_list[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{str_setupfile_interface.get()}\{str_setupfile_class.get()}'
+        pc_setupfile_class_folderpath = fr'{segment_list[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_setupfile_interface.get()}\{strvar_setupfile_class.get()}'
 
         # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
         for root, dirs, files in os.walk(pc_setupfile_class_folderpath):
@@ -1802,14 +1754,75 @@ def main_window(scope_ip):
                     file_path = os.path.join(root, file)
                     target_class_files.append((os.path.basename(file_path)).rstrip('.set'))
 
-        cbb_setup.config(values= target_class_files)
+        combobox_setup.config(values= target_class_files)
         # adjust_entry(entry= e_WMe_folder)
 
-    def adjust_entry(entry):
-        """將 Entry 的內容視圖滾動到最後，並設置游標到最後一位"""
-        entry.focus()           # 設置 Entry 欄位獲取焦點
-        entry.icursor(tk.END)   # 將游標移動到文本的最後一位
-        entry.xview_moveto(1)   # 滾動視圖到最後一部分，1 表比例最右邊
+    def select_setupfile_interface(event, segment_list):
+        
+        target_interface_subfolder= []
+
+        strvar_setupfile_class.set(value= '')
+
+        if strvar_setupfile_interface.get() == 'User':
+            strvar_setupfile_class.set(value= '')
+            combobox_setupfile_class.config(state= 'disabled')
+        elif strvar_setupfile_interface.get() == '':
+            strvar_setupfile_class.set(value= '')
+            combobox_setupfile_class.config(state= 'disabled')
+        else: 
+            combobox_setupfile_class.config(state= 'readonly')
+
+            # 示波器folder路徑
+            setupfile_interface_folderpath = fr'{segment_list[0]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_setupfile_interface.get()}'
+            # str_WMe_folder.set(value= setupfile_interface_folderpath)
+
+            # PC folder路徑
+            pc_setupfile_interface_folderpath = fr'{segment_list[1]}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_setupfile_interface.get()}'
+
+            # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
+            for root, dirs, files in os.walk(pc_setupfile_interface_folderpath):
+                for dir_name in dirs:
+                    # 取得子資料夾的絕對路徑
+                    dir_path = os.path.join(root, dir_name)
+                    target_interface_subfolder.append(os.path.basename(dir_path))
+
+            combobox_setupfile_class.config(values= target_interface_subfolder)
+            # adjust_entry(entry= e_WMe_folder)
+    
+    def set_to_fixty():
+        value = 50
+        entry_waveform_intensity.delete(0, tk.END)
+        entry_waveform_intensity.insert(0, str(value))
+        update_intensity_color(value)
+        mxr.check_intensity_setting(intensity_value= 50)
+
+    def switch_string(var_1, var_2):
+        string_1= var_1.get()
+        string_2= var_2.get()
+        var_1.set(string_2)
+        var_2.set(string_1)
+
+    def update_intensity_color(value):
+        """根據數值改變文字顏色"""
+        if value == 50:
+            entry_waveform_intensity.config(fg="black")
+        else:
+            entry_waveform_intensity.config(fg="red")
+
+    def validate_number(new_value):
+        """限制只能輸入數字 (允許空白)"""
+        if new_value == "":  # 空白允許
+            entry_waveform_intensity.config(fg="red")
+            return True
+        if new_value.isdigit():
+            num = int(new_value)
+            # 限制範圍
+            if waveform_intensity_min_value <= num <= waveform_intensity_max_value:
+                update_intensity_color(num)
+            else:
+                entry_waveform_intensity.config(fg="red")
+            return True
+        return False  # 阻擋非數字字元
 
 
 
@@ -1846,23 +1859,15 @@ def main_window(scope_ip):
 
 
     # 獲取ini數據
-    config_data = combo_ini()
+    config_data = recall_combobox_option_from_inifile()
     # general_top_percent_options = config_data['GeneralTopPercent']
     config_file_path = config_data['config_file']
 
 
-    def commbobox_function(combobox, combobox_var, ini_dict_key, ini_option_section, ini_option_key, ini_selected_section):
+    def execute_commbobox_function(combobox, combobox_var, ini_dict_key, ini_option_section, ini_option_key, ini_selected_section):
         combobox['values'] = config_data[ini_dict_key]  # 設置初始選項
-        combobox.bind('<Return>', lambda event: add_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
-        combobox.bind('<Delete>', lambda event: delete_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
-
-    def select_folder(entry_var, target_entry):
-        # 打開檔案瀏覽器以選擇資料夾
-        folder_selected = filedialog.askdirectory()
-        # 將選擇的資料夾路徑填入 Entry
-        entry_var.set(folder_selected)
-
-        adjust_entry(entry= target_entry)
+        combobox.bind('<Return>', lambda event: add_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
+        combobox.bind('<Delete>', lambda event: delete_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
 
 
     window = tk.Tk()
@@ -1872,948 +1877,951 @@ def main_window(scope_ip):
     window.configure(bg= '#E9F4FF')
     # window.resizable(True, True)
 
-    bg_color_1= '#c4cdd8'
-    bg_color_2= '#b0c8db'
+    background_color_1= '#c4cdd8'
+    backgroung_color_2= '#b0c8db'
 
-    # 設定wfm intensity參數
-    wfm_intensity_STEP = 1
-    wfm_intensity_MIN_VALUE = 0
-    wfm_intensity_MAX_VALUE = 100
+    # 設定waveform intensity參數
+    waveform_intensity_step = 1
+    waveform_intensity_min_value = 0
+    waveform_intensity_max_value = 100
 
     # Measurement Frame ===================================================================================================================================
 
-    label_frame_meas_item= tk.LabelFrame(window, text= 'Measurement', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_measurement_item= tk.LabelFrame(window, text= 'Measurement', background= background_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_freq = tk.Button(label_frame_meas_item, text='Frequency', width= 20, height= 2, command= lambda: mxr.freq(chan= int_ch_single.get()))
-    b_period = tk.Button(label_frame_meas_item, text='Period', width= 20, height= 2, command= lambda: mxr.period(chan= int_ch_single.get()))
-    b_dutycycle = tk.Button(label_frame_meas_item, text='Duty Cycle', width= 20, height= 2, command= lambda: mxr.dutycycle(chan= int_ch_single.get()))
-    b_tSU = tk.Button(label_frame_meas_item, text='Delta Time', width= 20, height= 2, command= lambda: mxr.tSU_tHO(
-        edge_1= start_rf.get(), 
-        num_1= start_num.get(), 
-        pos_1= start_pos.get(), 
-        edge_2= stop_rf.get(), 
-        num_2= stop_num.get(), 
-        pos_2= stop_pos.get(), 
-        chan= int_ch.get(), 
-        chan_start= int_ch_delta_start.get(), 
-        chan_stop= int_ch_delta_stop.get(), 
+    button_frequency = tk.Button(label_frame_measurement_item, text='Frequency', width= 20, height= 2, command= lambda: mxr.call_measurement_frequency(chan= intvar_channel_single.get()))
+    button_period = tk.Button(label_frame_measurement_item, text='Period', width= 20, height= 2, command= lambda: mxr.call_measurement_period(chan= intvar_channel_single.get()))
+    button_dutycycle = tk.Button(label_frame_measurement_item, text='Duty Cycle', width= 20, height= 2, command= lambda: mxr.call_measurement_dutycycle(chan= intvar_channel_single.get()))
+    button_delta_time = tk.Button(label_frame_measurement_item, text='Delta Time', width= 20, height= 2, command= lambda: mxr.call_measurement_delta_time(
+        edge_1= strvar_start_risefall.get(), 
+        num_1= strvar_start_N_edge.get(), 
+        pos_1= strvar_start_position.get(), 
+        edge_2= strvar_stop_risefall.get(), 
+        num_2= strvar_stop_N_edge.get(), 
+        pos_2= strvar_stop_position.get(), 
+        chan= intvar_channel.get(), 
+        chan_start= intvar_channel_delta_start.get(), 
+        chan_stop= intvar_channel_delta_stop.get(), 
         modify_name= boolvar_delta_name.get(),
-        timing_name= str_delta_name.get()
+        timing_name= strvar_delta_name.get()
         ))
-    b_tH = tk.Button(label_frame_meas_item, text='tH', width= 20, height= 2, command= lambda: mxr.tH(chan= int_ch_single.get()))
-    b_tL = tk.Button(label_frame_meas_item, text='tL', width= 20, height= 2, command= lambda: mxr.tL(chan= int_ch_single.get()))
-    b_tR = tk.Button(label_frame_meas_item, text='tR', width= 20, height= 2, command= lambda: mxr.tR(chan= int_ch_single.get()))
-    b_tF= tk.Button(label_frame_meas_item, text='tF', width= 20, height= 2, command= lambda: mxr.tF(chan= int_ch_single.get()))
-    b_VIH = tk.Button(label_frame_meas_item, text='VIH', width= 20, height= 2, command= lambda: mxr.VIH(chan= int_ch_single.get()))
-    b_VIL= tk.Button(label_frame_meas_item, text='VIL', width= 20, height= 2, command= lambda: mxr.VIL(chan= int_ch_single.get()))
-    b_slewrate_tR = tk.Button(label_frame_meas_item, text='Slew Rate tR', width= 20, height= 2, command= lambda: mxr.slewrate(chan= int_ch_single.get(), direction= 'RISing'))
-    b_slewrate_tF = tk.Button(label_frame_meas_item, text='Slew Rate tF', width= 20, height= 2, command= lambda: mxr.slewrate(chan= int_ch_single.get(), direction= 'FALLing'))
-    b_VPP = tk.Button(label_frame_meas_item, text='VPP', width= 20, height= 2, command= lambda: mxr.VPP(chan= int_ch_single.get()))
-    b_PeriodtoPeriod =  tk.Button(label_frame_meas_item, text='1Per-Per', width= 20, height= 2, command= lambda: mxr.NCJitter(chan= int_ch_single.get(), direction= 'RISing'))
+    button_tH = tk.Button(label_frame_measurement_item, text='tH', width= 20, height= 2, command= lambda: mxr.call_measurement_tH(chan= intvar_channel_single.get()))
+    button_tL = tk.Button(label_frame_measurement_item, text='tL', width= 20, height= 2, command= lambda: mxr.call_measurement_tL(chan= intvar_channel_single.get()))
+    button_tR = tk.Button(label_frame_measurement_item, text='tR', width= 20, height= 2, command= lambda: mxr.call_measurement_tR(chan= intvar_channel_single.get()))
+    button_tF = tk.Button(label_frame_measurement_item, text='tF', width= 20, height= 2, command= lambda: mxr.call_measurement_tF(chan= intvar_channel_single.get()))
+    button_VIH = tk.Button(label_frame_measurement_item, text='VIH', width= 20, height= 2, command= lambda: mxr.call_measurement_VIH(chan= intvar_channel_single.get()))
+    button_VIL= tk.Button(label_frame_measurement_item, text='VIL', width= 20, height= 2, command= lambda: mxr.call_measurement_VIL(chan= intvar_channel_single.get()))
+    button_slewrate_tR = tk.Button(label_frame_measurement_item, text='Slew Rate tR', width= 20, height= 2, command= lambda: mxr.call_measurement_slewrate(chan= intvar_channel_single.get(), direction= 'RISing'))
+    button_slewrate_tF = tk.Button(label_frame_measurement_item, text='Slew Rate tF', width= 20, height= 2, command= lambda: mxr.call_measurement_slewrate(chan= intvar_channel_single.get(), direction= 'FALLing'))
+    button_VPP = tk.Button(label_frame_measurement_item, text='VPP', width= 20, height= 2, command= lambda: mxr.call_measurement_VPP(chan= intvar_channel_single.get()))
+    button_VMAX = tk.Button(label_frame_measurement_item, text='VMAX', width= 20, height= 2, command= lambda: mxr.call_measurement_VMAX(chan= intvar_channel_single.get()))
+    button_VMIN = tk.Button(label_frame_measurement_item, text='VMIN', width= 20, height= 2, command= lambda: mxr.call_measurement_VMIN(chan= intvar_channel_single.get()))
+    button_PeriodtoPeriod =  tk.Button(label_frame_measurement_item, text='1Per-Per', width= 20, height= 2, command= lambda: mxr.call_measurement_NCJitter(chan= intvar_channel_single.get(), direction= 'RISing'))
 
     # Scale / Offset Frame ===================================================================================================================================
 
-    label_frame_scale= tk.LabelFrame(window, text= 'Scale / Offset', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_scale= tk.LabelFrame(window, text= 'Scale / Offset', background= background_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    l_volt_scale = tk.Label(label_frame_scale, text= 'Voltage Scale (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_volt_scale = tk.Label(label_frame_scale, text= 'Voltage Scale (V)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_volt_scale = tk.StringVar()
-    cbb_volt_scale = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_volt_scale)
-    commbobox_function(combobox= cbb_volt_scale, combobox_var= str_volt_scale, ini_dict_key= 'VoltScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltScale', ini_selected_section= 'Scale_Offset_Selected_Values')
+    strvar_voltage_scale = tk.StringVar()
+    combobox_voltage_scale = ttk.Combobox(label_frame_scale, width= 7, textvariable= strvar_voltage_scale)
+    execute_commbobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltScale', ini_selected_section= 'Scale_Offset_Selected_Values')
 
-    l_volt_offset = tk.Label(label_frame_scale, text= 'Voltage Offset (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_voltage_offset = tk.Label(label_frame_scale, text= 'Voltage Offset (V)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_volt_offset = tk.StringVar()
-    cbb_volt_offset = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_volt_offset)
-    commbobox_function(combobox= cbb_volt_offset, combobox_var= str_volt_offset, ini_dict_key= 'VoltOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
+    strvar_voltage_offset = tk.StringVar()
+    combobox_voltage_offset = ttk.Combobox(label_frame_scale, width= 7, textvariable= strvar_voltage_offset)
+    execute_commbobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
 
-    b_volt_scale = tk.Button(label_frame_scale, text= 'Volt Check', width= 10, height= 1, command= lambda: mxr.volt_check(scale= str_volt_scale.get(), offset= str_volt_offset.get()))
+    button_voltage_scale = tk.Button(label_frame_scale, text= 'Volt Check', width= 10, height= 1, command= lambda: mxr.check_voltage(scale= strvar_voltage_scale.get(), offset= strvar_voltage_offset.get()))
 
-    l_trigger_level = tk.Label(label_frame_scale, text= 'Trigger level (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_trigger_level = tk.Label(label_frame_scale, text= 'Trigger level (V)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_trigger_level = tk.StringVar()
-    cbb_trigger_level = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_trigger_level)
-    commbobox_function(combobox= cbb_trigger_level, combobox_var= str_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
+    strvar_trigger_level = tk.StringVar()
+    combobox_trigger_level = ttk.Combobox(label_frame_scale, width= 7, textvariable= strvar_trigger_level)
+    execute_commbobox_function(combobox= combobox_trigger_level, combobox_var= strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
 
-    l_trigger_chan = tk.Label(label_frame_scale, text= 'Trigger Channel', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_trigger_channel = tk.Label(label_frame_scale, text= 'Trigger Channel', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_trigger_chan = tk.StringVar()
-    cb_trigger_chan = ttk.Combobox(label_frame_scale, width= 7, textvariable= str_trigger_chan, values= [1, 2, 3, 4])
+    strvar_trigger_channel = tk.StringVar()
+    combobox_trigger_channel = ttk.Combobox(label_frame_scale, width= 7, textvariable= strvar_trigger_channel, values= [1, 2, 3, 4])
 
-    b_trigger_check = tk.Button(label_frame_scale, text= 'Trig Check', width= 10, height= 1, command= lambda: mxr.trig_check(chan= str_trigger_chan.get(), level= str_trigger_level.get()))
+    button_trigger_check = tk.Button(label_frame_scale, text= 'Trig Check', width= 10, height= 1, command= lambda: mxr.check_trigger_setting(chan= strvar_trigger_channel.get(), level= strvar_trigger_level.get()))
 
-    l_time_scale = tk.Label(label_frame_scale, text= 'Timebase Scale (sec)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_timebase_scale = tk.Label(label_frame_scale, text= 'Timebase Scale (sec)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_time_scale = tk.StringVar()
-    e_time_scale = tk.Entry(label_frame_scale, width= 7, textvariable= str_time_scale)
+    strvar_timebase_scale = tk.StringVar()
+    entry_timebase_scale = tk.Entry(label_frame_scale, width= 7, textvariable= strvar_timebase_scale)
 
-    l_time_offset = tk.Label(label_frame_scale, text= 'Timebase Offset (sec)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_timebase_offset = tk.Label(label_frame_scale, text= 'Timebase Offset (sec)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_time_offset = tk.StringVar()
-    e_time_offset = tk.Entry(label_frame_scale, width= 7, textvariable= str_time_offset)
+    strvar_timebase_offset = tk.StringVar()
+    entry_timebase_offset = tk.Entry(label_frame_scale, width= 7, textvariable= strvar_timebase_offset)
 
-    b_time_scale_check = tk.Button(label_frame_scale, text= 'Time scale Check', height= 1, command= lambda: mxr.timebase_scale_check(scale= str_time_scale.get()))
-    b_time_position_check = tk.Button(label_frame_scale, text= 'Time posi Check', height= 1, command= lambda: mxr.timebase_position_check(position= str_time_offset.get()))
+    button_timebase_scale_check = tk.Button(label_frame_scale, text= 'Time scale Check', height= 1, command= lambda: mxr.check_timebase_scale(scale= strvar_timebase_scale.get()))
+    button_timebase_offset_check = tk.Button(label_frame_scale, text= 'Time posi Check', height= 1, command= lambda: mxr.check_timebase_offset(position= strvar_timebase_offset.get()))
 
-    l_wfm_intensity = tk.Label(label_frame_scale, text= 'Waveform Intensity (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_waveform_intensity = tk.Label(label_frame_scale, text= 'Waveform Intensity (%)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
     vcmd = (window.register(validate_number), "%P") # %P = 輸入後字串
-    str_wfm_intensity = tk.StringVar()
-    e_wfm_intensity = tk.Entry(label_frame_scale, width= 7, justify="center", textvariable= str_wfm_intensity, validate="key", validatecommand=vcmd)
-    update_color(value= str_wfm_intensity.get())
-    b_wfm_intensity = tk.Button(label_frame_scale, text= 'Intensity Check', height= 1, command= lambda: mxr.intensity_check(intensity_value= str_wfm_intensity.get()))
+    strvar_waveform_intensity = tk.StringVar()
+    entry_waveform_intensity = tk.Entry(label_frame_scale, width= 7, justify="center", textvariable= strvar_waveform_intensity, validate="key", validatecommand=vcmd)
+    update_intensity_color(value= strvar_waveform_intensity.get())
+    button_waveform_intensity = tk.Button(label_frame_scale, text= 'Intensity Check', height= 1, command= lambda: mxr.check_intensity_setting(intensity_value= strvar_waveform_intensity.get()))
     
-    b_set_intensity_50 = tk.Button(label_frame_scale, text="Set Intensity 50", command=set_to_50, font=("Candara", 10))
+    button_set_intensity_50 = tk.Button(label_frame_scale, text="Set Intensity 50", command=set_to_fixty, font=("Candara", 10))
 
-    e_wfm_intensity.bind("<MouseWheel>", on_mouse_wheel)
-    e_wfm_intensity.bind("<Button-4>", lambda e: on_mouse_wheel(type("Event", (), {"delta": 120})))
-    e_wfm_intensity.bind("<Button-5>", lambda e: on_mouse_wheel(type("Event", (), {"delta": -120})))
+    entry_waveform_intensity.bind("<MouseWheel>", on_mouse_wheel)
+    entry_waveform_intensity.bind("<Button-4>", lambda e: on_mouse_wheel(type("Event", (), {"delta": 120})))
+    entry_waveform_intensity.bind("<Button-5>", lambda e: on_mouse_wheel(type("Event", (), {"delta": -120})))
 
-    b_meas_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: OFF', height= 1, command= lambda: mxr.meas_all_edge(), 
+    button_measure_all_edge = tk.Button(label_frame_scale, text= 'Meas All Edge: OFF', height= 1, command= lambda: mxr.measure_all_edge(), 
                                 state= 'disabled')
 
     # Delta Setup Frame ===================================================================================================================================
 
-    label_frame_delta= tk.LabelFrame(window, text= 'Delta Setup', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_delta= tk.LabelFrame(window, text= 'Delta Setup', background= backgroung_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    l_start = tk.Label(label_frame_delta, text= 'Delta Start', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
+    label_start = tk.Label(label_frame_delta, text= 'Delta Start', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
 
-    start_rf = tk.StringVar()
-    cb_start_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_rf, values= ['RISING', 'FALLING'])
+    strvar_start_risefall = tk.StringVar()
+    combobox_start_risefall = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_start_risefall, values= ['RISING', 'FALLING'])
 
-    start_num = tk.StringVar()
-    cb_start_num = tk.Entry(label_frame_delta, width= 11, textvariable= start_num)
+    strvar_start_N_edge = tk.StringVar()
+    combobox_start_N = tk.Entry(label_frame_delta, width= 11, textvariable= strvar_start_N_edge)
     
-    start_pos = tk.StringVar()
-    cb_start_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= start_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
+    strvar_start_position = tk.StringVar()
+    combobox_start_position = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_start_position, values= ['UPPER', 'MIDDLE', 'LOWER'])
     
-    l_stop = tk.Label(label_frame_delta, text= 'Delta Stop', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
+    label_stop = tk.Label(label_frame_delta, text= 'Delta Stop', background= 'yellow', fg= '#0D325C', font= ('Candara', 11,),)
 
-    stop_rf = tk.StringVar()
-    cb_stop_rf = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_rf, values= ['RISING', 'FALLING'])
+    strvar_stop_risefall = tk.StringVar()
+    combobox_stop_risefall = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_stop_risefall, values= ['RISING', 'FALLING'])
     
-    stop_num = tk.StringVar()
-    cb_stop_num = tk.Entry(label_frame_delta, width= 11, textvariable= stop_num)
+    strvar_stop_N_edge = tk.StringVar()
+    combobox_stop_N = tk.Entry(label_frame_delta, width= 11, textvariable= strvar_stop_N_edge)
     
-    stop_pos = tk.StringVar()
-    cb_stop_pos = ttk.Combobox(label_frame_delta, width= 11, textvariable= stop_pos, values= ['UPPER', 'MIDDLE', 'LOWER'])
+    strvar_stop_position = tk.StringVar()
+    combobox_stop_position = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_stop_position, values= ['UPPER', 'MIDDLE', 'LOWER'])
     
-    b_edge_switch = tk.Button(label_frame_delta, text= 'Edge Switch', height= 1, command= lambda: switch_string(var_1= start_rf, var_2= stop_rf))
-    b_pos_switch = tk.Button(label_frame_delta, text= 'Position Switch', height= 1, command= lambda: switch_string(var_1= start_pos, var_2= stop_pos))
+    button_edge_switch = tk.Button(label_frame_delta, text= 'Edge Switch', height= 1, command= lambda: switch_string(var_1= strvar_start_risefall, var_2= strvar_stop_risefall))
+    button_position_switch = tk.Button(label_frame_delta, text= 'Position Switch', height= 1, command= lambda: switch_string(var_1= strvar_start_position, var_2= strvar_stop_position))
 
     # Threshold Frame ===================================================================================================================================
 
-    label_frame_thres= tk.LabelFrame(window, text= 'Threshold', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_threshold= tk.LabelFrame(window, text= 'Threshold', background= background_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    int_gen_thres = tk.IntVar()    
-    rb_gen_threshold_1= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (%)', variable= int_gen_thres, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    intvar_general_threshold = tk.IntVar()    
+    radiobutton_general_percent_top= tk.Radiobutton(label_frame_threshold, text= 'Gen Thres Top (%)', variable= intvar_general_threshold, value= 1, background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
 
-    str_gen_top_percent = tk.StringVar()
-    cbb_gen_top_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_top_percent)
-    commbobox_function(combobox= cbb_gen_top_percent, combobox_var= str_gen_top_percent, ini_dict_key= 'GeneralTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopPercent', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_general_percent_top = tk.StringVar()
+    combobox_general_percent_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_top)
+    execute_commbobox_function(combobox= combobox_general_percent_top, combobox_var= strvar_general_percent_top, ini_dict_key= 'GeneralTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopPercent', ini_selected_section= 'Threshold_Selected_Values')
     
-    l_gen_threshold_1= tk.Label(label_frame_thres, text= '            Gen Thres Middle (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_general_percent_middle= tk.Label(label_frame_threshold, text= '            Gen Thres Middle (%)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_gen_mid_percent = tk.StringVar()
-    cbb_gen_mid_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_mid_percent)
-    commbobox_function(combobox= cbb_gen_mid_percent, combobox_var= str_gen_mid_percent, ini_dict_key= 'GeneralMiddlePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddlePercent', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_general_percent_middle = tk.StringVar()
+    combobox_general_percent_middle = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_middle)
+    execute_commbobox_function(combobox= combobox_general_percent_middle, combobox_var= strvar_general_percent_middle, ini_dict_key= 'GeneralMiddlePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddlePercent', ini_selected_section= 'Threshold_Selected_Values')
 
-    l_gen_threshold_2= tk.Label(label_frame_thres, text= '        Gen Thres Base (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_general_percent_base= tk.Label(label_frame_threshold, text= '        Gen Thres Base (%)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_gen_base_percent = tk.StringVar()
-    cbb_gen_base_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_base_percent)
-    commbobox_function(combobox= cbb_gen_base_percent, combobox_var= str_gen_base_percent, ini_dict_key= 'GeneralBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBasePercent', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_general_percent_base = tk.StringVar()
+    combobox_general_percent_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_base)
+    execute_commbobox_function(combobox= combobox_general_percent_base, combobox_var= strvar_general_percent_base, ini_dict_key= 'GeneralBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
-    rb_gen_threshold_2= tk.Radiobutton(label_frame_thres, text= 'Gen Thres Top (V)', variable= int_gen_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
-    rb_gen_threshold_2.select()
+    radiobutton_general_value_top= tk.Radiobutton(label_frame_threshold, text= 'Gen Thres Top (V)', variable= intvar_general_threshold, value= 2, background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    radiobutton_general_value_top.select()
 
-    str_gen_top = tk.StringVar()
-    cbb_gen_top = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_top)
-    commbobox_function(combobox= cbb_gen_top, combobox_var= str_gen_top, ini_dict_key= 'GeneralTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTop', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_general_value_top = tk.StringVar()
+    combobox_general_value_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_top)
+    execute_commbobox_function(combobox= combobox_general_value_top, combobox_var= strvar_general_value_top, ini_dict_key= 'GeneralTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTop', ini_selected_section= 'Threshold_Selected_Values')
 
-    l_gen_threshold_4= tk.Label(label_frame_thres, text= '            Gen Thres Middle (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_general_value_middle= tk.Label(label_frame_threshold, text= '            Gen Thres Middle (V)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_gen_mid = tk.StringVar()
-    cbb_gen_mid = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_mid)
-    commbobox_function(combobox= cbb_gen_mid, combobox_var= str_gen_mid, ini_dict_key= 'GeneralMiddle', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddle', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_general_value_middle = tk.StringVar()
+    combobox_general_value_middle = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_middle)
+    execute_commbobox_function(combobox= combobox_general_value_middle, combobox_var= strvar_general_value_middle, ini_dict_key= 'GeneralMiddle', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddle', ini_selected_section= 'Threshold_Selected_Values')
 
-    l_gen_threshold_5= tk.Label(label_frame_thres, text= '        Gen Thres Base (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_general_value_base= tk.Label(label_frame_threshold, text= '        Gen Thres Base (V)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_gen_base = tk.StringVar()
-    cbb_gen_base = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_gen_base)
-    commbobox_function(combobox= cbb_gen_base, combobox_var= str_gen_base, ini_dict_key= 'GeneralBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBase', ini_selected_section= 'Threshold_Selected_Values')
-    b_gen_check = tk.Button(
-        label_frame_thres, text= 'Gen Thres Check', command= lambda: mxr.gen_threshold(
-            g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
+    strvar_general_value_base = tk.StringVar()
+    combobox_general_value_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_base)
+    execute_commbobox_function(combobox= combobox_general_value_base, combobox_var= strvar_general_value_base, ini_dict_key= 'GeneralBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBase', ini_selected_section= 'Threshold_Selected_Values')
+    button_general_threshold_check = tk.Button(
+        label_frame_threshold, text= 'Gen Thres Check', command= lambda: mxr.set_general_threshold(
+            g_top= combobox_general_value_top.get(), g_middle= combobox_general_value_middle.get(), g_base= combobox_general_value_base.get(), g_top_percent= combobox_general_percent_top.get(), g_middle_percent= combobox_general_percent_middle.get(), g_base_percent= combobox_general_percent_base.get(), 
             )
         )
 
-    int_rf_thres = tk.IntVar()    
-    rb_rf_threshold_1= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (%)', variable= int_rf_thres, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    intvar_risefall_threshold = tk.IntVar()    
+    radiobutton_risefall_percent_top= tk.Radiobutton(label_frame_threshold, text= 'tRtF Thres Top (%)', variable= intvar_risefall_threshold, value= 1, background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
 
-    l_rf_threshold_1= tk.Label(label_frame_thres, text= '       tRtF Thres Base (%)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_risefall_percent_base= tk.Label(label_frame_threshold, text= '       tRtF Thres Base (%)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_rf_top_percent = tk.StringVar()
-    cbb_rf_top_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_top_percent)
-    commbobox_function(combobox= cbb_rf_top_percent, combobox_var= str_rf_top_percent, ini_dict_key= 'RFTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopPercent', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_risefall_percent_top = tk.StringVar()
+    combobox_risefall_percent_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_percent_top)
+    execute_commbobox_function(combobox= combobox_risefall_percent_top, combobox_var= strvar_risefall_percent_top, ini_dict_key= 'RFTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopPercent', ini_selected_section= 'Threshold_Selected_Values')
 
-    str_rf_base_percent = tk.StringVar()
-    cbb_rf_base_percent = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_base_percent)
-    commbobox_function(combobox= cbb_rf_base_percent, combobox_var= str_rf_base_percent, ini_dict_key= 'RFBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBasePercent', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_risefall_percent_base = tk.StringVar()
+    combobox_risefall_percent_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_percent_base)
+    execute_commbobox_function(combobox= combobox_risefall_percent_base, combobox_var= strvar_risefall_percent_base, ini_dict_key= 'RFBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
-    rb_rf_threshold_2= tk.Radiobutton(label_frame_thres, text= 'tRtF Thres Top (V)', variable= int_rf_thres, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
-    rb_rf_threshold_2.select()
+    radiobutton_risefall_value_top= tk.Radiobutton(label_frame_threshold, text= 'tRtF Thres Top (V)', variable= intvar_risefall_threshold, value= 2, background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    radiobutton_risefall_value_top.select()
 
-    l_rf_threshold_2= tk.Label(label_frame_thres, text= '       tRtF Thres Base (V)', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    label_risefall_value_base= tk.Label(label_frame_threshold, text= '       tRtF Thres Base (V)', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
 
-    str_rf_top = tk.StringVar()
-    cbb_rf_top = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_top)
-    commbobox_function(combobox= cbb_rf_top, combobox_var= str_rf_top, ini_dict_key= 'RFTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTop', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_risefall_value_top = tk.StringVar()
+    combobox_risefall_value_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_value_top)
+    execute_commbobox_function(combobox= combobox_risefall_value_top, combobox_var= strvar_risefall_value_top, ini_dict_key= 'RFTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTop', ini_selected_section= 'Threshold_Selected_Values')
 
-    str_rf_base = tk.StringVar()
-    cbb_rf_base = ttk.Combobox(label_frame_thres, width= 8, textvariable= str_rf_base)
-    commbobox_function(combobox= cbb_rf_base, combobox_var= str_rf_base, ini_dict_key= 'RFBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBase', ini_selected_section= 'Threshold_Selected_Values')
+    strvar_risefall_value_base = tk.StringVar()
+    combobox_risefall_value_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_value_base)
+    execute_commbobox_function(combobox= combobox_risefall_value_base, combobox_var= strvar_risefall_value_base, ini_dict_key= 'RFBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBase', ini_selected_section= 'Threshold_Selected_Values')
 
-    b_rf_check = tk.Button(
-        label_frame_thres, text= 'RF Thres Check', command= lambda: mxr.RF_threshold(
-            rf_top= cbb_rf_top.get(), rf_base= cbb_rf_base.get(), rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get(),
+    button_risefall_threshold_check = tk.Button(
+        label_frame_threshold, text= 'RF Thres Check', command= lambda: mxr.set_risefall_threshold(
+            rf_top= combobox_risefall_value_top.get(), rf_base= combobox_risefall_value_base.get(), rf_top_percent= combobox_risefall_percent_top.get(), rf_base_percent= combobox_risefall_percent_base.get(),
             )
         )
 
-    l_sampling_rate = tk.Label(label_frame_thres, text= '※ Sampling Rate', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
-    str_sampling_rate = tk.StringVar()
-    e_sampling_rate = tk.Entry(label_frame_thres, width= 10, textvariable= str_sampling_rate)
-    b_sampling_rate_check = tk.Button(label_frame_thres, text= 'Check', height= 1, command= lambda: mxr.sampling_rate_acquire(rate= str_sampling_rate.get()))
-    b_sampling_rate_auto = tk.Button(label_frame_thres, text= 'Auto', height= 1, command= lambda: mxr.sampling_rate_acquire(rate= 'AUTO'))
+    label_sampling_rate = tk.Label(label_frame_threshold, text= '※ Sampling Rate', background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    strvar_sampling_rate = tk.StringVar()
+    entry_sampling_rate = tk.Entry(label_frame_threshold, width= 10, textvariable= strvar_sampling_rate)
+    button_sampling_rate_check = tk.Button(label_frame_threshold, text= 'Check', height= 1, command= lambda: mxr.acquire_sampling_rate(rate= strvar_sampling_rate.get()))
+    button_sampling_rate_automode = tk.Button(label_frame_threshold, text= 'Auto', height= 1, command= lambda: mxr.acquire_sampling_rate(rate= 'AUTO'))
 
-    l_memory_depth = tk.Label(label_frame_thres, text= '※ Memory Depth', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11,),)
-    str_memory_depth = tk.StringVar()
-    e_memory_depth = tk.Entry(label_frame_thres, width= 10, textvariable= str_memory_depth)
-    b_memory_depth_check = tk.Button(label_frame_thres, text= 'Check', height= 1, command= lambda: mxr.memory_depth_acquire(points_value= str_memory_depth.get()))
-    b_memory_depth_auto = tk.Button(label_frame_thres, text= 'Auto', height= 1, command= lambda: mxr.memory_depth_acquire(points_value= 'AUTO'))
+    label_memory_depth = tk.Label(label_frame_threshold, text= '※ Memory Depth', background= background_color_1, fg= '#0D325C', font= ('Candara', 11,),)
+    strvar_memory_depth = tk.StringVar()
+    entry_memory_depth = tk.Entry(label_frame_threshold, width= 10, textvariable= strvar_memory_depth)
+    button_memory_depth_check = tk.Button(label_frame_threshold, text= 'Check', height= 1, command= lambda: mxr.acquire_memory_depth(points_value= strvar_memory_depth.get()))
+    button_memory_depth_automode = tk.Button(label_frame_threshold, text= 'Auto', height= 1, command= lambda: mxr.acquire_memory_depth(points_value= 'AUTO'))
 
 
     # Label Frame ===================================================================================================================================
 
-    label_frame_label= tk.LabelFrame(window, text= 'Label', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_label= tk.LabelFrame(window, text= 'Label', background= backgroung_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    int_label_type = tk.IntVar()    
-    rb_label= tk.Radiobutton(label_frame_label, text= 'Label', variable= int_label_type, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
+    intvar_label_type = tk.IntVar()    
+    radiobutton_label= tk.Radiobutton(label_frame_label, text= 'Label', variable= intvar_label_type, value= 1, background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
 
-    rb_bookmark= tk.Radiobutton(label_frame_label, text= 'Bookmark', variable= int_label_type, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
-    rb_label.select()
+    radiobutton_bookmark= tk.Radiobutton(label_frame_label, text= 'Bookmark', variable= intvar_label_type, value= 2, background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
+    radiobutton_label.select()
 
-    str_label_1 = tk.StringVar()
-    e_label_1 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_1)
+    strvar_label_1 = tk.StringVar()
+    entey_label_1 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_1)
 
-    b_lable1 = tk.Button(label_frame_label, text= 'Chan1_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 1, bookmark= str_label_1.get().rstrip('\n')))
+    button_lable1 = tk.Button(label_frame_label, text= 'Chan1_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 1, bookmark= strvar_label_1.get().rstrip('\n')))
     # b_clear1 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_1))
-    b_del_label1 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 1, choose_type= int_label_type.get()))
+    button_delete_label_1 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 1, choose_type= intvar_label_type.get()))
 
-    str_label_2 = tk.StringVar()
-    e_label_2 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_2)
+    strvar_label_2 = tk.StringVar()
+    entry_label_2 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_2)
 
-    b_lable2 = tk.Button(label_frame_label, text= 'Chan2_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 2, bookmark= (str_label_2.get().rstrip('\n'))))
+    button_lable_2 = tk.Button(label_frame_label, text= 'Chan2_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 2, bookmark= (strvar_label_2.get().rstrip('\n'))))
     # b_clear2 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_2))
-    b_del_label2 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 2, choose_type= int_label_type.get()))
+    button_delete_label_2 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 2, choose_type= intvar_label_type.get()))
 
-    str_label_3 = tk.StringVar()
-    e_label_3 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_3)
+    strvar_label_3 = tk.StringVar()
+    entry_label_3 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_3)
 
-    b_lable3 = tk.Button(label_frame_label, text= 'Chan3_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 3, bookmark= (str_label_3.get().rstrip('\n'))))
+    button_lable_3 = tk.Button(label_frame_label, text= 'Chan3_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 3, bookmark= (strvar_label_3.get().rstrip('\n'))))
     # b_clear3 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_3))
-    b_del_label3 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 3, choose_type= int_label_type.get()))
+    button_delete_label_3 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 3, choose_type= intvar_label_type.get()))
 
-    str_label_4 = tk.StringVar()
-    e_label_4 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_4)
+    strvar_label_4 = tk.StringVar()
+    entry_label_4 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_4)
 
-    b_lable4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 4, bookmark= (str_label_4.get().rstrip('\n'))))
+    button_lable_4 = tk.Button(label_frame_label, text= 'Chan4_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 4, bookmark= (strvar_label_4.get().rstrip('\n'))))
     # b_clear4 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_4))
-    b_del_label4 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 4, choose_type= int_label_type.get()))
+    button_delete_label_4 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 4, choose_type= intvar_label_type.get()))
 
-    str_label_5 = tk.StringVar()
-    e_label_5 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_5)
+    strvar_label_5 = tk.StringVar()
+    entry_label_5 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_5)
 
-    b_lable5 = tk.Button(label_frame_label, text= 'WMe1_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 5, bookmark= str_label_5.get().rstrip('\n')))
+    button_lable_5 = tk.Button(label_frame_label, text= 'WMe1_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 5, bookmark= strvar_label_5.get().rstrip('\n')))
     # b_clear5 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_5))
-    b_del_label5 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 5, choose_type= int_label_type.get()))
+    button_delete_label_5 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 5, choose_type= intvar_label_type.get()))
 
-    str_label_6 = tk.StringVar()
-    e_label_6 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_6)
+    strvar_label_6 = tk.StringVar()
+    entry_label_6 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_6)
 
-    b_lable6 = tk.Button(label_frame_label, text= 'WMe2_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 6, bookmark= (str_label_6.get().rstrip('\n'))))
+    button_lable_6 = tk.Button(label_frame_label, text= 'WMe2_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 6, bookmark= (strvar_label_6.get().rstrip('\n'))))
     # b_clear6 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_6))
-    b_del_label6 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 6, choose_type= int_label_type.get()))
+    button_delete_label_6 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 6, choose_type= intvar_label_type.get()))
 
-    str_label_7 = tk.StringVar()
-    e_label_7 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_7)
+    strvar_label_7 = tk.StringVar()
+    entry_label_7 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_7)
 
-    b_lable7 = tk.Button(label_frame_label, text= 'WMe3_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 7, bookmark= (str_label_7.get().rstrip('\n'))))
+    button_lable_7 = tk.Button(label_frame_label, text= 'WMe3_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 7, bookmark= (strvar_label_7.get().rstrip('\n'))))
     # b_clear7 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_7))
-    b_del_label7 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 7, choose_type= int_label_type.get()))
+    button_delete_label_7 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 7, choose_type= intvar_label_type.get()))
 
-    str_label_8 = tk.StringVar()
-    e_label_8 = tk.Entry(label_frame_label, width= 25, textvariable= str_label_8)
+    strvar_label_8 = tk.StringVar()
+    entry_label_8 = tk.Entry(label_frame_label, width= 25, textvariable= strvar_label_8)
 
-    b_lable8 = tk.Button(label_frame_label, text= 'WMe4_label', command= lambda: mxr.add_bookmark(choose_type= int_label_type.get(), chan= 8, bookmark= (str_label_8.get().rstrip('\n'))))
+    button_lable_8 = tk.Button(label_frame_label, text= 'WMe4_label', command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 8, bookmark= (strvar_label_8.get().rstrip('\n'))))
     # b_clear8 = tk.Button(label_frame_label, text= 'Clear', command= lambda: clear(string= str_label_8))
-    b_del_label8 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 8, choose_type= int_label_type.get()))
+    button_delete_label_8 = tk.Button(label_frame_label, text= 'Delete', command= lambda: mxr.delete_bookmark(chan= 8, choose_type= intvar_label_type.get()))
 
     # Control Frame ===================================================================================================================================
 
-    label_frame_control= tk.LabelFrame(window, text= 'Control', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_control= tk.LabelFrame(window, text= 'Control', background= backgroung_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_run = tk.Button(label_frame_control, text='RUN', width= 18, height= 2, command= lambda: mxr.run())
+    button_run = tk.Button(label_frame_control, text='RUN', width= 18, height= 2, command= lambda: mxr.run())
+    button_stop = tk.Button(label_frame_control, text='STOP', width= 18, height= 2, command= lambda: mxr.stop())
+    button_single = tk.Button(label_frame_control, text='SINGLE', width= 18, height= 2, command= lambda: mxr.single())
 
-    b_stop = tk.Button(label_frame_control, text='STOP', width= 18, height= 2, command= lambda: mxr.stop())
+    button_clear_display = tk.Button(label_frame_control, text='Clear', width= 18, height= 2, command= lambda: mxr.clear_diaplay())
+    button_clear_display.config(state= 'disabled')
 
-    b_single = tk.Button(label_frame_control, text='SINGLE', width= 18, height= 2, command= lambda: mxr.single())
+    button_autoscale = tk.Button(label_frame_control, text='Auto Scale', width= 18, height= 2, command= lambda: mxr.autoscale())
+    button_autoscale.config(state= 'disabled')
 
-    b_clear_display = tk.Button(label_frame_control, text='Clear', width= 18, height= 2, command= lambda: mxr.clear_diaplay())
-    b_clear_display.config(state= 'disabled')
+    button_default = tk.Button(label_frame_control, text='Default', width= 18, height= 2, command= lambda: mxr.default())
+    button_default.config(state= 'disabled')
 
-    b_autoscale = tk.Button(label_frame_control, text='Auto Scale', width= 18, height= 2, command= lambda: mxr.autoscale())
-    b_autoscale.config(state= 'disabled')
+    button_trigger = tk.Button(label_frame_control, text='Trigger Type', width= 18, height= 2, command= lambda: mxr.set_trigger_type())
 
-    b_default = tk.Button(label_frame_control, text='Default', width= 18, height= 2, command= lambda: mxr.default())
-    b_default.config(state= 'disabled')
+    button_delete_measurement = tk.Button(label_frame_control, text='Delete item', width= 18, height= 2, command= lambda: mxr.delete_measurement())
 
-    b_trigger = tk.Button(label_frame_control, text='Trigger Type', width= 18, height= 2, command= lambda: mxr.trig_type())
+    button_add_marker = tk.Button(label_frame_control, text='Add Marker', width= 18, height= 2, command= lambda: mxr.add_marker())
 
-    b_del = tk.Button(label_frame_control, text='Delete item', width= 18, height= 2, command= lambda: mxr.delete_item())
+    button_delete_marker = tk.Button(label_frame_control, text='Del Marker', width= 18, height= 2, command= lambda: mxr.delete_marker())
 
-    b_add_marker = tk.Button(label_frame_control, text='Add Marker', width= 18, height= 2, command= lambda: mxr.add_marker())
-
-    b_del_marker = tk.Button(label_frame_control, text='Del Marker', width= 18, height= 2, command= lambda: mxr.delete_marker())
-
-    b_trig_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 18, height= 2, command= lambda: mxr.trig_slope())
+    button_trigger_slope = tk.Button(label_frame_control, text= 'Trig Slope', width= 18, height= 2, command= lambda: mxr.set_trigger_slope())
 
     def disable_button():
-        if b_autoscale["state"] == 'normal':
-            b_autoscale.config(state="disabled")
+        if button_autoscale["state"] == 'normal':
+            button_autoscale.config(state="disabled")
         else:
-            b_autoscale.config(state="normal")
-        if b_default["state"] == 'normal':
-            b_default.config(state="disabled")
+            button_autoscale.config(state="normal")
+        if button_default["state"] == 'normal':
+            button_default.config(state="disabled")
         else:
-            b_default.config(state="normal")
-        if b_clear_display["state"] == 'normal':
-            b_clear_display.config(state="disabled")
+            button_default.config(state="normal")
+        if button_clear_display["state"] == 'normal':
+            button_clear_display.config(state="disabled")
         else:
-            b_clear_display.config(state="normal")
+            button_clear_display.config(state="normal")
 
-    b_button_disable = tk.Button(label_frame_control, text= 'Disable\nButton', width= 18, height=2, command= disable_button)
+    button_disable_button = tk.Button(label_frame_control, text= 'Disable\nButton', width= 18, height=2, command= disable_button)
 
     boolvar_marker_1 = tk.BooleanVar()    
-    cb_marker_1= tk.Checkbutton(label_frame_control, text= 'Meas 1', variable= boolvar_marker_1, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_1= tk.Checkbutton(label_frame_control, text= 'Meas 1', variable= boolvar_marker_1, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_2 = tk.BooleanVar()    
-    cb_marker_2= tk.Checkbutton(label_frame_control, text= 'Meas 2', variable= boolvar_marker_2, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_2= tk.Checkbutton(label_frame_control, text= 'Meas 2', variable= boolvar_marker_2, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_3 = tk.BooleanVar()    
-    cb_marker_3= tk.Checkbutton(label_frame_control, text= 'Meas 3', variable= boolvar_marker_3, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_3= tk.Checkbutton(label_frame_control, text= 'Meas 3', variable= boolvar_marker_3, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_4 = tk.BooleanVar()    
-    cb_marker_4= tk.Checkbutton(label_frame_control, text= 'Meas 4', variable= boolvar_marker_4, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_4= tk.Checkbutton(label_frame_control, text= 'Meas 4', variable= boolvar_marker_4, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_5 = tk.BooleanVar()    
-    cb_marker_5= tk.Checkbutton(label_frame_control, text= 'Meas 5', variable= boolvar_marker_5, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_5= tk.Checkbutton(label_frame_control, text= 'Meas 5', variable= boolvar_marker_5, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_6 = tk.BooleanVar()    
-    cb_marker_6= tk.Checkbutton(label_frame_control, text= 'Meas 6', variable= boolvar_marker_6, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_6= tk.Checkbutton(label_frame_control, text= 'Meas 6', variable= boolvar_marker_6, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_7 = tk.BooleanVar()    
-    cb_marker_7= tk.Checkbutton(label_frame_control, text= 'Meas7', variable= boolvar_marker_7, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_7= tk.Checkbutton(label_frame_control, text= 'Meas7', variable= boolvar_marker_7, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_8 = tk.BooleanVar()    
-    cb_marker_8= tk.Checkbutton(label_frame_control, text= 'Meas8', variable= boolvar_marker_8, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_8= tk.Checkbutton(label_frame_control, text= 'Meas8', variable= boolvar_marker_8, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_9 = tk.BooleanVar()    
-    cb_marker_9= tk.Checkbutton(label_frame_control, text= 'Meas9', variable= boolvar_marker_9, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_9= tk.Checkbutton(label_frame_control, text= 'Meas9', variable= boolvar_marker_9, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_10 = tk.BooleanVar()    
-    cb_marker_10= tk.Checkbutton(label_frame_control, text= 'Meas10', variable= boolvar_marker_10, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_10= tk.Checkbutton(label_frame_control, text= 'Meas10', variable= boolvar_marker_10, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_11 = tk.BooleanVar()    
-    cb_marker_11= tk.Checkbutton(label_frame_control, text= 'Meas11', variable= boolvar_marker_11, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_11= tk.Checkbutton(label_frame_control, text= 'Meas11', variable= boolvar_marker_11, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_12 = tk.BooleanVar()    
-    cb_marker_12= tk.Checkbutton(label_frame_control, text= 'Meas12', variable= boolvar_marker_12, background= bg_color_2, fg= '#0D325C')
+    checkbutton_marker_12= tk.Checkbutton(label_frame_control, text= 'Meas12', variable= boolvar_marker_12, background= backgroung_color_2, fg= '#0D325C')
 
     boolvar_marker_color = tk.BooleanVar()    
-    cb_marker_color= tk.Checkbutton(label_frame_control, text= 'Multi-Marker Color', variable= boolvar_marker_color, background= bg_color_2, fg= '#0D325C', font= ('Calibri', 11, 'bold'))
+    checkbutton_marker_color= tk.Checkbutton(label_frame_control, text= 'Multi-Marker Color', variable= boolvar_marker_color, background= backgroung_color_2, fg= '#0D325C', font= ('Calibri', 11, 'bold'))
 
     # Channel Frame ===================================================================================================================================
 
-    label_frame_chan= tk.LabelFrame(window, text= 'Channel', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_channel= tk.LabelFrame(window, text= 'Channel', background= background_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    b_Chan1 = tk.Button(label_frame_chan, text='Chan1', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 1, bookmark= str_label_1.get(), choose_type= int_label_type.get()))
-    b_Chan2 = tk.Button(label_frame_chan, text='Chan2', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 2, bookmark= str_label_2.get(), choose_type= int_label_type.get()))
-    b_Chan3 = tk.Button(label_frame_chan, text='Chan3', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 3, bookmark= str_label_3.get(), choose_type= int_label_type.get()))
-    b_Chan4 = tk.Button(label_frame_chan, text='Chan4', width= 18, height= 2, command= lambda: mxr.display_Chan(chan= 4, bookmark= str_label_4.get(), choose_type= int_label_type.get()))
-    b_WMe1 = tk.Button(label_frame_chan, text='WMemory1', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 1, bookmark= str_label_5.get(), choose_type= int_label_type.get()))
-    b_WMe2 = tk.Button(label_frame_chan, text='WMemory2', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 2, bookmark= str_label_6.get(), choose_type= int_label_type.get()))
-    b_WMe3 = tk.Button(label_frame_chan, text='WMemory3', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 3, bookmark= str_label_7.get(), choose_type= int_label_type.get()))
-    b_WMe4 = tk.Button(label_frame_chan, text='WMemory4', width= 18, height= 2, command= lambda: mxr.display_WMemory(chan= 4, bookmark= str_label_8.get(), choose_type= int_label_type.get()))
+    button_channel_1 = tk.Button(label_frame_channel, text='Chan1', width= 18, height= 2, command= lambda: mxr.display_channel(chan= 1, bookmark= strvar_label_1.get(), choose_type= intvar_label_type.get()))
+    button_channel_2 = tk.Button(label_frame_channel, text='Chan2', width= 18, height= 2, command= lambda: mxr.display_channel(chan= 2, bookmark= strvar_label_2.get(), choose_type= intvar_label_type.get()))
+    button_channel_3 = tk.Button(label_frame_channel, text='Chan3', width= 18, height= 2, command= lambda: mxr.display_channel(chan= 3, bookmark= strvar_label_3.get(), choose_type= intvar_label_type.get()))
+    button_channel_4 = tk.Button(label_frame_channel, text='Chan4', width= 18, height= 2, command= lambda: mxr.display_channel(chan= 4, bookmark= strvar_label_4.get(), choose_type= intvar_label_type.get()))
+    button_wmemory_1 = tk.Button(label_frame_channel, text='WMemory1', width= 18, height= 2, command= lambda: mxr.display_wmemory(chan= 1, bookmark= strvar_label_5.get(), choose_type= intvar_label_type.get()))
+    button_wmemory_2 = tk.Button(label_frame_channel, text='WMemory2', width= 18, height= 2, command= lambda: mxr.display_wmemory(chan= 2, bookmark= strvar_label_6.get(), choose_type= intvar_label_type.get()))
+    button_wmemory_3 = tk.Button(label_frame_channel, text='WMemory3', width= 18, height= 2, command= lambda: mxr.display_wmemory(chan= 3, bookmark= strvar_label_7.get(), choose_type= intvar_label_type.get()))
+    button_wmemory_4 = tk.Button(label_frame_channel, text='WMemory4', width= 18, height= 2, command= lambda: mxr.display_wmemory(chan= 4, bookmark= strvar_label_8.get(), choose_type= intvar_label_type.get()))
 
-    int_ch = tk.IntVar()    
-    rb_ch_single = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
-    rb_ch_single.select()
-    int_ch_single = tk.IntVar()
-    cbb_ch_single = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_single, values= [1, 2, 3, 4])
+    intvar_channel = tk.IntVar()    
+    radiobutton_channel_single = tk.Radiobutton(label_frame_channel, text= 'Channel', variable= intvar_channel, value= 1, background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    radiobutton_channel_delta = tk.Radiobutton(label_frame_channel, text= 'Channel', variable= intvar_channel, value= 2, background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    radiobutton_channel_single.select()
+    
+    intvar_channel_single = tk.IntVar()
+    combobox_channel_single = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_single, values= [1, 2, 3, 4])
 
-    rb_ch_delta = tk.Radiobutton(label_frame_chan, text= 'Chan', variable= int_ch, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
-    int_ch_delta_start = tk.IntVar()
-    cbb_ch_delta_start = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_start, values= [1, 2, 3, 4])
+    intvar_channel_delta_start = tk.IntVar()
+    combobox_channel_delta_start = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_delta_start, values= [1, 2, 3, 4])
 
-    l_arrow = tk.Label(label_frame_chan, text= '      ↓', background= bg_color_1, fg= '#0D325C', font= ('Calibri', 11, 'bold'),)
-    l_ch_delta_stop = tk.Label(label_frame_chan, text= 'Chan', background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
-    int_ch_delta_stop = tk.IntVar()
-    cbb_ch_delta_stop = ttk.Combobox(label_frame_chan, width= 5, textvariable= int_ch_delta_stop, values= [1, 2, 3, 4])
+    label_arrow = tk.Label(label_frame_channel, text= '      ↓', background= background_color_1, fg= '#0D325C', font= ('Calibri', 11, 'bold'),)
+    label_channel_delta_stop = tk.Label(label_frame_channel, text= 'Channel', background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    intvar_channel_delta_stop = tk.IntVar()
+    combobox_channel_delta_stop = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_delta_stop, values= [1, 2, 3, 4])
 
     boolvar_delta_name= tk.BooleanVar()
-    cb_delta_name = tk.Checkbutton(label_frame_chan, text= 'Modify Delta Name', variable= boolvar_delta_name, background= bg_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
-    str_delta_name = tk.StringVar()
-    cbb_delta_name = ttk.Combobox(label_frame_chan, width= 12, textvariable= str_delta_name, values= ['Setup Time', 'Hold Time'])
-    cbb_delta_name.set(value= 'Setup Time')
+    checkbutton_delta_name = tk.Checkbutton(label_frame_channel, text= 'Modify Delta Name', variable= boolvar_delta_name, background= background_color_1, fg= '#0D325C', font= ('Candara', 11, 'bold'),)
+    strvar_delta_name = tk.StringVar()
+    combobox_delta_name = ttk.Combobox(label_frame_channel, width= 12, textvariable= strvar_delta_name, values= ['Setup Time', 'Hold Time'])
+    combobox_delta_name.set(value= 'Setup Time')
 
-    b_chan_switch = tk.Button(label_frame_chan, text= 'Delta Chan Switch', height= 1, command= lambda: switch_string(var_1= int_ch_delta_start, var_2= int_ch_delta_stop))
+    button_channel_switch = tk.Button(label_frame_channel, text= 'Delta Channel Switch', height= 1, command= lambda: switch_string(var_1= intvar_channel_delta_start, var_2= intvar_channel_delta_stop))
 
     # Save Frame ===================================================================================================================================
 
-    label_frame_save= tk.LabelFrame(window, text= 'Save', background= bg_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_save_file= tk.LabelFrame(window, text= 'Save', background= backgroung_color_2, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    str_image_folder = tk.StringVar()
-    e_image_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_image_folder)
+    # str_image_folder = tk.StringVar()
+    # e_image_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_image_folder)
 
-    l_image_folder = tk.Label(label_frame_save, text= 'Image Scope folder', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    # l_image_folder = tk.Label(label_frame_save, text= 'Image Scope folder', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    int_img_path_choice = tk.IntVar()
-    rb_img_desktop_path = tk.Radiobutton(label_frame_save, text= 'Desktop', variable= int_img_path_choice, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
-    rb_img_server_path = tk.Radiobutton(label_frame_save, text= 'Server', variable= int_img_path_choice, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
-    # rb_img_desktop_path.select()
+    # int_img_path_choice = tk.IntVar()
+    # rb_img_desktop_path = tk.Radiobutton(label_frame_save, text= 'Desktop', variable= int_img_path_choice, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    # rb_img_server_path = tk.Radiobutton(label_frame_save, text= 'Server', variable= int_img_path_choice, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    # # rb_img_desktop_path.select()
 
-    str_image_pc_folder = tk.StringVar()
-    e_image_pc_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_image_pc_folder)
+    strvar_image_pc_folder = tk.StringVar()
+    entry_image_pc_folder = tk.Entry(label_frame_save_file, width= 40, textvariable= strvar_image_pc_folder)
 
-    l_image_pc_folder = tk.Label(label_frame_save, text= 'Image PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    label_image_pc_folder = tk.Label(label_frame_save_file, text= 'Image PC folder [筆電的資料夾路徑]', background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_image_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_image_pc_folder, target_entry= e_image_pc_folder))
+    button_image_pc_browse = tk.Button(label_frame_save_file, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= strvar_image_pc_folder, target_entry= entry_image_pc_folder))
     
-    str_image = tk.StringVar()
-    e_image = tk.Entry(label_frame_save, width= 40, textvariable= str_image)
+    strvar_image = tk.StringVar()
+    entry_image = tk.Entry(label_frame_save_file, width= 40, textvariable= strvar_image)
 
-    l_imagename = tk.Label(label_frame_save, text= '(填 圖檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    label_image_name = tk.Label(label_frame_save_file, text= '(填 圖檔名)', background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_image_save_scope = tk.Button(label_frame_save, text= 'Save Image-Scope', command= lambda: mxr.save_image_scope(folder= str_image_folder.get(), image_name= str_image.get(), path_choice= int_img_path_choice.get()))
+    # b_image_save_scope = tk.Button(label_frame_save, text= 'Save Image-Scope', command= lambda: mxr.save_image_scope(folder= str_image_folder.get(), image_name= str_image.get(), path_choice= int_img_path_choice.get()))
     # b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_waveform_pc(folder= str_image_folder.get(), file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
-    b_image_save_pc = tk.Button(label_frame_save, text= 'Save Image-PC', command= lambda: mxr.save_image_pc(file_name= str_image.get(), pc_folder= str_image_pc_folder.get()))
+    button_save_image_pc = tk.Button(label_frame_save_file, text= 'Save Image-PC', command= lambda: mxr.save_pc_image(file_name= strvar_image.get(), pc_folder= strvar_image_pc_folder.get()))
     
-    l_divider = tk.Label(label_frame_save, text= '=====================================================================================================================================================', 
-                         height= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 6,),)
+    label_divider = tk.Label(label_frame_save_file, text= '=====================================================================================================================================================', 
+                         height= 1, background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 6,),)
 
-    int_file_type = tk.IntVar()
-    rb_Wme = tk.Radiobutton(label_frame_save, text= 'WMemory', variable= int_file_type, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
-    rb_Setup = tk.Radiobutton(label_frame_save, text= 'Setup', variable= int_file_type, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
-    rb_Wme.select()
+    intvar_file_type = tk.IntVar()
+    radiobutton_wmemory = tk.Radiobutton(label_frame_save_file, text= 'WMemory', variable= intvar_file_type, value= 1, background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
+    radiobutton_setup = tk.Radiobutton(label_frame_save_file, text= 'Setup', variable= intvar_file_type, value= 2, background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10, 'bold'),)
+    radiobutton_wmemory.select()
 
-    str_WMe_folder = tk.StringVar()
-    e_WMe_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_WMe_folder)
+    strvar_wmemory_folder = tk.StringVar()
+    entry_wmemory_folder = tk.Entry(label_frame_save_file, width= 40, textvariable= strvar_wmemory_folder)
 
-    l_WMe_folder = tk.Label(label_frame_save, text= 'Scope folder', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    label_wmemory_folder = tk.Label(label_frame_save_file, text= 'Scope folder', background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    int_wme_path_choice = tk.IntVar()
-    rb_wme_desktop_path = tk.Radiobutton(label_frame_save, text= 'Desktop', variable= int_wme_path_choice, value= 1, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
-    rb_wme_server_path = tk.Radiobutton(label_frame_save, text= 'Server', variable= int_wme_path_choice, value= 2, background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    intvar_wmemory_path_choice = tk.IntVar()
+    radiobutton_wmemory_desktop_path = tk.Radiobutton(label_frame_save_file, text= 'Desktop', variable= intvar_wmemory_path_choice, value= 1, background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    radiobutton_wmemory_server_path = tk.Radiobutton(label_frame_save_file, text= 'Server', variable= intvar_wmemory_path_choice, value= 2, background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10,),)
     # rb_wme_desktop_path.select()
 
-    str_WMe_pc_folder = tk.StringVar()
-    e_WMe_pc_folder = tk.Entry(label_frame_save, width= 40, textvariable= str_WMe_pc_folder)
+    strvar_wmemory_pc_folder = tk.StringVar()
+    entry_wmemory_pc_folder = tk.Entry(label_frame_save_file, width= 40, textvariable= strvar_wmemory_pc_folder)
 
-    l_WMe_pc_folder = tk.Label(label_frame_save, text= 'PC folder [筆電的資料夾路徑]', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    label_wmemory_pc_folder = tk.Label(label_frame_save_file, text= 'PC folder [筆電的資料夾路徑]', background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_WMe_pc_browse = tk.Button(label_frame_save, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= str_WMe_pc_folder, target_entry= e_WMe_pc_folder))
+    button_wmemory_pc_browse = tk.Button(label_frame_save_file, text= 'Browse', width= 10, command= lambda: select_folder(entry_var= strvar_wmemory_pc_folder, target_entry= entry_wmemory_pc_folder))
 
-    str_other_file = tk.StringVar()
-    e_other_file = tk.Entry(label_frame_save, width= 40, textvariable= str_other_file)
+    strvar_other_file = tk.StringVar()
+    entry_other_file = tk.Entry(label_frame_save_file, width= 40, textvariable= strvar_other_file)
 
-    l_other_filename = tk.Label(label_frame_save, text= '(填 檔名)', background= bg_color_2, fg= '#0D325C', font= ('Candara', 10,),)
+    label_other_filename = tk.Label(label_frame_save_file, text= '(填 檔名)', background= backgroung_color_2, fg= '#0D325C', font= ('Candara', 10,),)
 
-    b_other_file_save_scope = tk.Button(label_frame_save, text= 'Save file in Scope', command= lambda: mxr.save_other_file_scope(chan= int_ch_single.get(), folder= str_WMe_folder.get(), current_file_name= str_other_file.get(), ext_type= int_file_type.get(), path_choice= int_wme_path_choice.get()))
-    b_other_file_save_pc = tk.Button(label_frame_save, text= 'Save file in PC', command= lambda: mxr.save_wmemory_pc(folder= str_WMe_folder.get(), file_name= str_other_file.get(), pc_folder= str_WMe_pc_folder.get(), ext_type= int_file_type.get()))
+    button_other_file_save_scope = tk.Button(label_frame_save_file, text= 'Save file in Scope', command= lambda: mxr.save_scope_file(chan= intvar_channel_single.get(), folder= strvar_wmemory_folder.get(), current_file_name= strvar_other_file.get(), ext_type= intvar_file_type.get(), path_choice= intvar_wmemory_path_choice.get()))
+    button_other_file_save_pc = tk.Button(label_frame_save_file, text= 'Save file in PC', command= lambda: mxr.save_pc_wmemory(folder= strvar_wmemory_folder.get(), file_name= strvar_other_file.get(), pc_folder= strvar_wmemory_pc_folder.get(), ext_type= intvar_file_type.get()))
 
 
     # Load WMemory Frame ===================================================================================================================================
 
-    label_frame_load_wme= tk.LabelFrame(window, text= 'Load WMemory', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_load_file= tk.LabelFrame(window, text= 'Load WMemory', background= background_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    str_WMe1 = tk.StringVar()
-    e_WMe1 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe1)
+    strvar_wmemory_1 = tk.StringVar()
+    entry_wmemory_1 = tk.Entry(label_frame_load_file, width= 50, textvariable= strvar_wmemory_1)
 
-    b_WMe1_load = tk.Button(label_frame_load_wme, text= 'load WMemory1', width= 18, command= lambda: mxr.load_wmemory(chan= 1, folder= str_WMe_folder.get(), wme_name= str_WMe1.get(), file_path_choice = int_wme_path_choice.get()))
-    b_wme_clear1 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 1, string= str_WMe1))
+    button_load_wmemory_1 = tk.Button(label_frame_load_file, text= 'load WMemory1', width= 18, command= lambda: mxr.load_wmemory(chan= 1, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_1.get(), file_path_choice = intvar_wmemory_path_choice.get()))
+    button_clear_wmemory_1 = tk.Button(label_frame_load_file, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 1, string= strvar_wmemory_1))
 
-    str_WMe2 = tk.StringVar()
-    e_WMe2 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe2)
+    strvar_wmemory_2 = tk.StringVar()
+    entry_wmemory_2 = tk.Entry(label_frame_load_file, width= 50, textvariable= strvar_wmemory_2)
     
-    b_WMe2_load = tk.Button(label_frame_load_wme, text= 'load WMemory2', width= 18, command= lambda: mxr.load_wmemory(chan= 2, folder= str_WMe_folder.get(), wme_name= str_WMe2.get(), file_path_choice = int_wme_path_choice.get()))
-    b_wme_clear2 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 2, string= str_WMe2))
+    button_load_wmemory_2 = tk.Button(label_frame_load_file, text= 'load WMemory2', width= 18, command= lambda: mxr.load_wmemory(chan= 2, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_2.get(), file_path_choice = intvar_wmemory_path_choice.get()))
+    button_clear_wmemory_2 = tk.Button(label_frame_load_file, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 2, string= strvar_wmemory_2))
 
-    str_WMe3 = tk.StringVar()
-    e_WMe3 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe3)
+    strvar_wmemory_3 = tk.StringVar()
+    entry_wmemory_3 = tk.Entry(label_frame_load_file, width= 50, textvariable= strvar_wmemory_3)
 
-    b_WMe3_load = tk.Button(label_frame_load_wme, text= 'load WMemory3', width= 18, command= lambda: mxr.load_wmemory(chan= 3, folder= str_WMe_folder.get(), wme_name= str_WMe3.get(), file_path_choice = int_wme_path_choice.get()))
-    b_wme_clear3 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 3, string= str_WMe3))
+    button_load_wmemory_3 = tk.Button(label_frame_load_file, text= 'load WMemory3', width= 18, command= lambda: mxr.load_wmemory(chan= 3, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_3.get(), file_path_choice = intvar_wmemory_path_choice.get()))
+    button_clear_wmemory_3 = tk.Button(label_frame_load_file, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 3, string= strvar_wmemory_3))
 
-    str_WMe4 = tk.StringVar()
-    e_WMe4 = tk.Entry(label_frame_load_wme, width= 50, textvariable= str_WMe4)
+    strvar_wmemory_4 = tk.StringVar()
+    entry_wmemory_4 = tk.Entry(label_frame_load_file, width= 50, textvariable= strvar_wmemory_4)
     
-    b_WMe4_load = tk.Button(label_frame_load_wme, text= 'load WMemory4', width= 18, command= lambda: mxr.load_wmemory(chan= 4, folder= str_WMe_folder.get(), wme_name= str_WMe4.get(), file_path_choice = int_wme_path_choice.get()))
-    b_wme_clear4 = tk.Button(label_frame_load_wme, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 4, string= str_WMe4))
+    button_load_wmemory_4 = tk.Button(label_frame_load_file, text= 'load WMemory4', width= 18, command= lambda: mxr.load_wmemory(chan= 4, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_4.get(), file_path_choice = intvar_wmemory_path_choice.get()))
+    button_clear_wmemory_4 = tk.Button(label_frame_load_file, text= 'Clear', command= lambda: mxr.clear_wmemory(chan= 4, string= strvar_wmemory_4))
 
-    str_setupfile_interface = tk.StringVar()
-    cbb_setupfile_interface = ttk.Combobox(label_frame_load_wme, width= 5, textvariable= str_setupfile_interface)
+    strvar_setupfile_interface = tk.StringVar()
+    combobox_setupfile_interface = ttk.Combobox(label_frame_load_file, width= 5, textvariable= strvar_setupfile_interface)
 
-    str_setupfile_class = tk.StringVar()
-    cbb_setupfile_class = ttk.Combobox(label_frame_load_wme, width= 18, textvariable= str_setupfile_class)
+    strvar_setupfile_class = tk.StringVar()
+    combobox_setupfile_class = ttk.Combobox(label_frame_load_file, width= 18, textvariable= strvar_setupfile_class)
 
-    str_setup = tk.StringVar()
-    cbb_setup = ttk.Combobox(label_frame_load_wme, width= 15, textvariable= str_setup)
+    strvar_setup = tk.StringVar()
+    combobox_setup = ttk.Combobox(label_frame_load_file, width= 15, textvariable= strvar_setup)
     
     boolvar_setup_timebase = tk.BooleanVar()    
-    cb_setup_timebase= tk.Checkbutton(label_frame_load_wme, text= 'Time', variable= boolvar_setup_timebase, background= bg_color_1, fg= '#0D325C')
-    cb_setup_timebase.select()
+    checkbutton_setup_timebase= tk.Checkbutton(label_frame_load_file, text= 'Time', variable= boolvar_setup_timebase, background= background_color_1, fg= '#0D325C')
+    checkbutton_setup_timebase.select()
 
     boolvar_setup_label = tk.BooleanVar()    
-    cb_setup_label= tk.Checkbutton(label_frame_load_wme, text= 'Label', variable= boolvar_setup_label, background= bg_color_1, fg= '#0D325C')
-    cb_setup_label.select()
+    checkbutton_setup_label= tk.Checkbutton(label_frame_load_file, text= 'Label', variable= boolvar_setup_label, background= background_color_1, fg= '#0D325C')
+    checkbutton_setup_label.select()
 
     boolvar_setup_volt = tk.BooleanVar()    
-    cb_setup_volt= tk.Checkbutton(label_frame_load_wme, text= 'Volt', variable= boolvar_setup_volt, background= bg_color_1, fg= '#0D325C')
-    cb_setup_volt.select()
+    checkbutton_setup_voltage= tk.Checkbutton(label_frame_load_file, text= 'Volt', variable= boolvar_setup_volt, background= background_color_1, fg= '#0D325C')
+    checkbutton_setup_voltage.select()
 
 
     # Extract Results Frame ===================================================================================================================================
 
-    label_frame_extract_result= tk.LabelFrame(window, text= 'Extract Results', background= bg_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
+    label_frame_extract_result= tk.LabelFrame(window, text= 'Extract Results', background= background_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
     intvar_result_type = tk.IntVar()   
-    rb_mean_result = tk.Radiobutton(label_frame_extract_result, text= 'Mean', variable= intvar_result_type, value= 1, background= bg_color_1, fg= '#0D325C', font= ('Candara', 10,), command= lambda: select1_change_label_text())
-    rb_minmax_result = tk.Radiobutton(label_frame_extract_result, text= 'Min & Max', variable= intvar_result_type, value= 2, background= bg_color_1, fg= '#0D325C', font= ('Candara', 10,), command= lambda: select2_change_label_text())
+    radiobutton_mean_result = tk.Radiobutton(label_frame_extract_result, text= 'Mean', variable= intvar_result_type, value= 1, background= background_color_1, fg= '#0D325C', font= ('Candara', 10,), command= lambda: change_label_text_mean_result())
+    radiobutton_minmax_result = tk.Radiobutton(label_frame_extract_result, text= 'Min & Max', variable= intvar_result_type, value= 2, background= background_color_1, fg= '#0D325C', font= ('Candara', 10,), command= lambda: change_label_text_minmax_result())
     intvar_result_type.set(value= 1)
 
-    b_get_results = tk.Button(label_frame_extract_result, text= 'Get Results (最多取12個)', width= 20, height= 2, command= lambda: mxr.get_results())
+    button_get_result = tk.Button(label_frame_extract_result, text= 'Get Results (最多取12個)', width= 20, height= 2, command= lambda: mxr.extract_result())
     
-    l_result_type_1 = tk.Label(label_frame_extract_result, text= 'Mean', background= bg_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
-    l_result_type_2 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
+    label_result_tag_1 = tk.Label(label_frame_extract_result, text= 'Mean', background= background_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
+    label_result_tag_2 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
 
-    l_result_dividing_line = tk.Label(label_frame_extract_result, text= '-------------------------------------------------', background= bg_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
+    # l_result_dividing_line = tk.Label(label_frame_extract_result, text= '-------------------------------------------------', background= bg_color_1, fg= '#516464', font= ('Candara', 15, 'bold'),)
 
-    l_meas_name_1 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_1 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_1.config(state=tk.DISABLED)
-    text_result2_1 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_1.config(state=tk.DISABLED)
+    label_measurement_name_1 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_1 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_1.config(state=tk.DISABLED)
+    text_result_minmax_1 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_1.config(state=tk.DISABLED)
     
-    l_meas_name_2 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_2 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_2.config(state=tk.DISABLED)
-    text_result2_2 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_2.config(state=tk.DISABLED)
+    label_measurement_name_2 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_2 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_2.config(state=tk.DISABLED)
+    text_result_minmax_2 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_2.config(state=tk.DISABLED)
     
-    l_meas_name_3 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_3 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_3.config(state=tk.DISABLED)
-    text_result2_3 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_3.config(state=tk.DISABLED)
+    label_measurement_name_3 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_3 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_3.config(state=tk.DISABLED)
+    text_result_minmax_3 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_3.config(state=tk.DISABLED)
     
-    l_meas_name_4 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_4 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_4.config(state=tk.DISABLED)
-    text_result2_4 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_4.config(state=tk.DISABLED)
+    label_measurement_name_4 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_4 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_4.config(state=tk.DISABLED)
+    text_result_minmax_4 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_4.config(state=tk.DISABLED)
     
-    l_meas_name_5 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_5 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_5.config(state=tk.DISABLED)
-    text_result2_5 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_5.config(state=tk.DISABLED)
+    label_measurement_name_5 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_5 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_5.config(state=tk.DISABLED)
+    text_result_minmax_5 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_5.config(state=tk.DISABLED)
     
-    l_meas_name_6 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_6 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_6.config(state=tk.DISABLED)
-    text_result2_6 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_6.config(state=tk.DISABLED)
+    label_measurement_name_6 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_6 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_6.config(state=tk.DISABLED)
+    text_result_minmax_6 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_6.config(state=tk.DISABLED)
     
-    l_meas_name_7 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_7 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_7.config(state=tk.DISABLED)
-    text_result2_7 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_7.config(state=tk.DISABLED)
+    label_measurement_name_7 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_7 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_7.config(state=tk.DISABLED)
+    text_result_minmax_7 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_7.config(state=tk.DISABLED)
     
-    l_meas_name_8 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_8 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_8.config(state=tk.DISABLED)
-    text_result2_8 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_8.config(state=tk.DISABLED)
+    label_measurement_name_8 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_8 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_8.config(state=tk.DISABLED)
+    text_result_minmax_8 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_8.config(state=tk.DISABLED)
     
-    l_meas_name_9 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_9 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_9.config(state=tk.DISABLED)
-    text_result2_9 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_9.config(state=tk.DISABLED)
+    label_measurement_name_9 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_9 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_9.config(state=tk.DISABLED)
+    text_result_minmax_9 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_9.config(state=tk.DISABLED)
     
-    l_meas_name_10 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_10 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_10.config(state=tk.DISABLED)
-    text_result2_10 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_10.config(state=tk.DISABLED)
+    label_measurement_name_10 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_10 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_10.config(state=tk.DISABLED)
+    text_result_minmax_10 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_10.config(state=tk.DISABLED)
     
-    l_meas_name_11 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_11 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_11.config(state=tk.DISABLED)
-    text_result2_11 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_11.config(state=tk.DISABLED)
+    label_measurement_name_11 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_11 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_11.config(state=tk.DISABLED)
+    text_result_minmax_11 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_11.config(state=tk.DISABLED)
     
-    l_meas_name_12 = tk.Label(label_frame_extract_result, text= '', background= bg_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
-    text_result1_12 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result1_12.config(state=tk.DISABLED)
-    text_result2_12 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
-    text_result2_12.config(state=tk.DISABLED)
+    label_measurement_name_12 = tk.Label(label_frame_extract_result, text= '', background= background_color_1, fg= '#516464', font= ('Candara', 11, 'bold'),)
+    text_result_mean_12 = tk.Text(label_frame_extract_result, width= 22, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_mean_12.config(state=tk.DISABLED)
+    text_result_minmax_12 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
+    text_result_minmax_12.config(state=tk.DISABLED)
     
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
-    label_frame_meas_item.grid(row= 0, column= 0, padx= 5, pady= 2, columnspan= 2, sticky= 'nsew')
+    label_frame_measurement_item.grid(row= 0, column= 0, padx= 5, pady= 2, columnspan= 2, sticky= 'nsew')
     label_frame_scale.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'nsew')
     label_frame_delta.grid(row= 1, column= 1, padx= 5, pady= 2, sticky= 'nsew')
-    label_frame_thres.grid(row= 2, column= 0, padx= 5, pady= 2, rowspan= 2, columnspan= 2, sticky= 'nsew')
+    label_frame_threshold.grid(row= 2, column= 0, padx= 5, pady= 2, rowspan= 2, columnspan= 2, sticky= 'nsew')
     label_frame_label.grid(row= 4, column= 0, padx= 5, pady= 2, columnspan= 2, sticky= 'nsew')
 
     label_frame_control.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'nsew')
-    label_frame_chan.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'nsew')
-    label_frame_save.grid(row= 2, column= 2, padx= 5, pady= 2, sticky= 'nsew')
-    label_frame_load_wme.grid(row= 3, column= 2, padx= 5, pady= 2, rowspan= 2, sticky= 'nsew')
+    label_frame_channel.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'nsew')
+    label_frame_save_file.grid(row= 2, column= 2, padx= 5, pady= 2, sticky= 'nsew')
+    label_frame_load_file.grid(row= 3, column= 2, padx= 5, pady= 2, rowspan= 2, sticky= 'nsew')
     
     label_frame_extract_result.grid(row= 0, column= 3, padx= 5, pady= 2, rowspan= 5, sticky= 'nsew')
 
     # Meas grid
-    b_freq.grid(row= 0, column= 0, padx= 5, pady= 4)
-    b_period.grid(row= 0, column= 1, padx= 5, pady= 4)
-    b_dutycycle.grid(row= 0, column= 2, padx= 5, pady= 4)
-    b_tSU.grid(row= 0, column= 3, padx= 5, pady= 4)
-    b_tH.grid(row= 1, column= 0, padx= 5, pady= 4)
-    b_tL.grid(row= 1, column= 1, padx= 5, pady= 4)
-    b_tR.grid(row= 1, column= 2, padx= 5, pady= 4)
-    b_tF.grid(row= 1, column= 3, padx= 5, pady= 4)
-    b_VIH.grid(row= 2, column= 0, padx= 5, pady= 4)
-    b_VIL.grid(row= 2, column= 1, padx= 5, pady= 4)
-    b_slewrate_tR.grid(row= 2, column= 2, padx= 5, pady= 4)
-    b_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 4)
-    b_VPP.grid(row= 3, column= 0, padx= 5, pady= 4)
-    b_PeriodtoPeriod.grid(row= 3, column= 1, padx= 5, pady= 4)
+    button_frequency.grid(row= 0, column= 0, padx= 5, pady= 4)
+    button_period.grid(row= 0, column= 1, padx= 5, pady= 4)
+    button_dutycycle.grid(row= 0, column= 2, padx= 5, pady= 4)
+    button_delta_time.grid(row= 0, column= 3, padx= 5, pady= 4)
+    button_tH.grid(row= 1, column= 0, padx= 5, pady= 4)
+    button_tL.grid(row= 1, column= 1, padx= 5, pady= 4)
+    button_tR.grid(row= 1, column= 2, padx= 5, pady= 4)
+    button_tF.grid(row= 1, column= 3, padx= 5, pady= 4)
+    button_VIH.grid(row= 2, column= 0, padx= 5, pady= 4)
+    button_VIL.grid(row= 2, column= 1, padx= 5, pady= 4)
+    button_slewrate_tR.grid(row= 2, column= 2, padx= 5, pady= 4)
+    button_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 4)
+    button_VPP.grid(row= 3, column= 0, padx= 5, pady= 4)
+    button_VMAX.grid(row= 3, column= 1, padx= 5, pady= 4)
+    button_VMIN.grid(row= 3, column= 2, padx= 5, pady= 4)
+    button_PeriodtoPeriod.grid(row= 3, column= 3, padx= 5, pady= 4)
 
     # Scale grid
-    l_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    cbb_volt_scale.grid(row= 0, column= 1, padx= 5, pady= 4)
-    l_volt_offset.grid(row= 1, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    cbb_volt_offset.grid(row= 1, column= 1, padx= 5, pady= 4)
-    b_volt_scale.grid(row= 2, column= 0, padx= 5, pady= 4, sticky= 'e')
-    l_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    cbb_trigger_level.grid(row= 3, column= 1, padx= 5, pady= 4)
-    l_trigger_chan.grid(row= 4, column= 0, padx= 5, pady= 4, sticky= 'w') 
-    cb_trigger_chan.grid(row= 4, column= 1, padx= 5, pady= 4)
-    b_trigger_check.grid(row= 5, column= 0, padx= 5, pady= 4, sticky= 'e')
-    l_time_scale.grid(row= 0, column= 2, padx= 5, pady= 4, sticky= 'w') 
-    e_time_scale.grid(row= 0, column= 3, padx= 5, pady= 4)
-    l_time_offset.grid(row= 1, column= 2, padx= 5, pady= 4, sticky= 'w') 
-    e_time_offset.grid(row= 1, column= 3, padx= 5, pady= 4)
-    b_time_scale_check.grid(row= 2, column= 2, padx= 5, pady= 4)
-    b_time_position_check.grid(row= 2, column= 3, padx= 5, pady= 4)
-    l_wfm_intensity.grid(row= 3, column= 2, padx= 5, pady= 4, sticky= 'w')
-    e_wfm_intensity.grid(row= 3, column= 3, padx= 5, pady= 4)
-    b_wfm_intensity.grid(row= 4, column= 3, padx= 5, pady= 4, sticky= 'e')
-    b_set_intensity_50.grid(row= 5, column= 3, padx= 5, pady= 4, sticky= 'e')
+    label_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    combobox_voltage_scale.grid(row= 0, column= 1, padx= 5, pady= 4)
+    label_voltage_offset.grid(row= 1, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    combobox_voltage_offset.grid(row= 1, column= 1, padx= 5, pady= 4)
+    button_voltage_scale.grid(row= 2, column= 0, padx= 5, pady= 4, sticky= 'e')
+    label_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    combobox_trigger_level.grid(row= 3, column= 1, padx= 5, pady= 4)
+    label_trigger_channel.grid(row= 4, column= 0, padx= 5, pady= 4, sticky= 'w') 
+    combobox_trigger_channel.grid(row= 4, column= 1, padx= 5, pady= 4)
+    button_trigger_check.grid(row= 5, column= 0, padx= 5, pady= 4, sticky= 'e')
+    label_timebase_scale.grid(row= 0, column= 2, padx= 5, pady= 4, sticky= 'w') 
+    entry_timebase_scale.grid(row= 0, column= 3, padx= 5, pady= 4)
+    label_timebase_offset.grid(row= 1, column= 2, padx= 5, pady= 4, sticky= 'w') 
+    entry_timebase_offset.grid(row= 1, column= 3, padx= 5, pady= 4)
+    button_timebase_scale_check.grid(row= 2, column= 2, padx= 5, pady= 4)
+    button_timebase_offset_check.grid(row= 2, column= 3, padx= 5, pady= 4)
+    label_waveform_intensity.grid(row= 3, column= 2, padx= 5, pady= 4, sticky= 'w')
+    entry_waveform_intensity.grid(row= 3, column= 3, padx= 5, pady= 4)
+    button_waveform_intensity.grid(row= 4, column= 3, padx= 5, pady= 4, sticky= 'e')
+    button_set_intensity_50.grid(row= 5, column= 3, padx= 5, pady= 4, sticky= 'e')
 
     # b_meas_all_edge.grid(row= 5, column= 2, padx= 5, pady= 4)
 
     # Delta grid
-    l_start.grid(row= 0, column= 0, padx= 5, pady= 5)
-    cb_start_rf.grid(row= 1, column= 0, padx=5, pady= 5)
-    cb_start_num.grid(row= 2, column= 0, padx=5, pady= 5)
-    cb_start_pos.grid(row= 3, column= 0, padx=5, pady= 5)
-    l_stop.grid(row= 0, column= 1, padx= 5, pady= 5)
-    cb_stop_rf.grid(row= 1, column= 1, padx=5, pady= 5)
-    cb_stop_num.grid(row= 2, column= 1, padx=5, pady= 5)
-    cb_stop_pos.grid(row= 3, column= 1, padx=5, pady= 5)
-    b_edge_switch.grid(row= 4, column= 0, padx= 5, pady= 5)
-    b_pos_switch.grid(row= 4, column= 1, padx= 5, pady= 5)
+    label_start.grid(row= 0, column= 0, padx= 5, pady= 5)
+    combobox_start_risefall.grid(row= 1, column= 0, padx=5, pady= 5)
+    combobox_start_N.grid(row= 2, column= 0, padx=5, pady= 5)
+    combobox_start_position.grid(row= 3, column= 0, padx=5, pady= 5)
+    label_stop.grid(row= 0, column= 1, padx= 5, pady= 5)
+    combobox_stop_risefall.grid(row= 1, column= 1, padx=5, pady= 5)
+    combobox_stop_N.grid(row= 2, column= 1, padx=5, pady= 5)
+    combobox_stop_position.grid(row= 3, column= 1, padx=5, pady= 5)
+    button_edge_switch.grid(row= 4, column= 0, padx= 5, pady= 5)
+    button_position_switch.grid(row= 4, column= 1, padx= 5, pady= 5)
 
     # Thres grid
-    rb_gen_threshold_1.grid(row= 0, column= 0, padx= 5, pady= 3)
-    cbb_gen_top_percent.grid(row= 0, column= 1, sticky= 'w')
-    l_gen_threshold_1.grid(row= 1, column= 0, padx= 5, pady= 3)
-    cbb_gen_mid_percent.grid(row= 1, column= 1, sticky= 'w')
-    l_gen_threshold_2.grid(row= 2, column= 0, padx= 5, pady= 3)
-    cbb_gen_base_percent.grid(row= 2, column= 1, sticky= 'w')
-    rb_gen_threshold_2.grid(row= 3, column= 0, padx= 5, pady= 3) 
-    cbb_gen_top.grid(row= 3, column= 1, sticky= 'w')
-    l_gen_threshold_4.grid(row= 4, column= 0, padx= 5, pady= 3) 
-    cbb_gen_mid.grid(row= 4, column= 1, sticky= 'w')
-    l_gen_threshold_5.grid(row= 5, column= 0, padx= 5, pady= 3) 
-    cbb_gen_base.grid(row= 5, column= 1, sticky= 'w')
-    b_gen_check.grid(row= 0, column= 2, padx= 5, pady= 3, sticky= 'e')
-    rb_rf_threshold_1.grid(row= 0, column= 3, padx= 5, pady= 3)
-    l_rf_threshold_1.grid(row= 1, column= 3, padx= 5, pady= 3) 
-    cbb_rf_top_percent.grid(row= 0, column= 4, sticky= 'w')
-    cbb_rf_base_percent.grid(row= 1, column= 4, sticky= 'w')
-    rb_rf_threshold_2.grid(row= 2, column= 3, padx= 5, pady= 3) 
-    l_rf_threshold_2.grid(row= 3, column= 3, padx= 5, pady= 3) 
-    cbb_rf_top.grid(row= 2, column= 4, sticky= 'w')
-    cbb_rf_base.grid(row= 3, column= 4, sticky= 'w')
-    b_rf_check.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e', columnspan= 2)
+    radiobutton_general_percent_top.grid(row= 0, column= 0, padx= 5, pady= 3)
+    combobox_general_percent_top.grid(row= 0, column= 1, sticky= 'w')
+    label_general_percent_middle.grid(row= 1, column= 0, padx= 5, pady= 3)
+    combobox_general_percent_middle.grid(row= 1, column= 1, sticky= 'w')
+    label_general_percent_base.grid(row= 2, column= 0, padx= 5, pady= 3)
+    combobox_general_percent_base.grid(row= 2, column= 1, sticky= 'w')
+    radiobutton_general_value_top.grid(row= 3, column= 0, padx= 5, pady= 3) 
+    combobox_general_value_top.grid(row= 3, column= 1, sticky= 'w')
+    label_general_value_middle.grid(row= 4, column= 0, padx= 5, pady= 3) 
+    combobox_general_value_middle.grid(row= 4, column= 1, sticky= 'w')
+    label_general_value_base.grid(row= 5, column= 0, padx= 5, pady= 3) 
+    combobox_general_value_base.grid(row= 5, column= 1, sticky= 'w')
+    button_general_threshold_check.grid(row= 0, column= 2, padx= 5, pady= 3, sticky= 'e')
+    radiobutton_risefall_percent_top.grid(row= 0, column= 3, padx= 5, pady= 3)
+    label_risefall_percent_base.grid(row= 1, column= 3, padx= 5, pady= 3) 
+    combobox_risefall_percent_top.grid(row= 0, column= 4, sticky= 'w')
+    combobox_risefall_percent_base.grid(row= 1, column= 4, sticky= 'w')
+    radiobutton_risefall_value_top.grid(row= 2, column= 3, padx= 5, pady= 3) 
+    label_risefall_value_base.grid(row= 3, column= 3, padx= 5, pady= 3) 
+    combobox_risefall_value_top.grid(row= 2, column= 4, sticky= 'w')
+    combobox_risefall_value_base.grid(row= 3, column= 4, sticky= 'w')
+    button_risefall_threshold_check.grid(row= 0, column= 5, padx= 5, pady= 3, sticky= 'e', columnspan= 2)
 
-    l_sampling_rate.grid(row= 4, column= 3)
-    e_sampling_rate.grid(row= 4, column= 4)
-    b_sampling_rate_check.grid(row= 4, column= 5)
-    b_sampling_rate_auto.grid(row= 4, column= 6)
-    l_memory_depth.grid(row= 5, column= 3)
-    e_memory_depth.grid(row= 5, column= 4)
-    b_memory_depth_check.grid(row= 5, column= 5)
-    b_memory_depth_auto.grid(row= 5, column= 6)
+    label_sampling_rate.grid(row= 4, column= 3)
+    entry_sampling_rate.grid(row= 4, column= 4)
+    button_sampling_rate_check.grid(row= 4, column= 5)
+    button_sampling_rate_automode.grid(row= 4, column= 6)
+    label_memory_depth.grid(row= 5, column= 3)
+    entry_memory_depth.grid(row= 5, column= 4)
+    button_memory_depth_check.grid(row= 5, column= 5)
+    button_memory_depth_automode.grid(row= 5, column= 6)
 
     # Label grid
-    rb_label.grid(row= 0, column= 0, padx= 5, sticky= 'w')
-    rb_bookmark.grid(row= 0, column= 1, padx= 5, sticky= 'w')
+    radiobutton_label.grid(row= 0, column= 0, padx= 5, sticky= 'w')
+    radiobutton_bookmark.grid(row= 0, column= 1, padx= 5, sticky= 'w')
 
-    e_label_1.grid(row= 1, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable1.grid(row= 1, column= 2, padx= 5, pady= 3)
-    b_del_label1.grid(row= 1, column= 3, padx= 5, pady= 3)
-    e_label_2.grid(row= 2, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable2.grid(row= 2, column= 2, padx= 5, pady= 3)
-    b_del_label2.grid(row= 2, column= 3, padx= 5, pady= 3)
-    e_label_3.grid(row= 3, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable3.grid(row= 3, column= 2, padx= 5, pady= 3)
-    b_del_label3.grid(row= 3, column= 3, padx= 5, pady= 3)
-    e_label_4.grid(row= 4, column= 0, padx= 5, pady= 3, columnspan= 2)
-    b_lable4.grid(row= 4, column= 2, padx= 5, pady= 3)
-    b_del_label4.grid(row= 4, column= 3, padx= 5, pady= 3)
+    entey_label_1.grid(row= 1, column= 0, padx= 5, pady= 3, columnspan= 2)
+    button_lable1.grid(row= 1, column= 2, padx= 5, pady= 3)
+    button_delete_label_1.grid(row= 1, column= 3, padx= 5, pady= 3)
+    entry_label_2.grid(row= 2, column= 0, padx= 5, pady= 3, columnspan= 2)
+    button_lable_2.grid(row= 2, column= 2, padx= 5, pady= 3)
+    button_delete_label_2.grid(row= 2, column= 3, padx= 5, pady= 3)
+    entry_label_3.grid(row= 3, column= 0, padx= 5, pady= 3, columnspan= 2)
+    button_lable_3.grid(row= 3, column= 2, padx= 5, pady= 3)
+    button_delete_label_3.grid(row= 3, column= 3, padx= 5, pady= 3)
+    entry_label_4.grid(row= 4, column= 0, padx= 5, pady= 3, columnspan= 2)
+    button_lable_4.grid(row= 4, column= 2, padx= 5, pady= 3)
+    button_delete_label_4.grid(row= 4, column= 3, padx= 5, pady= 3)
 
-    e_label_5.grid(row= 1, column= 4, padx= 5, pady= 3, sticky= 'e')
-    b_lable5.grid(row= 1, column= 5, padx= 5, pady= 3, sticky= 'e')
-    b_del_label5.grid(row= 1, column= 6, padx= 5, pady= 3, sticky= 'e')
-    e_label_6.grid(row= 2, column= 4, padx= 5, pady= 3, sticky= 'e')
-    b_lable6.grid(row= 2, column= 5, padx= 5, pady= 3, sticky= 'e')
-    b_del_label6.grid(row= 2, column= 6, padx= 5, pady= 3, sticky= 'e')
-    e_label_7.grid(row= 3, column= 4, padx= 5, pady= 3, sticky= 'e')
-    b_lable7.grid(row= 3, column= 5, padx= 5, pady= 3, sticky= 'e')
-    b_del_label7.grid(row= 3, column= 6, padx= 5, pady= 3, sticky= 'e')
-    e_label_8.grid(row= 4, column= 4, padx= 5, pady= 3, sticky= 'e')
-    b_lable8.grid(row= 4, column= 5, padx= 5, pady= 3, sticky= 'e')
-    b_del_label8.grid(row= 4, column= 6, padx= 5, pady= 3, sticky= 'e')
+    entry_label_5.grid(row= 1, column= 4, padx= 5, pady= 3, sticky= 'e')
+    button_lable_5.grid(row= 1, column= 5, padx= 5, pady= 3, sticky= 'e')
+    button_delete_label_5.grid(row= 1, column= 6, padx= 5, pady= 3, sticky= 'e')
+    entry_label_6.grid(row= 2, column= 4, padx= 5, pady= 3, sticky= 'e')
+    button_lable_6.grid(row= 2, column= 5, padx= 5, pady= 3, sticky= 'e')
+    button_delete_label_6.grid(row= 2, column= 6, padx= 5, pady= 3, sticky= 'e')
+    entry_label_7.grid(row= 3, column= 4, padx= 5, pady= 3, sticky= 'e')
+    button_lable_7.grid(row= 3, column= 5, padx= 5, pady= 3, sticky= 'e')
+    button_delete_label_7.grid(row= 3, column= 6, padx= 5, pady= 3, sticky= 'e')
+    entry_label_8.grid(row= 4, column= 4, padx= 5, pady= 3, sticky= 'e')
+    button_lable_8.grid(row= 4, column= 5, padx= 5, pady= 3, sticky= 'e')
+    button_delete_label_8.grid(row= 4, column= 6, padx= 5, pady= 3, sticky= 'e')
 
     # Control grid
-    b_run.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2)
-    b_stop.grid(row= 0, column= 1, padx= 5, pady= 3, rowspan= 2)
-    b_single.grid(row= 0, column= 2, padx= 5, pady= 3, rowspan= 2)
-    b_autoscale.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2)
-    b_default.grid(row= 2, column= 1, padx= 5, pady= 3, rowspan= 2)
-    b_clear_display.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2)
-    b_trigger.grid(row= 4, column= 0, padx= 5, pady= 3, rowspan= 2)
-    b_trig_slope.grid(row= 4, column= 1, padx= 5, pady= 3, rowspan= 2)
-    b_button_disable.grid(row= 4, column= 2, padx= 5, pady= 3, rowspan= 2)
-    b_del.grid(row= 6, column= 0, padx= 5, pady= 3, rowspan= 2)
-    b_add_marker.grid(row= 6, column= 1, padx= 5, pady= 3, rowspan= 2)
-    b_del_marker.grid(row= 6, column= 2, padx= 5, pady= 3, rowspan= 2)
-    cb_marker_1.grid(row= 0, column= 4, padx= 5) 
-    cb_marker_2.grid(row= 1, column= 4, padx= 5) 
-    cb_marker_3.grid(row= 2, column= 4, padx= 5) 
-    cb_marker_4.grid(row= 3, column= 4, padx= 5) 
-    cb_marker_5.grid(row= 4, column= 4, padx= 5) 
-    cb_marker_6.grid(row= 5, column= 4, padx= 5) 
-    cb_marker_7.grid(row= 0, column= 5, sticky= 'w',) 
-    cb_marker_8.grid(row= 1, column= 5, sticky= 'w',) 
-    cb_marker_9.grid(row= 2, column= 5, sticky= 'w',) 
-    cb_marker_10.grid(row= 3, column= 5, sticky= 'w',) 
-    cb_marker_11.grid(row= 4, column= 5, sticky= 'w',) 
-    cb_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
-    cb_marker_color.grid(row= 7, column= 4, padx= 5, pady= 3, columnspan= 2, sticky= 'w')
+    button_run.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2)
+    button_stop.grid(row= 0, column= 1, padx= 5, pady= 3, rowspan= 2)
+    button_single.grid(row= 0, column= 2, padx= 5, pady= 3, rowspan= 2)
+    button_autoscale.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2)
+    button_default.grid(row= 2, column= 1, padx= 5, pady= 3, rowspan= 2)
+    button_clear_display.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2)
+    button_trigger.grid(row= 4, column= 0, padx= 5, pady= 3, rowspan= 2)
+    button_trigger_slope.grid(row= 4, column= 1, padx= 5, pady= 3, rowspan= 2)
+    button_disable_button.grid(row= 4, column= 2, padx= 5, pady= 3, rowspan= 2)
+    button_delete_measurement.grid(row= 6, column= 0, padx= 5, pady= 3, rowspan= 2)
+    button_add_marker.grid(row= 6, column= 1, padx= 5, pady= 3, rowspan= 2)
+    button_delete_marker.grid(row= 6, column= 2, padx= 5, pady= 3, rowspan= 2)
+    checkbutton_marker_1.grid(row= 0, column= 4, padx= 5) 
+    checkbutton_marker_2.grid(row= 1, column= 4, padx= 5) 
+    checkbutton_marker_3.grid(row= 2, column= 4, padx= 5) 
+    checkbutton_marker_4.grid(row= 3, column= 4, padx= 5) 
+    checkbutton_marker_5.grid(row= 4, column= 4, padx= 5) 
+    checkbutton_marker_6.grid(row= 5, column= 4, padx= 5) 
+    checkbutton_marker_7.grid(row= 0, column= 5, sticky= 'w',) 
+    checkbutton_marker_8.grid(row= 1, column= 5, sticky= 'w',) 
+    checkbutton_marker_9.grid(row= 2, column= 5, sticky= 'w',) 
+    checkbutton_marker_10.grid(row= 3, column= 5, sticky= 'w',) 
+    checkbutton_marker_11.grid(row= 4, column= 5, sticky= 'w',) 
+    checkbutton_marker_12.grid(row= 5, column= 5, sticky= 'w',) 
+    checkbutton_marker_color.grid(row= 7, column= 4, padx= 5, pady= 3, columnspan= 2, sticky= 'w')
 
     # Chan grid
-    b_Chan1.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_Chan2.grid(row= 0, column= 2, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_Chan3.grid(row= 0, column= 4, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_Chan4.grid(row= 0, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe1.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe2.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe3.grid(row= 2, column= 4, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    b_WMe4.grid(row= 2, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
-    cb_delta_name.grid(row= 4, column= 2, padx= 5, pady= 3, sticky= 'w', columnspan= 3)
-    cbb_delta_name.grid(row= 4, column= 4, sticky= 'e')
-    rb_ch_single.grid(row= 5, column= 0, sticky= 'e')
-    cbb_ch_single.grid(row= 5, column= 1, sticky= 'w')
-    rb_ch_delta.grid(row= 5, column= 2, sticky= 'e')
-    cbb_ch_delta_start.grid(row= 5, column= 3, sticky= 'w')
-    l_arrow.grid(row= 6, column= 2, sticky= 'e')
-    l_ch_delta_stop.grid(row= 7, column= 2, sticky= 'e')
-    cbb_ch_delta_stop.grid(row= 7, column= 3, sticky= 'w')
-    b_chan_switch.grid(row= 6, column= 4, sticky= 'e')
+    button_channel_1.grid(row= 0, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    button_channel_2.grid(row= 0, column= 2, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    button_channel_3.grid(row= 0, column= 4, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    button_channel_4.grid(row= 0, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    button_wmemory_1.grid(row= 2, column= 0, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    button_wmemory_2.grid(row= 2, column= 2, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    button_wmemory_3.grid(row= 2, column= 4, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    button_wmemory_4.grid(row= 2, column= 6, padx= 5, pady= 3, rowspan= 2, columnspan= 2, sticky= 'w')
+    checkbutton_delta_name.grid(row= 4, column= 2, padx= 5, pady= 3, sticky= 'w', columnspan= 3)
+    combobox_delta_name.grid(row= 4, column= 4, sticky= 'e')
+    radiobutton_channel_single.grid(row= 5, column= 0, sticky= 'e')
+    combobox_channel_single.grid(row= 5, column= 1, sticky= 'w')
+    radiobutton_channel_delta.grid(row= 5, column= 2, sticky= 'e')
+    combobox_channel_delta_start.grid(row= 5, column= 3, sticky= 'w')
+    label_arrow.grid(row= 6, column= 2, sticky= 'e')
+    label_channel_delta_stop.grid(row= 7, column= 2, sticky= 'e')
+    combobox_channel_delta_stop.grid(row= 7, column= 3, sticky= 'w')
+    button_channel_switch.grid(row= 6, column= 4, sticky= 'e')
 
     # Save grid
-    e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 1)
-    l_image_folder.grid(row=0, column= 1, columnspan= 2, sticky= 'w', padx= 5, pady= 1)
-    rb_img_desktop_path.grid(row= 0, column= 2, padx= 5, pady= 1, sticky= 'e')
-    rb_img_server_path.grid(row= 0, column= 3, padx= 5, pady= 1, sticky= 'w')
-    e_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 1)
-    b_image_pc_browse.grid(row= 1, column= 1, sticky= 'w', padx= 5, pady= 1)
-    l_image_pc_folder.grid(row= 1, column= 2, columnspan= 3, sticky= 'w', padx= 5, pady= 1)
-    e_image.grid(row= 2, column= 0, padx= 5, pady= 1)
-    l_imagename.grid(row= 2, column= 1, padx= 5, pady= 1, sticky= 'w')
-    b_image_save_scope.grid(row= 2, column= 2, padx= 5, pady= 1, sticky= 'w')
-    b_image_save_pc.grid(row= 2, column= 3, sticky= 'w', padx= 5, pady= 1, columnspan= 2)
+    # e_image_folder.grid(row= 0, column= 0, padx= 5, pady= 1)
+    # l_image_folder.grid(row=0, column= 1, columnspan= 2, sticky= 'w', padx= 5, pady= 1)
+    # rb_img_desktop_path.grid(row= 0, column= 2, padx= 5, pady= 1, sticky= 'e')
+    # rb_img_server_path.grid(row= 0, column= 3, padx= 5, pady= 1, sticky= 'w')
+    entry_image_pc_folder.grid(row= 1, column= 0, padx= 5, pady= 1)
+    button_image_pc_browse.grid(row= 1, column= 1, sticky= 'w', padx= 5, pady= 1)
+    label_image_pc_folder.grid(row= 1, column= 2, columnspan= 3, sticky= 'w', padx= 5, pady= 1)
+    entry_image.grid(row= 2, column= 0, padx= 5, pady= 1)
+    label_image_name.grid(row= 2, column= 1, padx= 5, pady= 1, sticky= 'w')
+    # b_image_save_scope.grid(row= 2, column= 2, padx= 5, pady= 1, sticky= 'w')
+    button_save_image_pc.grid(row= 2, column= 2, sticky= 'w', padx= 5, pady= 1, columnspan= 2)
     
-    l_divider.grid(row= 3, column= 0, columnspan= 4)
+    label_divider.grid(row= 3, column= 0, columnspan= 4)
 
-    rb_Wme.grid(row= 4, column= 0, padx= 5, sticky= 'w')
-    rb_Setup.grid(row= 4, column= 0, padx= 5)
+    radiobutton_wmemory.grid(row= 4, column= 0, padx= 5, sticky= 'w')
+    radiobutton_setup.grid(row= 4, column= 0, padx= 5)
 
-    e_WMe_folder.grid(row= 5, column= 0, padx= 5, pady= 1)
-    l_WMe_folder.grid(row=5, column= 1, sticky= 'w', padx= 5, pady= 1)
-    rb_wme_desktop_path.grid(row= 5, column= 2, padx= 5, pady= 1, sticky= 'e')
-    rb_wme_server_path.grid(row= 5, column= 3, padx= 5, pady= 1, sticky= 'w')
-    e_WMe_pc_folder.grid(row= 6, column= 0, padx= 5, pady= 1)
-    b_WMe_pc_browse.grid(row= 6, column= 1, sticky= 'w', padx= 5, pady= 1)
-    l_WMe_pc_folder.grid(row= 6, column= 2, sticky= 'w', padx= 5, pady= 1, columnspan= 2)
-    e_other_file.grid(row= 7, column= 0, padx= 5, pady= 1)
-    l_other_filename.grid(row= 7, column= 1, sticky= 'w', padx= 5, pady= 1)
-    b_other_file_save_scope.grid(row= 7, column= 2, padx= 5, pady= 1, sticky= 'w')
-    b_other_file_save_pc.grid(row= 7, column= 3, padx= 5, pady= 1, sticky= 'w')
+    entry_wmemory_folder.grid(row= 5, column= 0, padx= 5, pady= 1)
+    label_wmemory_folder.grid(row=5, column= 1, sticky= 'w', padx= 5, pady= 1)
+    radiobutton_wmemory_desktop_path.grid(row= 5, column= 2, padx= 5, pady= 1, sticky= 'e')
+    radiobutton_wmemory_server_path.grid(row= 5, column= 3, padx= 5, pady= 1, sticky= 'w')
+    entry_wmemory_pc_folder.grid(row= 6, column= 0, padx= 5, pady= 1)
+    button_wmemory_pc_browse.grid(row= 6, column= 1, sticky= 'w', padx= 5, pady= 1)
+    label_wmemory_pc_folder.grid(row= 6, column= 2, sticky= 'w', padx= 5, pady= 1, columnspan= 2)
+    entry_other_file.grid(row= 7, column= 0, padx= 5, pady= 1)
+    label_other_filename.grid(row= 7, column= 1, sticky= 'w', padx= 5, pady= 1)
+    button_other_file_save_scope.grid(row= 7, column= 2, padx= 5, pady= 1, sticky= 'w')
+    button_other_file_save_pc.grid(row= 7, column= 3, padx= 5, pady= 1, sticky= 'w')
     
     #LoadWMe grid
-    e_WMe1.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
-    b_WMe1_load.grid(row=0, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear1.grid(row= 0, column= 5, padx= 5, pady= 2, sticky= 'w')
-    e_WMe2.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
-    b_WMe2_load.grid(row=1, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear2.grid(row= 1, column= 5, padx= 5, pady= 2, sticky= 'w')
-    e_WMe3.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
-    b_WMe3_load.grid(row=2, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear3.grid(row= 2, column= 5, padx= 5, pady= 2, sticky= 'w')
-    e_WMe4.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
-    b_WMe4_load.grid(row=3, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
-    b_wme_clear4.grid(row= 3, column= 5, padx= 5, pady= 2, sticky= 'w')
-    cbb_setupfile_interface.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
-    cbb_setupfile_class.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
-    cbb_setup.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'w')
-    cb_setup_timebase.grid(row= 4, column= 4, pady= 2, sticky= 'w')
-    cb_setup_label.grid(row= 4, column= 5, pady= 2, sticky= 'w')
-    cb_setup_volt.grid(row= 4, column= 6, pady= 2, sticky= 'w')
+    entry_wmemory_1.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    button_load_wmemory_1.grid(row=0, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    button_clear_wmemory_1.grid(row= 0, column= 5, padx= 5, pady= 2, sticky= 'w')
+    entry_wmemory_2.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    button_load_wmemory_2.grid(row=1, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    button_clear_wmemory_2.grid(row= 1, column= 5, padx= 5, pady= 2, sticky= 'w')
+    entry_wmemory_3.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    button_load_wmemory_3.grid(row=2, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    button_clear_wmemory_3.grid(row= 2, column= 5, padx= 5, pady= 2, sticky= 'w')
+    entry_wmemory_4.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'w', columnspan= 3)
+    button_load_wmemory_4.grid(row=3, column= 3, padx= 5, pady= 2, columnspan= 2, sticky= 'w')
+    button_clear_wmemory_4.grid(row= 3, column= 5, padx= 5, pady= 2, sticky= 'w')
+    combobox_setupfile_interface.grid(row= 4, column= 0, padx= 5, pady= 2, sticky= 'w')
+    combobox_setupfile_class.grid(row= 4, column= 1, padx= 5, pady= 2, sticky= 'w')
+    combobox_setup.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'w')
+    checkbutton_setup_timebase.grid(row= 4, column= 4, pady= 2, sticky= 'w')
+    checkbutton_setup_label.grid(row= 4, column= 5, pady= 2, sticky= 'w')
+    checkbutton_setup_voltage.grid(row= 4, column= 6, pady= 2, sticky= 'w')
 
     #Extract Results grid
-    rb_mean_result.grid(row= 0, column= 0, padx= 5, pady= 2)
-    rb_minmax_result.grid(row= 0, column= 1, padx= 5, pady= 2)
-    b_get_results.grid(row= 1, column= 0, padx= 5, pady= 2, columnspan= 2)
-    l_result_type_1.grid(row= 2, column= 0)
-    l_result_type_2.grid(row= 2, column= 1)
+    radiobutton_mean_result.grid(row= 0, column= 0, padx= 5, pady= 2)
+    radiobutton_minmax_result.grid(row= 0, column= 1, padx= 5, pady= 2)
+    button_get_result.grid(row= 1, column= 0, padx= 5, pady= 2, columnspan= 2)
+    label_result_tag_1.grid(row= 2, column= 0)
+    label_result_tag_2.grid(row= 2, column= 1)
     # l_result_dividing_line.grid(row= 3, column= 0, columnspan= 2)
-    l_meas_name_1.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_1.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_1.grid(row= 5, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_2.grid(row= 6, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_2.grid(row= 7, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_2.grid(row= 7, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_3.grid(row= 8, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_3.grid(row= 9, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_3.grid(row= 9, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_4.grid(row= 10, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_4.grid(row= 11, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_4.grid(row= 11, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_5.grid(row= 12, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_5.grid(row= 13, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_5.grid(row= 13, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_6.grid(row= 14, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_6.grid(row= 15, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_6.grid(row= 15, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_7.grid(row= 16, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_7.grid(row= 17, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_7.grid(row= 17, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_8.grid(row= 18, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_8.grid(row= 19, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_8.grid(row= 19, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_9.grid(row= 20, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_9.grid(row= 21, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_9.grid(row= 21, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_10.grid(row= 22, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_10.grid(row= 23, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_10.grid(row= 23, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_11.grid(row= 24, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_11.grid(row= 25, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_11.grid(row= 25, column= 1, sticky= 'w', padx= 5, pady= 2)
-    l_meas_name_12.grid(row= 26, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
-    text_result1_12.grid(row= 27, column= 0, sticky= 'w', padx= 5, pady= 2)
-    text_result2_12.grid(row= 27, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_1.grid(row= 4, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_1.grid(row= 5, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_1.grid(row= 5, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_2.grid(row= 6, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_2.grid(row= 7, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_2.grid(row= 7, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_3.grid(row= 8, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_3.grid(row= 9, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_3.grid(row= 9, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_4.grid(row= 10, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_4.grid(row= 11, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_4.grid(row= 11, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_5.grid(row= 12, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_5.grid(row= 13, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_5.grid(row= 13, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_6.grid(row= 14, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_6.grid(row= 15, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_6.grid(row= 15, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_7.grid(row= 16, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_7.grid(row= 17, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_7.grid(row= 17, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_8.grid(row= 18, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_8.grid(row= 19, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_8.grid(row= 19, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_9.grid(row= 20, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_9.grid(row= 21, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_9.grid(row= 21, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_10.grid(row= 22, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_10.grid(row= 23, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_10.grid(row= 23, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_11.grid(row= 24, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_11.grid(row= 25, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_11.grid(row= 25, column= 1, sticky= 'w', padx= 5, pady= 2)
+    label_measurement_name_12.grid(row= 26, column= 0, sticky= 'w', padx= 5, pady= 2, columnspan= 2)
+    text_result_mean_12.grid(row= 27, column= 0, sticky= 'w', padx= 5, pady= 2)
+    text_result_minmax_12.grid(row= 27, column= 1, sticky= 'w', padx= 5, pady= 2)
 
-    ToolTip(cbb_volt_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_volt_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(b_wfm_intensity, '可用滑鼠滾輪調整數字大小')
-    ToolTip(cb_start_rf, '嗚啦!')
-    ToolTip(cb_start_num, '呀哈!')
-    ToolTip(cb_stop_rf, '噗嚕!')
-    ToolTip(cbb_gen_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_gen_mid_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_gen_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_gen_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_gen_mid, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_gen_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_rf_top_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_rf_base_percent, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_rf_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(cbb_rf_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
-    ToolTip(e_label_4, '133 221 333 123 111')
-    ToolTip(e_label_6, '電倉鼠!')
-    ToolTip(b_autoscale, '好的不得了')
-    ToolTip(b_clear_display, '嗚嚕嗚啦')
-    ToolTip(b_default, '6666')
-    ToolTip(cb_marker_2, '防塵套不要亂丟')
-    ToolTip(cb_marker_9, '花椒串')
-    ToolTip(cbb_ch_single, '累')
-    ToolTip(cbb_ch_delta_start, '隨波逐流的')
-    ToolTip(cbb_ch_delta_stop, '人生')
-    ToolTip(e_image_folder, '自己打字，按按鈕會幫你新增資料夾')
-    ToolTip(e_image, '嗚哩哩')
-    ToolTip(e_image_pc_folder, '可以直接存電腦啦~')
-    ToolTip(e_WMe_folder, '自己打字，按按鈕會幫你新增資料夾')
-    ToolTip(e_other_file, 'Channel要選對欸')
-    ToolTip(e_WMe_pc_folder, '示波器有沒有先存檔ㄏㄚˋ')
-    ToolTip(e_WMe2, '呀哈呀哈')
-    ToolTip(e_WMe4, '噗嚕!')
+    ToolTip(combobox_voltage_scale, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_voltage_offset, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_trigger_level, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(button_waveform_intensity, '可用滑鼠滾輪調整數字大小')
+    ToolTip(combobox_start_risefall, '嗚啦!')
+    ToolTip(combobox_start_N, '呀哈!')
+    ToolTip(combobox_stop_risefall, '噗嚕!')
+    ToolTip(combobox_general_percent_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_general_percent_middle, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_general_percent_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_general_value_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_general_value_middle, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_general_value_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_risefall_percent_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_risefall_percent_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_risefall_value_top, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(combobox_risefall_value_base, '可用滑鼠滾輪選擇\n新增選項: 輸入後按Enter\n刪除選項: 選擇後按Delete')
+    ToolTip(entry_label_4, '133 221 333 123 111')
+    ToolTip(entry_label_6, '電倉鼠!')
+    ToolTip(button_autoscale, '好的不得了')
+    ToolTip(button_clear_display, '嗚嚕嗚啦')
+    ToolTip(button_default, '6666')
+    ToolTip(checkbutton_marker_2, '防塵套不要亂丟')
+    ToolTip(checkbutton_marker_9, '花椒串')
+    ToolTip(combobox_channel_single, '累')
+    ToolTip(combobox_channel_delta_start, '隨波逐流的')
+    ToolTip(combobox_channel_delta_stop, '人生')
+    # ToolTip(e_image_folder, '自己打字，按按鈕會幫你新增資料夾')
+    ToolTip(entry_image, '嗚哩哩')
+    ToolTip(entry_image_pc_folder, '可以直接存電腦啦~')
+    ToolTip(entry_wmemory_folder, '自己打字，按按鈕會幫你新增資料夾')
+    ToolTip(entry_other_file, 'Channel要選對欸')
+    ToolTip(entry_wmemory_pc_folder, '示波器有沒有先存檔ㄏㄚˋ')
+    ToolTip(entry_wmemory_2, '呀哈呀哈')
+    ToolTip(entry_wmemory_4, '噗嚕!')
 
-    ToolTip(text_result1_3, '取小數點後三位')
-    ToolTip(text_result2_7, '無條件捨去')
-    ToolTip(text_result2_9, '芭樂綠茶')
-    ToolTip(text_result1_12, '多多檢查')
+    ToolTip(text_result_mean_3, '取小數點後三位')
+    ToolTip(text_result_minmax_7, '無條件捨去')
+    ToolTip(text_result_minmax_9, '芭樂綠茶')
+    ToolTip(text_result_mean_12, '多多檢查')
 
     segment_list= initialize()
     
-    b_setup_load = tk.Button(label_frame_load_wme, text= 'load Setup', width= 10, command= lambda: mxr.load_setup(
-        folder= str_WMe_folder.get(), setup_name= str_setup.get(), 
+    b_setup_load = tk.Button(label_frame_load_file, text= 'load Setup', width= 10, command= lambda: mxr.load_setup(
+        folder= strvar_wmemory_folder.get(), setup_name= strvar_setup.get(), 
         scope_segment= segment_list[0],
         # time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
-        choose_type= int_label_type.get(), 
-        file_path_choice = int_wme_path_choice.get(), 
+        choose_type= intvar_label_type.get(), 
+        file_path_choice = intvar_wmemory_path_choice.get(), 
         # volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
         # trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
-        g_top= cbb_gen_top.get(), g_middle= cbb_gen_mid.get(), g_base= cbb_gen_base.get(), 
-        g_top_percent= cbb_gen_top_percent.get(), g_middle_percent= cbb_gen_mid_percent.get(), g_base_percent= cbb_gen_base_percent.get(), 
-        rf_top= cbb_rf_top.get(),  rf_base= cbb_rf_base.get(), 
-        rf_top_percent= cbb_rf_top_percent.get(), rf_base_percent= cbb_rf_base_percent.get()
+        g_top= combobox_general_value_top.get(), g_middle= combobox_general_value_middle.get(), g_base= combobox_general_value_base.get(), 
+        g_top_percent= combobox_general_percent_top.get(), g_middle_percent= combobox_general_percent_middle.get(), g_base_percent= combobox_general_percent_base.get(), 
+        rf_top= combobox_risefall_value_top.get(),  rf_base= combobox_risefall_value_base.get(), 
+        rf_top_percent= combobox_risefall_percent_top.get(), rf_base_percent= combobox_risefall_percent_base.get()
         ))
     b_setup_load.grid(row= 4, column= 3, padx= 5, pady= 2, sticky= 'w')
     
     # cbb_setupfile_interface.config(values= setupfile_interface_list)
-    cbb_setupfile_interface.bind("<<ComboboxSelected>>", lambda e: setupfile_interface_select(e, segment_list= segment_list))
-    cbb_setupfile_class.bind("<<ComboboxSelected>>", lambda e: setupfile_class_select(e, segment_list= segment_list))
+    combobox_setupfile_interface.bind("<<ComboboxSelected>>", lambda e: select_setupfile_interface(e, segment_list= segment_list))
+    combobox_setupfile_class.bind("<<ComboboxSelected>>", lambda e: select_setupfile_class(e, segment_list= segment_list))
 
     window.protocol('WM_DELETE_WINDOW', close_window)
 
