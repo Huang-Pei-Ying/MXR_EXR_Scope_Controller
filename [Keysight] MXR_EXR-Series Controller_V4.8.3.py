@@ -11,8 +11,34 @@ import numpy as np
 from PIL import Image
 import random
 import string
+import ctypes
+from tkinter import font
+
 
 window_name= '[Keysight] MXR/EXR-Series Controller_v4.9.0'
+
+def enable_dpi_awareness_windows():
+    # # 若要完全依解析度即可不呼叫，但建議在 Windows 上啟用 DPI-awareness
+    if sys.platform != "win32":
+        return
+    try:
+        user32 = ctypes.windll.user32
+        if hasattr(user32, "SetProcessDpiAwarenessContext"):
+            user32.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
+            return
+    except Exception:
+        pass
+    try:
+        shcore = ctypes.windll.shcore
+        shcore.SetProcessDpiAwareness(2)
+        return
+    except Exception:
+        pass
+    try:
+        ctypes.windll.user32.SetProcessDPIAware()
+    except Exception:
+        pass
+
 
 # 第一個視窗取得scope id並開啟主視窗
 def show_main_window(old_scope_ips):
@@ -1869,11 +1895,96 @@ def main_window(scope_ip):
         combobox.bind('<Return>', lambda event: add_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
         combobox.bind('<Delete>', lambda event: delete_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
 
-
+    # enable_dpi_awareness_windows()   # 必須在建立 Tk() 之前呼叫（Windows）
     window = tk.Tk()
     window.title(window_name)
-    # window.geometry('1500x760+2+2')
-    window.geometry('+2+2')
+
+    # 取得螢幕解析度（像素）
+    screen_w = window.winfo_screenwidth()
+    screen_h = window.winfo_screenheight()
+
+    ref_resolution= (2560, 1600)
+    ref_w, ref_h = ref_resolution
+    res_scale_w = screen_w / ref_w
+    res_scale_h = screen_h / ref_h
+    res_scale = min(res_scale_w, res_scale_h)  # 保證不會超出任一方向
+    # 若要同時顧慮 DPI 作次要調整
+    ppi = window.winfo_fpixels('1i') if hasattr(window, "winfo_fpixels") else 96
+    dpi_scale = ppi / 96.0
+
+    """
+    use_dpi_as_secondary: 若 True, final_scale = res_scale * dpi_scale
+                         若 False, final_scale = res_scale(解析度優先)
+    """
+
+    use_dpi_as_secondary= True
+    if use_dpi_as_secondary:
+        final_scale = res_scale * dpi_scale
+    else:
+        final_scale = res_scale
+
+    print(f"screen: {screen_w}x{screen_h}, ref: {ref_w}x{ref_h}, res_scale: {res_scale:.3f}, dpi_scale: {dpi_scale:.3f}, final_scale: {final_scale:.3f}")
+
+    # 設定視窗佔螢幕一個比例（保持不同解析度下相同佔比）
+    win_w = int(screen_w * 0.9)
+    win_h = int(screen_h * 0.8)
+    window.geometry(f"{win_w}x{win_h}")
+    window.minsize(360, 240)
+
+    # 取得一個安全的按鈕字型（部分系統可能沒有 TkButtonFont）
+    try:
+        btn_font = font.nametofont("TkButtonFont").copy()
+    except Exception:
+        default_font = font.nametofont("TkDefaultFont")
+        btn_font = font.Font(root= window,
+                             family=default_font.cget("family"),
+                             size=default_font.cget("size"))
+    
+    base_font_size= 5
+    # 根據 final_scale 設定字型與按鈕的 width/height（以字元/行作單位）
+    new_font_size = max(6, int(round(base_font_size * final_scale)))
+    btn_font.configure(size= new_font_size)
+
+
+
+
+    # # 取得 PPI 並設定 scaling（以 96 DPI 為基準）
+    # ppi = window.winfo_fpixels('1i')
+    # dpi_scale = ppi / 96.0
+    # window.tk.call('tk', 'scaling', dpi_scale)
+    # print("Detected PPI:", ppi, " dpi_scale:", dpi_scale)
+
+    # 初始視窗大小 (佔螢幕比例)
+    # screen_w = window.winfo_screenwidth()
+    # screen_h = window.winfo_screenheight()
+    # init_w = int(screen_w * 0.9)
+    # init_h = int(screen_h * 0.8)
+    # window.geometry(f"{init_w}x{init_h}")
+    # window.minsize(360, 240)
+
+
+    # # 先用 TkDefaultFont 作為基底（此命名通常存在）
+    # default_font = font.nametofont("TkDefaultFont")
+    # base_font_size= 10
+
+    # # 安全取得或建立「按鈕字型」
+    # try:
+    #     # 若存在 TkButtonFont（部分系統才有），直接使用它的 copy/調整
+    #     btn_font = font.nametofont("TkButtonFont").copy()
+    #     btn_font.configure(size=max(6, int(base_font_size * dpi_scale)))
+    # except Exception:
+    #     # 若不存在，建立新的字型，家庭名稱使用 default_font 的 family
+    #     btn_font = font.Font(root= window,
+    #                          family=default_font.cget("family"),
+    #                          size=max(6, int(base_font_size * dpi_scale)),
+    #                          weight=default_font.cget("weight"))
+
+    # 拉大或縮小視窗時，設定 weight=1 代表允許該行隨著視窗放大而跟著變大
+    window.rowconfigure(0, weight=1)
+    window.columnconfigure(0, weight=1)
+
+    # # window.geometry('1500x760+2+2')
+    # window.geometry('+2+2')
     window.configure(bg= '#E9F4FF')
     # window.resizable(True, True)
 
@@ -1885,14 +1996,28 @@ def main_window(scope_ip):
     waveform_intensity_min_value = 0
     waveform_intensity_max_value = 100
 
+    # 設定按鈕大小, 初始按鈕尺寸以 dpi_scale 調整（width/height 為字元/行數）
+    def set_button_size(base_btn_w, base_btn_h):
+        # w=20, h=2
+        # init_button_width = max(4, int(round(original_width * dpi_scale)))
+        # init_button_height = max(1, int(round(original_height * dpi_scale)))
+
+        btn_w = max(4, int(round(base_btn_w * final_scale)))
+        btn_h = max(1, int(round(base_btn_h * final_scale)))
+
+        return btn_w, btn_h
+    
+
     # Measurement Frame ===================================================================================================================================
 
     label_frame_measurement_item= tk.LabelFrame(window, text= 'Measurement', background= background_color_1, fg= '#506376', font= ('Candara', 10, 'bold'),)
 
-    button_frequency = tk.Button(label_frame_measurement_item, text='Frequency', width= 20, height= 2, command= lambda: mxr.call_measurement_frequency(chan= intvar_channel_single.get()))
-    button_period = tk.Button(label_frame_measurement_item, text='Period', width= 20, height= 2, command= lambda: mxr.call_measurement_period(chan= intvar_channel_single.get()))
-    button_dutycycle = tk.Button(label_frame_measurement_item, text='Duty Cycle', width= 20, height= 2, command= lambda: mxr.call_measurement_dutycycle(chan= intvar_channel_single.get()))
-    button_delta_time = tk.Button(label_frame_measurement_item, text='Delta Time', width= 20, height= 2, command= lambda: mxr.call_measurement_delta_time(
+    button_width, button_height= set_button_size(base_btn_w= 20, base_btn_h= 2)
+
+    button_frequency = tk.Button(label_frame_measurement_item, text='Frequency', width= button_width, height= button_height, command= lambda: mxr.call_measurement_frequency(chan= intvar_channel_single.get()), font= btn_font)
+    button_period = tk.Button(label_frame_measurement_item, text='Period', width= button_width, height= button_height, command= lambda: mxr.call_measurement_period(chan= intvar_channel_single.get()), font= btn_font)
+    button_dutycycle = tk.Button(label_frame_measurement_item, text='Duty Cycle', width= button_width, height= button_height, command= lambda: mxr.call_measurement_dutycycle(chan= intvar_channel_single.get()), font= btn_font)
+    button_delta_time = tk.Button(label_frame_measurement_item, text='Delta Time', width= button_width, height= button_height, command= lambda: mxr.call_measurement_delta_time(
         edge_1= strvar_start_risefall.get(), 
         num_1= strvar_start_N_edge.get(), 
         pos_1= strvar_start_position.get(), 
@@ -1904,19 +2029,19 @@ def main_window(scope_ip):
         chan_stop= intvar_channel_delta_stop.get(), 
         modify_name= boolvar_delta_name.get(),
         timing_name= strvar_delta_name.get()
-        ))
-    button_tH = tk.Button(label_frame_measurement_item, text='tH', width= 20, height= 2, command= lambda: mxr.call_measurement_tH(chan= intvar_channel_single.get()))
-    button_tL = tk.Button(label_frame_measurement_item, text='tL', width= 20, height= 2, command= lambda: mxr.call_measurement_tL(chan= intvar_channel_single.get()))
-    button_tR = tk.Button(label_frame_measurement_item, text='tR', width= 20, height= 2, command= lambda: mxr.call_measurement_tR(chan= intvar_channel_single.get()))
-    button_tF = tk.Button(label_frame_measurement_item, text='tF', width= 20, height= 2, command= lambda: mxr.call_measurement_tF(chan= intvar_channel_single.get()))
-    button_VIH = tk.Button(label_frame_measurement_item, text='VIH', width= 20, height= 2, command= lambda: mxr.call_measurement_VIH(chan= intvar_channel_single.get()))
-    button_VIL= tk.Button(label_frame_measurement_item, text='VIL', width= 20, height= 2, command= lambda: mxr.call_measurement_VIL(chan= intvar_channel_single.get()))
-    button_slewrate_tR = tk.Button(label_frame_measurement_item, text='Slew Rate tR', width= 20, height= 2, command= lambda: mxr.call_measurement_slewrate(chan= intvar_channel_single.get(), direction= 'RISing'))
-    button_slewrate_tF = tk.Button(label_frame_measurement_item, text='Slew Rate tF', width= 20, height= 2, command= lambda: mxr.call_measurement_slewrate(chan= intvar_channel_single.get(), direction= 'FALLing'))
-    button_VPP = tk.Button(label_frame_measurement_item, text='VPP', width= 20, height= 2, command= lambda: mxr.call_measurement_VPP(chan= intvar_channel_single.get()))
-    button_VMAX = tk.Button(label_frame_measurement_item, text='VMAX', width= 20, height= 2, command= lambda: mxr.call_measurement_VMAX(chan= intvar_channel_single.get()))
-    button_VMIN = tk.Button(label_frame_measurement_item, text='VMIN', width= 20, height= 2, command= lambda: mxr.call_measurement_VMIN(chan= intvar_channel_single.get()))
-    button_PeriodtoPeriod =  tk.Button(label_frame_measurement_item, text='1Per-Per', width= 20, height= 2, command= lambda: mxr.call_measurement_NCJitter(chan= intvar_channel_single.get(), direction= 'RISing'))
+        ), font= btn_font)
+    button_tH = tk.Button(label_frame_measurement_item, text='tH', width= button_width, height= button_height, command= lambda: mxr.call_measurement_tH(chan= intvar_channel_single.get()), font= btn_font)
+    button_tL = tk.Button(label_frame_measurement_item, text='tL', width= button_width, height= button_height, command= lambda: mxr.call_measurement_tL(chan= intvar_channel_single.get()), font= btn_font)
+    button_tR = tk.Button(label_frame_measurement_item, text='tR', width= button_width, height= button_height, command= lambda: mxr.call_measurement_tR(chan= intvar_channel_single.get()), font= btn_font)
+    button_tF = tk.Button(label_frame_measurement_item, text='tF', width= button_width, height= button_height, command= lambda: mxr.call_measurement_tF(chan= intvar_channel_single.get()), font= btn_font)
+    button_VIH = tk.Button(label_frame_measurement_item, text='VIH', width= button_width, height= button_height, command= lambda: mxr.call_measurement_VIH(chan= intvar_channel_single.get()), font= btn_font)
+    button_VIL= tk.Button(label_frame_measurement_item, text='VIL', width= button_width, height= button_height, command= lambda: mxr.call_measurement_VIL(chan= intvar_channel_single.get()), font= btn_font)
+    button_slewrate_tR = tk.Button(label_frame_measurement_item, text='Slew Rate tR', width= button_width, height= button_height, command= lambda: mxr.call_measurement_slewrate(chan= intvar_channel_single.get(), direction= 'RISing'), font= btn_font)
+    button_slewrate_tF = tk.Button(label_frame_measurement_item, text='Slew Rate tF', width= button_width, height= button_height, command= lambda: mxr.call_measurement_slewrate(chan= intvar_channel_single.get(), direction= 'FALLing'), font= btn_font)
+    button_VPP = tk.Button(label_frame_measurement_item, text='VPP', width= button_width, height= button_height, command= lambda: mxr.call_measurement_VPP(chan= intvar_channel_single.get()), font= btn_font)
+    button_VMAX = tk.Button(label_frame_measurement_item, text='VMAX', width= button_width, height= button_height, command= lambda: mxr.call_measurement_VMAX(chan= intvar_channel_single.get()), font= btn_font)
+    button_VMIN = tk.Button(label_frame_measurement_item, text='VMIN', width= button_width, height= button_height, command= lambda: mxr.call_measurement_VMIN(chan= intvar_channel_single.get()), font= btn_font)
+    button_PeriodtoPeriod =  tk.Button(label_frame_measurement_item, text='1Per-Per', width= button_width, height= button_height, command= lambda: mxr.call_measurement_NCJitter(chan= intvar_channel_single.get(), direction= 'RISing'), font= btn_font)
 
     # Scale / Offset Frame ===================================================================================================================================
 
@@ -2487,6 +2612,43 @@ def main_window(scope_ip):
     text_result_minmax_12 = tk.Text(label_frame_extract_result, width= 0, height= 1, background= '#DBE4F0', fg= '#375050', font= ('Calibri', 11, 'bold'),)
     text_result_minmax_12.config(state=tk.DISABLED)
     
+    # Weight===================================================================================================================================
+    label_frame_measurement_item.rowconfigure(0, weight=1, uniform="row")
+    label_frame_measurement_item.columnconfigure(0, weight=1, uniform="col")
+
+    for r in range(4):
+        label_frame_measurement_item.rowconfigure(r, weight=1, uniform="row")
+    for c in range(4):
+        label_frame_measurement_item.columnconfigure(c, weight=1, uniform="col")
+
+    label_frame_scale.rowconfigure(1, weight=1, uniform="row")
+    label_frame_scale.columnconfigure(0, weight=1, uniform="col")
+
+    label_frame_delta.rowconfigure(1, weight=1, uniform="row")
+    label_frame_delta.columnconfigure(1, weight=1, uniform="col")
+
+    label_frame_threshold.rowconfigure(2, weight=1, uniform="row")
+    label_frame_threshold.columnconfigure(0, weight=1, uniform="col")
+
+    label_frame_label.rowconfigure(4, weight=1, uniform="row")
+    label_frame_label.columnconfigure(0, weight=1, uniform="col")
+
+    label_frame_control.rowconfigure(0, weight=1, uniform="row")
+    label_frame_control.columnconfigure(2, weight=1, uniform="col")
+
+    label_frame_channel.rowconfigure(1, weight=1, uniform="row")
+    label_frame_channel.columnconfigure(2, weight=1, uniform="col")
+
+    label_frame_save_file.rowconfigure(2, weight=1, uniform="row")
+    label_frame_save_file.columnconfigure(2, weight=1, uniform="col")
+
+    label_frame_load_file.rowconfigure(3, weight=1, uniform="row")
+    label_frame_load_file.columnconfigure(2, weight=1, uniform="col")
+
+    label_frame_extract_result.rowconfigure(0, weight=1, uniform="row")
+    label_frame_extract_result.columnconfigure(3, weight=1, uniform="col")
+
+
 
     # Grid ===================================================================================================================================
     # LabelFrame grid
@@ -2504,22 +2666,22 @@ def main_window(scope_ip):
     label_frame_extract_result.grid(row= 0, column= 3, padx= 5, pady= 2, rowspan= 5, sticky= 'nsew')
 
     # Meas grid
-    button_frequency.grid(row= 0, column= 0, padx= 5, pady= 4)
-    button_period.grid(row= 0, column= 1, padx= 5, pady= 4)
-    button_dutycycle.grid(row= 0, column= 2, padx= 5, pady= 4)
-    button_delta_time.grid(row= 0, column= 3, padx= 5, pady= 4)
-    button_tH.grid(row= 1, column= 0, padx= 5, pady= 4)
-    button_tL.grid(row= 1, column= 1, padx= 5, pady= 4)
-    button_tR.grid(row= 1, column= 2, padx= 5, pady= 4)
-    button_tF.grid(row= 1, column= 3, padx= 5, pady= 4)
-    button_VIH.grid(row= 2, column= 0, padx= 5, pady= 4)
-    button_VIL.grid(row= 2, column= 1, padx= 5, pady= 4)
-    button_slewrate_tR.grid(row= 2, column= 2, padx= 5, pady= 4)
-    button_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 4)
-    button_VPP.grid(row= 3, column= 0, padx= 5, pady= 4)
-    button_VMAX.grid(row= 3, column= 1, padx= 5, pady= 4)
-    button_VMIN.grid(row= 3, column= 2, padx= 5, pady= 4)
-    button_PeriodtoPeriod.grid(row= 3, column= 3, padx= 5, pady= 4)
+    button_frequency.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'nesw')
+    button_period.grid(row= 0, column= 1, padx= 5, pady= 4, sticky= 'nesw')
+    button_dutycycle.grid(row= 0, column= 2, padx= 5, pady= 4, sticky= 'nesw')
+    button_delta_time.grid(row= 0, column= 3, padx= 5, pady= 4, sticky= 'nesw')
+    button_tH.grid(row= 1, column= 0, padx= 5, pady= 4, sticky= 'nesw')
+    button_tL.grid(row= 1, column= 1, padx= 5, pady= 4, sticky= 'nesw')
+    button_tR.grid(row= 1, column= 2, padx= 5, pady= 4, sticky= 'nesw')
+    button_tF.grid(row= 1, column= 3, padx= 5, pady= 4, sticky= 'nesw')
+    button_VIH.grid(row= 2, column= 0, padx= 5, pady= 4, sticky= 'nesw')
+    button_VIL.grid(row= 2, column= 1, padx= 5, pady= 4, sticky= 'nesw')
+    button_slewrate_tR.grid(row= 2, column= 2, padx= 5, pady= 4, sticky= 'nesw')
+    button_slewrate_tF.grid(row= 2, column= 3, padx= 5, pady= 4, sticky= 'nesw')
+    button_VPP.grid(row= 3, column= 0, padx= 5, pady= 4, sticky= 'nesw')
+    button_VMAX.grid(row= 3, column= 1, padx= 5, pady= 4, sticky= 'nesw')
+    button_VMIN.grid(row= 3, column= 2, padx= 5, pady= 4, sticky= 'nesw')
+    button_PeriodtoPeriod.grid(row= 3, column= 3, padx= 5, pady= 4, sticky= 'nesw')
 
     # Scale grid
     label_volt_scale.grid(row= 0, column= 0, padx= 5, pady= 4, sticky= 'w') 
@@ -2827,8 +2989,34 @@ def main_window(scope_ip):
 
     mxr= MXR(scope_ip= scope_ip)
 
-    window.mainloop()
 
+    # init_win_w, init_win_h = win_w, win_h
+    # def on_configure(event):
+    #     # 避免在初始化時多次觸發
+    #     if event.width <= 1 or event.height <= 1:
+    #         return
+    #     size_ratio_w = event.width / init_win_w
+    #     size_ratio_h = event.height / init_win_h
+    #     size_ratio = min(size_ratio_w, size_ratio_h)
+
+    #     dynamic_scale = final_scale * size_ratio
+    #     new_font = max(6, int(round(base_font_size * dynamic_scale)))
+    #     new_w = max(4, int(round(20 * dynamic_scale)))
+    #     new_h = max(1, int(round(2 * dynamic_scale)))
+
+    #     if btn_font.cget("size") != new_font:
+    #         btn_font.configure(size=new_font)
+    #     buttons= [button_frequency, button_period, button_dutycycle, button_delta_time, 
+    #               button_tH, button_tL, button_tR, button_tF, button_VIH, button_VIL, 
+    #               button_slewrate_tR, button_slewrate_tF, button_VPP, button_VMAX, button_VMIN, button_PeriodtoPeriod]
+    #     for b in buttons:
+    #         if int(b.cget("width")) != new_w or int(b.cget("height")) != new_h:
+    #             b.config(width=new_w, height=new_h)
+
+    # window.bind("<Configure>", on_configure)
+
+
+    window.mainloop()
 
 # 選擇 Scope IP ============================================================================================================================================
 
@@ -2841,10 +3029,11 @@ for i in range(len(config_initial['Scope_IPs'])):
     scope_ips.append(config_initial['Scope_IPs'][f'IP_{i}'])
 scope_ips.append('')
 
+enable_dpi_awareness_windows()
 id_window = tk.Tk()
 id_window.title(window_name)
 id_window.resizable(width= False, height= False)
-id_window.geometry('390x160+500+150')
+id_window.geometry('+500+150')
 id_window.configure(background= '#91B6E1')
 
 l_scope_ip = tk.Label(id_window, text= 'Enter Scope IP', background= '#91B6E1', fg= '#091E87', font= ('Candara', 12, 'bold'),)
