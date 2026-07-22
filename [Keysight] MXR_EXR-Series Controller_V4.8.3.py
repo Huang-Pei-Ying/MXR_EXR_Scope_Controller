@@ -2103,7 +2103,7 @@ def main_window(scope_ip):
 
 
     # # window.geometry('1500x760+2+2')
-    # window.geometry('+2+2')
+    window.geometry('+2+2')
     window.configure(bg= '#E9F4FF')
     # window.resizable(True, True)
 
@@ -2117,20 +2117,20 @@ def main_window(scope_ip):
 
 
 
-    base_font_size= 5
+    base_font_size= 7
 
     candara_family = choose_available_font(window, ["Candara", "Calibri"], fallback="Segoe UI")
     calibri_family = choose_available_font(window, ["Calibri", "Candara"], fallback="Segoe UI")
 
     # base fonts (pure tk)
     family = "Segoe UI" if sys.platform == "win32" else "Helvetica"
-    candara_base_font = font.Font(root= window, family= candara_family, size= max(8, int(round(base_font_size * res_scale))))
-    calibri_base_font = font.Font(root= window, family= calibri_family, size= max(8, int(round(base_font_size * res_scale))))
+    candara_base_font = font.Font(root= window, family= candara_family, size= max(10, int(round(base_font_size * res_scale))))
+    calibri_base_font = font.Font(root= window, family= calibri_family, size= max(10, int(round(base_font_size * res_scale))))
 
-    candara_bold_font = font.Font(root= window, family= candara_family, size=max(8, int(round(base_font_size * res_scale))), weight="bold")
-    calibri_bold_font = font.Font(root= window, family= calibri_family, size=max(8, int(round(base_font_size * res_scale))), weight="bold")
+    candara_bold_font = font.Font(root= window, family= candara_family, size=max(10, int(round(base_font_size * res_scale))), weight="bold")
+    calibri_bold_font = font.Font(root= window, family= calibri_family, size=max(10, int(round(base_font_size * res_scale))), weight="bold")
     
-    entry_font = font.Font(root= window, family= calibri_family, size=max(9, int(round((base_font_size-1) * res_scale))))
+    entry_font = font.Font(root= window, family= calibri_family, size=max(10, int(round((base_font_size-1) * res_scale))))
     
     # safe font retrieval and base UI font (shared)
     try:
@@ -2216,13 +2216,13 @@ def main_window(scope_ip):
     label_volt_scale = tk.Label(label_frame_scale, text= 'Voltage Scale (V)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_voltage_scale = tk.StringVar()
-    combobox_voltage_scale = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_voltage_scale)
+    combobox_voltage_scale = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_voltage_scale, font= entry_font)
     execute_commbobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltScale', ini_selected_section= 'Scale_Offset_Selected_Values')
 
     label_voltage_offset = tk.Label(label_frame_scale, text= 'Voltage Offset (V)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_voltage_offset = tk.StringVar()
-    combobox_voltage_offset = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_voltage_offset)
+    combobox_voltage_offset = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_voltage_offset, font= entry_font)
     execute_commbobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
 
     button_voltage_scale = ttk.Button(label_frame_scale, text= 'Volt Check', width= button_width, command= lambda: mxr.check_voltage(scale= strvar_voltage_scale.get(), offset= strvar_voltage_offset.get()))
@@ -2230,25 +2230,25 @@ def main_window(scope_ip):
     label_trigger_level = tk.Label(label_frame_scale, text= 'Trigger level (V)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_trigger_level = tk.StringVar()
-    combobox_trigger_level = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_trigger_level)
+    combobox_trigger_level = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_trigger_level, font= entry_font)
     execute_commbobox_function(combobox= combobox_trigger_level, combobox_var= strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
 
     label_trigger_channel = tk.Label(label_frame_scale, text= 'Trigger Channel', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_trigger_channel = tk.StringVar()
-    combobox_trigger_channel = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_trigger_channel, values= [1, 2, 3, 4])
+    combobox_trigger_channel = ttk.Combobox(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_trigger_channel, values= [1, 2, 3, 4], font= entry_font)
 
     button_trigger_check = ttk.Button(label_frame_scale, text= 'Trig Check', width= button_width, command= lambda: mxr.check_trigger_setting(chan= strvar_trigger_channel.get(), level= strvar_trigger_level.get()))
 
     label_timebase_scale = tk.Label(label_frame_scale, text= 'Timebase Scale (sec)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_timebase_scale = tk.StringVar()
-    entry_timebase_scale = tk.Entry(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_timebase_scale)
+    entry_timebase_scale = tk.Entry(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_timebase_scale, font= entry_font)
 
     label_timebase_offset = tk.Label(label_frame_scale, text= 'Timebase Offset (sec)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_timebase_offset = tk.StringVar()
-    entry_timebase_offset = tk.Entry(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_timebase_offset)
+    entry_timebase_offset = tk.Entry(label_frame_scale, width= max(4, int(entry_width*0.4)), textvariable= strvar_timebase_offset, font= entry_font)
 
     button_timebase_scale_check = ttk.Button(label_frame_scale, text= 'Time scale Check', width= button_width, command= lambda: mxr.check_timebase_scale(scale= strvar_timebase_scale.get()))
     button_timebase_offset_check = ttk.Button(label_frame_scale, text= 'Time posi Check', width= button_width, command= lambda: mxr.check_timebase_offset(position= strvar_timebase_offset.get()))
@@ -2257,7 +2257,7 @@ def main_window(scope_ip):
 
     vcmd = (window.register(validate_number), "%P") # %P = 輸入後字串
     strvar_waveform_intensity = tk.StringVar()
-    entry_waveform_intensity = tk.Entry(label_frame_scale, width= max(4, int(entry_width*0.4)), justify="center", textvariable= strvar_waveform_intensity, validate="key", validatecommand=vcmd)
+    entry_waveform_intensity = tk.Entry(label_frame_scale, width= max(4, int(entry_width*0.4)), justify="center", textvariable= strvar_waveform_intensity, validate="key", validatecommand=vcmd, font= entry_font)
     update_intensity_color(value= strvar_waveform_intensity.get())
     button_waveform_intensity = ttk.Button(label_frame_scale, text= 'Intensity Check', width= button_width, command= lambda: mxr.check_intensity_setting(intensity_value= strvar_waveform_intensity.get()))
     
@@ -2281,24 +2281,24 @@ def main_window(scope_ip):
     label_start = tk.Label(label_frame_delta, text= 'Delta Start', background= 'yellow', fg= '#0D325C', font= candara_base_font,)
 
     strvar_start_risefall = tk.StringVar()
-    combobox_start_risefall = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_start_risefall, values= ['RISING', 'FALLING'])
+    combobox_start_risefall = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_start_risefall, values= ['RISING', 'FALLING'], font= entry_font)
 
     strvar_start_N_edge = tk.StringVar()
-    combobox_start_N = tk.Entry(label_frame_delta, width= max(11, int(entry_width*0.4)), textvariable= strvar_start_N_edge)
+    combobox_start_N = tk.Entry(label_frame_delta, width= max(11, int(entry_width*0.4)), textvariable= strvar_start_N_edge, font= entry_font)
     
     strvar_start_position = tk.StringVar()
-    combobox_start_position = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_start_position, values= ['UPPER', 'MIDDLE', 'LOWER'])
+    combobox_start_position = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_start_position, values= ['UPPER', 'MIDDLE', 'LOWER'], font= entry_font)
     
     label_stop = tk.Label(label_frame_delta, text= 'Delta Stop', background= 'yellow', fg= '#0D325C', font= candara_base_font,)
 
     strvar_stop_risefall = tk.StringVar()
-    combobox_stop_risefall = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_stop_risefall, values= ['RISING', 'FALLING'])
+    combobox_stop_risefall = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_stop_risefall, values= ['RISING', 'FALLING'], font= entry_font)
     
     strvar_stop_N_edge = tk.StringVar()
-    combobox_stop_N = tk.Entry(label_frame_delta, width= max(11, int(entry_width*0.4)), textvariable= strvar_stop_N_edge)
+    combobox_stop_N = tk.Entry(label_frame_delta, width= max(11, int(entry_width*0.4)), textvariable= strvar_stop_N_edge, font= entry_font)
     
     strvar_stop_position = tk.StringVar()
-    combobox_stop_position = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_stop_position, values= ['UPPER', 'MIDDLE', 'LOWER'])
+    combobox_stop_position = ttk.Combobox(label_frame_delta, width= 11, textvariable= strvar_stop_position, values= ['UPPER', 'MIDDLE', 'LOWER'], font= entry_font)
     
     button_edge_switch = ttk.Button(label_frame_delta, text= 'Edge Switch', width= button_width, command= lambda: switch_string(var_1= strvar_start_risefall, var_2= strvar_stop_risefall))
     button_position_switch = ttk.Button(label_frame_delta, text= 'Position Switch', width= button_width, command= lambda: switch_string(var_1= strvar_start_position, var_2= strvar_stop_position))
@@ -2315,38 +2315,38 @@ def main_window(scope_ip):
     radiobutton_general_percent_top= tk.Radiobutton(label_frame_threshold, text= 'Gen Thres Top (%)', variable= intvar_general_threshold, value= 1, background= background_color_1, fg= '#0D325C', font= candara_bold_font,)
 
     strvar_general_percent_top = tk.StringVar()
-    combobox_general_percent_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_top)
+    combobox_general_percent_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_top, font= entry_font)
     execute_commbobox_function(combobox= combobox_general_percent_top, combobox_var= strvar_general_percent_top, ini_dict_key= 'GeneralTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopPercent', ini_selected_section= 'Threshold_Selected_Values')
     
     label_general_percent_middle= tk.Label(label_frame_threshold, text= '            Gen Thres Middle (%)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_general_percent_middle = tk.StringVar()
-    combobox_general_percent_middle = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_middle)
+    combobox_general_percent_middle = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_middle, font= entry_font)
     execute_commbobox_function(combobox= combobox_general_percent_middle, combobox_var= strvar_general_percent_middle, ini_dict_key= 'GeneralMiddlePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddlePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     label_general_percent_base= tk.Label(label_frame_threshold, text= '        Gen Thres Base (%)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_general_percent_base = tk.StringVar()
-    combobox_general_percent_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_base)
+    combobox_general_percent_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_percent_base, font= entry_font)
     execute_commbobox_function(combobox= combobox_general_percent_base, combobox_var= strvar_general_percent_base, ini_dict_key= 'GeneralBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     radiobutton_general_value_top= tk.Radiobutton(label_frame_threshold, text= 'Gen Thres Top (V)', variable= intvar_general_threshold, value= 2, background= background_color_1, fg= '#0D325C', font= candara_bold_font,)
     radiobutton_general_value_top.select()
 
     strvar_general_value_top = tk.StringVar()
-    combobox_general_value_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_top)
+    combobox_general_value_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_top, font= entry_font)
     execute_commbobox_function(combobox= combobox_general_value_top, combobox_var= strvar_general_value_top, ini_dict_key= 'GeneralTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTop', ini_selected_section= 'Threshold_Selected_Values')
 
     label_general_value_middle= tk.Label(label_frame_threshold, text= '            Gen Thres Middle (V)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_general_value_middle = tk.StringVar()
-    combobox_general_value_middle = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_middle)
+    combobox_general_value_middle = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_middle, font= entry_font)
     execute_commbobox_function(combobox= combobox_general_value_middle, combobox_var= strvar_general_value_middle, ini_dict_key= 'GeneralMiddle', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddle', ini_selected_section= 'Threshold_Selected_Values')
 
     label_general_value_base= tk.Label(label_frame_threshold, text= '        Gen Thres Base (V)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_general_value_base = tk.StringVar()
-    combobox_general_value_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_base)
+    combobox_general_value_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_general_value_base, font= entry_font)
     execute_commbobox_function(combobox= combobox_general_value_base, combobox_var= strvar_general_value_base, ini_dict_key= 'GeneralBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBase', ini_selected_section= 'Threshold_Selected_Values')
     button_general_threshold_check = ttk.Button(
         label_frame_threshold, text= 'Gen Thres Check', width= button_width, command= lambda: mxr.set_general_threshold(
@@ -2360,11 +2360,11 @@ def main_window(scope_ip):
     label_risefall_percent_base= tk.Label(label_frame_threshold, text= '       tRtF Thres Base (%)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_risefall_percent_top = tk.StringVar()
-    combobox_risefall_percent_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_percent_top)
+    combobox_risefall_percent_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_percent_top, font= entry_font)
     execute_commbobox_function(combobox= combobox_risefall_percent_top, combobox_var= strvar_risefall_percent_top, ini_dict_key= 'RFTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopPercent', ini_selected_section= 'Threshold_Selected_Values')
 
     strvar_risefall_percent_base = tk.StringVar()
-    combobox_risefall_percent_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_percent_base)
+    combobox_risefall_percent_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_percent_base, font= entry_font)
     execute_commbobox_function(combobox= combobox_risefall_percent_base, combobox_var= strvar_risefall_percent_base, ini_dict_key= 'RFBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     radiobutton_risefall_value_top= tk.Radiobutton(label_frame_threshold, text= 'tRtF Thres Top (V)', variable= intvar_risefall_threshold, value= 2, background= background_color_1, fg= '#0D325C', font= candara_bold_font,)
@@ -2373,11 +2373,11 @@ def main_window(scope_ip):
     label_risefall_value_base= tk.Label(label_frame_threshold, text= '       tRtF Thres Base (V)', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
 
     strvar_risefall_value_top = tk.StringVar()
-    combobox_risefall_value_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_value_top)
+    combobox_risefall_value_top = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_value_top, font= entry_font)
     execute_commbobox_function(combobox= combobox_risefall_value_top, combobox_var= strvar_risefall_value_top, ini_dict_key= 'RFTop', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTop', ini_selected_section= 'Threshold_Selected_Values')
 
     strvar_risefall_value_base = tk.StringVar()
-    combobox_risefall_value_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_value_base)
+    combobox_risefall_value_base = ttk.Combobox(label_frame_threshold, width= 8, textvariable= strvar_risefall_value_base, font= entry_font)
     execute_commbobox_function(combobox= combobox_risefall_value_base, combobox_var= strvar_risefall_value_base, ini_dict_key= 'RFBase', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBase', ini_selected_section= 'Threshold_Selected_Values')
 
     button_risefall_threshold_check = ttk.Button(
@@ -2388,13 +2388,13 @@ def main_window(scope_ip):
 
     label_sampling_rate = tk.Label(label_frame_threshold, text= '※ Sampling Rate', background= background_color_1, fg= '#0D325C', font= candara_bold_font,)
     strvar_sampling_rate = tk.StringVar()
-    entry_sampling_rate = tk.Entry(label_frame_threshold, width= max(10, int(entry_width*0.4)), textvariable= strvar_sampling_rate)
+    entry_sampling_rate = tk.Entry(label_frame_threshold, width= max(10, int(entry_width*0.4)), textvariable= strvar_sampling_rate, font= entry_font)
     button_sampling_rate_check = ttk.Button(label_frame_threshold, text= 'Check', width= button_width, command= lambda: mxr.acquire_sampling_rate(rate= strvar_sampling_rate.get()))
     button_sampling_rate_automode = ttk.Button(label_frame_threshold, text= 'Auto', width= button_width, command= lambda: mxr.acquire_sampling_rate(rate= 'AUTO'))
 
     label_memory_depth = tk.Label(label_frame_threshold, text= '※ Memory Depth', background= background_color_1, fg= '#0D325C', font= candara_base_font,)
     strvar_memory_depth = tk.StringVar()
-    entry_memory_depth = tk.Entry(label_frame_threshold, width= max(10, int(entry_width*0.4)), textvariable= strvar_memory_depth)
+    entry_memory_depth = tk.Entry(label_frame_threshold, width= max(10, int(entry_width*0.4)), textvariable= strvar_memory_depth, font= entry_font)
     button_memory_depth_check = ttk.Button(label_frame_threshold, text= 'Check', width= button_width, command= lambda: mxr.acquire_memory_depth(points_value= strvar_memory_depth.get()))
     button_memory_depth_automode = ttk.Button(label_frame_threshold, text= 'Auto', width= button_width, command= lambda: mxr.acquire_memory_depth(points_value= 'AUTO'))
 
@@ -2414,49 +2414,49 @@ def main_window(scope_ip):
     radiobutton_label.select()
 
     strvar_label_1 = tk.StringVar()
-    entey_label_1 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_1)
+    entey_label_1 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_1, font= entry_font)
 
     button_lable1 = ttk.Button(label_frame_label, text= 'Chan1_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 1, bookmark= strvar_label_1.get().rstrip('\n')))
     button_delete_label_1 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 1, choose_type= intvar_label_type.get()))
 
     strvar_label_2 = tk.StringVar()
-    entry_label_2 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_2)
+    entry_label_2 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_2, font= entry_font)
 
     button_lable_2 = ttk.Button(label_frame_label, text= 'Chan2_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 2, bookmark= (strvar_label_2.get().rstrip('\n'))))
     button_delete_label_2 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 2, choose_type= intvar_label_type.get()))
 
     strvar_label_3 = tk.StringVar()
-    entry_label_3 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_3)
+    entry_label_3 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_3, font= entry_font)
 
     button_lable_3 = ttk.Button(label_frame_label, text= 'Chan3_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 3, bookmark= (strvar_label_3.get().rstrip('\n'))))
     button_delete_label_3 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 3, choose_type= intvar_label_type.get()))
 
     strvar_label_4 = tk.StringVar()
-    entry_label_4 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_4)
+    entry_label_4 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_4, font= entry_font)
 
     button_lable_4 = ttk.Button(label_frame_label, text= 'Chan4_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 4, bookmark= (strvar_label_4.get().rstrip('\n'))))
     button_delete_label_4 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 4, choose_type= intvar_label_type.get()))
 
     strvar_label_5 = tk.StringVar()
-    entry_label_5 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_5)
+    entry_label_5 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_5, font= entry_font)
 
     button_lable_5 = ttk.Button(label_frame_label, text= 'WMe1_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 5, bookmark= strvar_label_5.get().rstrip('\n')))
     button_delete_label_5 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 5, choose_type= intvar_label_type.get()))
 
     strvar_label_6 = tk.StringVar()
-    entry_label_6 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_6)
+    entry_label_6 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_6, font= entry_font)
 
     button_lable_6 = ttk.Button(label_frame_label, text= 'WMe2_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 6, bookmark= (strvar_label_6.get().rstrip('\n'))))
     button_delete_label_6 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 6, choose_type= intvar_label_type.get()))
 
     strvar_label_7 = tk.StringVar()
-    entry_label_7 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_7)
+    entry_label_7 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_7, font= entry_font)
 
     button_lable_7 = ttk.Button(label_frame_label, text= 'WMe3_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 7, bookmark= (strvar_label_7.get().rstrip('\n'))))
     button_delete_label_7 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 7, choose_type= intvar_label_type.get()))
 
     strvar_label_8 = tk.StringVar()
-    entry_label_8 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_8)
+    entry_label_8 = tk.Entry(label_frame_label, width= max(25, int(entry_width*0.4)), textvariable= strvar_label_8, font= entry_font)
 
     button_lable_8 = ttk.Button(label_frame_label, text= 'WMe4_label', width= button_width, command= lambda: mxr.add_bookmark(choose_type= intvar_label_type.get(), chan= 8, bookmark= (strvar_label_8.get().rstrip('\n'))))
     button_delete_label_8 = ttk.Button(label_frame_label, text= 'Delete', width= button_width, command= lambda: mxr.delete_bookmark(chan= 8, choose_type= intvar_label_type.get()))
@@ -2571,20 +2571,20 @@ def main_window(scope_ip):
     radiobutton_channel_single.select()
     
     intvar_channel_single = tk.IntVar()
-    combobox_channel_single = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_single, values= [1, 2, 3, 4])
+    combobox_channel_single = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_single, values= [1, 2, 3, 4], font= entry_font)
 
     intvar_channel_delta_start = tk.IntVar()
-    combobox_channel_delta_start = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_delta_start, values= [1, 2, 3, 4])
+    combobox_channel_delta_start = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_delta_start, values= [1, 2, 3, 4], font= entry_font)
 
     label_arrow = tk.Label(label_frame_channel, text= '      ↓', background= background_color_1, fg= '#0D325C', font= calibri_bold_font,)
     label_channel_delta_stop = tk.Label(label_frame_channel, text= 'Channel', background= background_color_1, fg= '#0D325C', font= candara_bold_font,)
     intvar_channel_delta_stop = tk.IntVar()
-    combobox_channel_delta_stop = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_delta_stop, values= [1, 2, 3, 4])
+    combobox_channel_delta_stop = ttk.Combobox(label_frame_channel, width= 5, textvariable= intvar_channel_delta_stop, values= [1, 2, 3, 4], font= entry_font)
 
     boolvar_delta_name= tk.BooleanVar()
     checkbutton_delta_name = tk.Checkbutton(label_frame_channel, text= 'Modify Delta Name', variable= boolvar_delta_name, background= background_color_1, fg= '#0D325C', font= candara_bold_font,)
     strvar_delta_name = tk.StringVar()
-    combobox_delta_name = ttk.Combobox(label_frame_channel, width= 12, textvariable= strvar_delta_name, values= ['Setup Time', 'Hold Time'])
+    combobox_delta_name = ttk.Combobox(label_frame_channel, width= 12, textvariable= strvar_delta_name, values= ['Setup Time', 'Hold Time'], font= entry_font)
     combobox_delta_name.set(value= 'Setup Time')
 
 
@@ -2610,14 +2610,14 @@ def main_window(scope_ip):
     # # rb_img_desktop_path.select()
 
     strvar_image_pc_folder = tk.StringVar()
-    entry_image_pc_folder = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_image_pc_folder)
+    entry_image_pc_folder = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_image_pc_folder, font= entry_font)
 
     label_image_pc_folder = tk.Label(label_frame_save_file, text= 'Image PC folder [筆電的資料夾路徑]', background= backgroung_color_2, fg= '#0D325C', font= candara_base_font,)
 
     button_image_pc_browse = ttk.Button(label_frame_save_file, text= 'Browse', width= button_width, command= lambda: select_folder(entry_var= strvar_image_pc_folder, target_entry= entry_image_pc_folder))
     
     strvar_image = tk.StringVar()
-    entry_image = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_image)
+    entry_image = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_image, font= entry_font)
 
     label_image_name = tk.Label(label_frame_save_file, text= '(填 圖檔名)', background= backgroung_color_2, fg= '#0D325C', font= candara_base_font,)
 
@@ -2634,7 +2634,7 @@ def main_window(scope_ip):
     radiobutton_wmemory.select()
 
     strvar_wmemory_folder = tk.StringVar()
-    entry_wmemory_folder = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_wmemory_folder)
+    entry_wmemory_folder = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_wmemory_folder, font= entry_font)
 
     label_wmemory_folder = tk.Label(label_frame_save_file, text= 'Scope folder', background= backgroung_color_2, fg= '#0D325C', font= candara_base_font,)
 
@@ -2644,14 +2644,14 @@ def main_window(scope_ip):
     # rb_wme_desktop_path.select()
 
     strvar_wmemory_pc_folder = tk.StringVar()
-    entry_wmemory_pc_folder = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_wmemory_pc_folder)
+    entry_wmemory_pc_folder = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_wmemory_pc_folder, font= entry_font)
 
     label_wmemory_pc_folder = tk.Label(label_frame_save_file, text= 'PC folder [筆電的資料夾路徑]', background= backgroung_color_2, fg= '#0D325C', font= candara_base_font,)
 
     button_wmemory_pc_browse = ttk.Button(label_frame_save_file, text= 'Browse', width= button_width, command= lambda: select_folder(entry_var= strvar_wmemory_pc_folder, target_entry= entry_wmemory_pc_folder))
 
     strvar_other_file = tk.StringVar()
-    entry_other_file = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_other_file)
+    entry_other_file = tk.Entry(label_frame_save_file, width= max(40, int(entry_width*0.4)), textvariable= strvar_other_file, font= entry_font)
 
     label_other_filename = tk.Label(label_frame_save_file, text= '(填 檔名)', background= backgroung_color_2, fg= '#0D325C', font= candara_base_font,)
 
@@ -2667,37 +2667,37 @@ def main_window(scope_ip):
     entry_width= set_entry_width(base_entry_width= 50)
 
     strvar_wmemory_1 = tk.StringVar()
-    entry_wmemory_1 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_1)
+    entry_wmemory_1 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_1, font= entry_font)
 
     button_load_wmemory_1 = ttk.Button(label_frame_load_file, text= 'load WMemory1', width= button_width, command= lambda: mxr.load_wmemory(chan= 1, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_1.get(), file_path_choice = intvar_wmemory_path_choice.get()))
     button_clear_wmemory_1 = ttk.Button(label_frame_load_file, text= 'Clear', width= button_width, command= lambda: mxr.clear_wmemory(chan= 1, string= strvar_wmemory_1))
 
     strvar_wmemory_2 = tk.StringVar()
-    entry_wmemory_2 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_2)
+    entry_wmemory_2 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_2, font= entry_font)
     
     button_load_wmemory_2 = ttk.Button(label_frame_load_file, text= 'load WMemory2', width= button_width, command= lambda: mxr.load_wmemory(chan= 2, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_2.get(), file_path_choice = intvar_wmemory_path_choice.get()))
     button_clear_wmemory_2 = ttk.Button(label_frame_load_file, text= 'Clear', width= button_width, command= lambda: mxr.clear_wmemory(chan= 2, string= strvar_wmemory_2))
 
     strvar_wmemory_3 = tk.StringVar()
-    entry_wmemory_3 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_3)
+    entry_wmemory_3 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_3, font= entry_font)
 
     button_load_wmemory_3 = ttk.Button(label_frame_load_file, text= 'load WMemory3', width= button_width, command= lambda: mxr.load_wmemory(chan= 3, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_3.get(), file_path_choice = intvar_wmemory_path_choice.get()))
     button_clear_wmemory_3 = ttk.Button(label_frame_load_file, text= 'Clear', width= button_width, command= lambda: mxr.clear_wmemory(chan= 3, string= strvar_wmemory_3))
 
     strvar_wmemory_4 = tk.StringVar()
-    entry_wmemory_4 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_4)
+    entry_wmemory_4 = tk.Entry(label_frame_load_file, width= max(50, int(entry_width*0.4)), textvariable= strvar_wmemory_4, font= entry_font)
     
     button_load_wmemory_4 = ttk.Button(label_frame_load_file, text= 'load WMemory4', width= button_width, command= lambda: mxr.load_wmemory(chan= 4, folder= strvar_wmemory_folder.get(), wme_name= strvar_wmemory_4.get(), file_path_choice = intvar_wmemory_path_choice.get()))
     button_clear_wmemory_4 = ttk.Button(label_frame_load_file, text= 'Clear', width= button_width, command= lambda: mxr.clear_wmemory(chan= 4, string= strvar_wmemory_4))
 
     strvar_setupfile_interface = tk.StringVar()
-    combobox_setupfile_interface = ttk.Combobox(label_frame_load_file, width= 5, textvariable= strvar_setupfile_interface)
+    combobox_setupfile_interface = ttk.Combobox(label_frame_load_file, width= 5, textvariable= strvar_setupfile_interface, font= entry_font)
 
     strvar_setupfile_class = tk.StringVar()
-    combobox_setupfile_class = ttk.Combobox(label_frame_load_file, width= 18, textvariable= strvar_setupfile_class)
+    combobox_setupfile_class = ttk.Combobox(label_frame_load_file, width= 18, textvariable= strvar_setupfile_class, font= entry_font)
 
     strvar_setup = tk.StringVar()
-    combobox_setup = ttk.Combobox(label_frame_load_file, width= 15, textvariable= strvar_setup)
+    combobox_setup = ttk.Combobox(label_frame_load_file, width= 15, textvariable= strvar_setup, font= entry_font)
     
     boolvar_setup_timebase = tk.BooleanVar()    
     checkbutton_setup_timebase= tk.Checkbutton(label_frame_load_file, text= 'Time', variable= boolvar_setup_timebase, background= background_color_1, fg= '#0D325C')
@@ -3043,8 +3043,8 @@ def main_window(scope_ip):
     combobox_channel_single.grid(row= 5, column= 1, sticky= 'w')
     radiobutton_channel_delta.grid(row= 5, column= 2, sticky= 'w')
     combobox_channel_delta_start.grid(row= 5, column= 3, sticky= 'nesww')
-    label_arrow.grid(row= 6, column= 2, sticky= 'w')
-    label_channel_delta_stop.grid(row= 7, column= 2, sticky= 'w')
+    label_arrow.grid(row= 6, column= 2, sticky= 'ew')
+    label_channel_delta_stop.grid(row= 7, column= 2, sticky= 'ew')
     combobox_channel_delta_stop.grid(row= 7, column= 3, sticky= 'w')
     button_channel_switch.grid(row= 6, column= 4, sticky= 'w')
 
