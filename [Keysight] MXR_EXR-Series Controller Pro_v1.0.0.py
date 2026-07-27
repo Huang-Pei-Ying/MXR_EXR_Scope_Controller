@@ -2019,147 +2019,68 @@ def main_window(scope_ip):
 
     print("selected ref:", (ref_w, ref_h), "res_scale:", round(res_scale, 3))
 
-    # initial window size (occupy a ratio of monitor)
-    win_w = int(screen_w * 0.9)
-    win_h = int(screen_h * 0.7)
-    window.geometry(f"{win_w}x{win_h}")
-    window.minsize(360, 240)
-
-    # ref_resolution= (2560, 1600)
-    # ref_w, ref_h = ref_resolution
-    # res_scale_w = tk_screen_w / ref_w
-    # res_scale_h = tk_screen_h / ref_h
-    # res_scale = min(res_scale_w, res_scale_h)  # 保證不會超出任一方向
-    # # 若要同時顧慮 DPI 作次要調整
-    # ppi = window.winfo_fpixels('1i') if hasattr(window, "winfo_fpixels") else 96
-    # dpi_scale = ppi / 96.0
-
-    # """
-    # use_dpi_as_secondary: 若 True, final_scale = res_scale * dpi_scale
-    #                      若 False, final_scale = res_scale(解析度優先)
-    # """
-
-    # use_dpi_as_secondary= True
-    # if use_dpi_as_secondary:
-    #     final_scale = res_scale * dpi_scale
-    # else:
-    #     final_scale = res_scale
-
-    # print(f"screen: {tk_screen_w}x{tk_screen_h}, ref: {ref_w}x{ref_h}, res_scale: {res_scale:.3f}, dpi_scale: {dpi_scale:.3f}, final_scale: {final_scale:.3f}")
-
-    # # 設定視窗佔螢幕一個比例（保持不同解析度下相同佔比）
-    # win_w = int(tk_screen_w * 0.9)
-    # win_h = int(tk_screen_h * 0.7)
-    # window.geometry(f"{win_w}x{win_h}")
-    # window.minsize(360, 240)
-
-    # # 取得一個安全的按鈕字型（部分系統可能沒有 TkButtonFont）
-    # try:
-    #     btn_font = font.nametofont("TkButtonFont").copy()
-    # except Exception:
-    #     default_font = font.nametofont("TkDefaultFont")
-    #     btn_font = font.Font(root= window,
-    #                          family=default_font.cget("family"),
-    #                          size=default_font.cget("size"))
     
-    # base_font_size= 5
-    # # 根據 final_scale 設定字型與按鈕的 width/height（以字元/行作單位）
-    # new_font_size = max(6, int(round(base_font_size * final_scale)))
-    # btn_font.configure(size= new_font_size)
+    # 設定style ========================================================================================================================================================================
+    style = ttk.Style(window)
 
-
-
-
-    # # 取得 PPI 並設定 scaling（以 96 DPI 為基準）
-    # ppi = window.winfo_fpixels('1i')
-    # dpi_scale = ppi / 96.0
-    # window.tk.call('tk', 'scaling', dpi_scale)
-    # print("Detected PPI:", ppi, " dpi_scale:", dpi_scale)
-
-    # 初始視窗大小 (佔螢幕比例)
-    # screen_w = window.winfo_screenwidth()
-    # screen_h = window.winfo_screenheight()
-    # init_w = int(screen_w * 0.9)
-    # init_h = int(screen_h * 0.8)
-    # window.geometry(f"{init_w}x{init_h}")
-    # window.minsize(360, 240)
-
-
-    # # 先用 TkDefaultFont 作為基底（此命名通常存在）
-    # default_font = font.nametofont("TkDefaultFont")
-    # base_font_size= 10
-
-    # # 安全取得或建立「按鈕字型」
-    # try:
-    #     # 若存在 TkButtonFont（部分系統才有），直接使用它的 copy/調整
-    #     btn_font = font.nametofont("TkButtonFont").copy()
-    #     btn_font.configure(size=max(6, int(base_font_size * dpi_scale)))
-    # except Exception:
-    #     # 若不存在，建立新的字型，家庭名稱使用 default_font 的 family
-    #     btn_font = font.Font(root= window,
-    #                          family=default_font.cget("family"),
-    #                          size=max(6, int(base_font_size * dpi_scale)),
-    #                          weight=default_font.cget("weight"))
-
-
-    # # window.geometry('1500x760+2+2')
-    window.geometry('+2+2')
-    window.configure(bg= '#E9F4FF')
-    # window.resizable(True, True)
-
-    background_color_1= '#c4cdd8'
-    backgroung_color_2= '#b0c8db'
-
-    # 設定waveform intensity參數
-    waveform_intensity_step = 1
-    waveform_intensity_min_value = 0
-    waveform_intensity_max_value = 100
-
-
+    # 顏色表 (name -> (bg, fg, select))
+    colors = {
+        'window': ('#084F6A', '#000000', '#000000'), 
+        'labelframe': ("#011E25", '#9DB5B2', '#000000'), 
+        'label': ('#011E25', '#DAF0EE', '#000000'), 
+        'button': ('#8CC6D0', '#0B3041', '#000000'), 
+        'special_button': ('#61CBF4', '#FFFFFF', '#000000'), 
+        'entry': ('#EAF4F6', '#0B3041', '#000000'), 
+        'combobox': ('#F2F2F2', '#0B3041', '#000000'), 
+        'radiobutton_1': ('#011E25', '#F6C6AD', '#8CC6D0'), 
+        'radiobutton_2': ('#011E25', '#F2CFEE', '#8CC6D0'), 
+        'radiobutton_3': ('#011E25', '#E59EDD', '#8CC6D0'), 
+        'checkbutton_1': ('#011E25', '#FFFFB3', '#EAF4F6'), 
+        'checkbutton_2': ('#011E25', '#83CBEB', '#EAF4F6')       
+    }
 
     base_font_size= 7
-
-    candara_family = choose_available_font(window, ["Candara", "Calibri"], fallback="Segoe UI")
-    calibri_family = choose_available_font(window, ["Calibri", "Candara"], fallback="Segoe UI")
-
-    # base fonts (pure tk)
-    family = "Segoe UI" if sys.platform == "win32" else "Helvetica"
-    candara_base_font = font.Font(root= window, family= candara_family, size= max(10, int(round(base_font_size * res_scale))))
-    calibri_base_font = font.Font(root= window, family= calibri_family, size= max(10, int(round(base_font_size * res_scale))))
-
-    candara_bold_font = font.Font(root= window, family= candara_family, size=max(10, int(round(base_font_size * res_scale))), weight="bold")
-    calibri_bold_font = font.Font(root= window, family= calibri_family, size=max(10, int(round(base_font_size * res_scale))), weight="bold")
     
-    entry_font = font.Font(root= window, family= calibri_family, size=max(10, int(round((base_font_size-1) * res_scale))))
-    
-    # safe font retrieval and base UI font (shared)
-    try:
-        ui_font = font.nametofont("TkDefaultFont").copy()
-    except Exception:
-        ui_font = font.Font(root= window, family="Helvetica", size=10)
-    ui_font.configure(size=max(8, int(round(base_font_size * res_scale))))
+    # 設定label style
+    label_style= {
+        'calibri_bold': ('Calibri', 'bold'), 
+        'calibri_normal': ('Candara', 'normal'), 
+        'candara_bold': ('Calibri', 'bold'), 
+        'candara_normal': ('Candara', 'normal'), 
+    }
+    for name, (font_name, weight) in label_style.items():
+        ui_label_font= font.Font(root= window, family= font_name, size= max(8, int(round(base_font_size * res_scale))), weight= weight)
+        style_name = f"label_{name}.TLabel"
+        # configure the style; some themes ignore background for TLabel
+        style.configure(style_name, background= colors['label'][0], foreground= colors['label'][1], font= ui_label_font, padding= 1)
 
-    # apply font to ttk widgets via style
-    style = ttk.Style(window)
-    try:
-        # style.configure("TLabel", font=ui_font)
-        style.configure("TButton", font= ui_font)
-        # style.configure("TEntry", font=ui_font)
-        # style.configure("TCheckbutton", font=ui_font)
-        # style.configure("TRadiobutton", font=ui_font)
-        style.configure("TCombobox", font= ui_font)
-    except Exception:
-        # some Tk versions/ttk themes may ignore some styles; continue anyway
-        pass
+    # 設定button style
+    ui_button_font= font.Font(root= window, family= f'Calibri', size= max(8, int(round(base_font_size * res_scale))))
+    style.configure('entry_normal_height.TButton', background= colors['button'][0], foreground= colors['button'][1], font= ui_button_font, padding= 1)
+    style.configure('entry_double_height.TButton', background= colors['button'][0], foreground= colors['button'][1], font= ui_button_font, padding= 2)
+    style.configure('entry_special.TButton', background= colors['special_button'][0], foreground= colors['special_button'][1], font= ui_button_font, padding= 2)
 
+    # 設定entry style
+    ui_entry_font= font.Font(root= window, family= f'Calibri', size= max(10, int(round((base_font_size-1) * res_scale))))
+    style.configure('TEntry', background= colors['entry'][0], foreground= colors['entry'][1], font= ui_entry_font, padding= 1)
+
+    # 設定combobox style
+    ui_combobox_font= font.Font(root= window, family= f'Calibri', size= max(10, int(round((base_font_size-1) * res_scale))))
+    style.configure('TCombobox', background= colors['combobox'][0], foreground= colors['combobox'][1], font= ui_combobox_font, padding= 1)
+
+    # 設定radiobutton style
+    ui_radiobutton_font= font.Font(root= window, family= f'Calibri', size= max(8, int(round(base_font_size * res_scale))))
+    for i in range(1, 4):
+        style.configure(f'radiobutton_{i}.TRadiobutton', background= colors[f'radiobutton_{i}'][0], foreground= colors[f'radiobutton_{i}'][1], font= ui_radiobutton_font, padding= 1)
+
+    # 設定checkbutton style
+    ui_checkbutton_font= font.Font(root= window, family= f'Calibri', size= max(8, int(round(base_font_size * res_scale))))
+    for i in range(1, 3):
+        style.configure(f'checkbutton_{i}.TCheckbutton', background= colors[f'checkbutton_{i}'][0], foreground= colors[f'checkbutton_{i}'][1], font= ui_checkbutton_font, padding= 1)
 
 
     # 設定按鈕大小, 初始按鈕尺寸以 dpi_scale 調整（width/height 為字元/行數）
     def set_button_size(base_btn_w, base_btn_h):
-        # w=20, h=2
-        # init_button_width = max(4, int(round(original_width * dpi_scale)))
-        # init_button_height = max(1, int(round(original_height * dpi_scale)))
-
         btn_w = max(4, int(round(base_btn_w * res_scale)))
         btn_h = max(1, int(round(base_btn_h * res_scale)))
 
@@ -2168,6 +2089,62 @@ def main_window(scope_ip):
     def set_entry_width(base_entry_width):
         entry_w = max(10, int(round(base_entry_width * res_scale)))
         return entry_w
+    
+    # =============================================================================================================================================================================
+
+    # initial window size (occupy a ratio of monitor)
+    win_w = int(screen_w * 0.9)
+    win_h = int(screen_h * 0.7)
+    window.geometry(f"{win_w}x{win_h}")
+    window.minsize(360, 240)
+
+    # # window.geometry('1500x760+2+2')
+    window.geometry('+2+2')
+    window.configure(bg= colors['window'][0])
+    # window.resizable(True, True)
+
+    # 設定waveform intensity參數
+    waveform_intensity_step = 1
+    waveform_intensity_min_value = 0
+    waveform_intensity_max_value = 100
+
+
+
+    # base_font_size= 7
+
+    # candara_family = choose_available_font(window, ["Candara", "Calibri"], fallback="Segoe UI")
+    # calibri_family = choose_available_font(window, ["Calibri", "Candara"], fallback="Segoe UI")
+
+    # # base fonts (pure tk)
+    # # family = "Segoe UI" if sys.platform == "win32" else "Helvetica"
+    # candara_base_font = font.Font(root= window, family= candara_family, size= max(10, int(round(base_font_size * res_scale))))
+    # calibri_base_font = font.Font(root= window, family= calibri_family, size= max(10, int(round(base_font_size * res_scale))))
+
+    # candara_bold_font = font.Font(root= window, family= candara_family, size=max(10, int(round(base_font_size * res_scale))), weight="bold")
+    # calibri_bold_font = font.Font(root= window, family= calibri_family, size=max(10, int(round(base_font_size * res_scale))), weight="bold")
+    
+    # entry_font = font.Font(root= window, family= calibri_family, size=max(10, int(round((base_font_size-1) * res_scale))))
+    
+    # # safe font retrieval and base UI font (shared)
+    # try:
+    #     ui_font = font.nametofont("TkDefaultFont").copy()
+    # except Exception:
+    #     ui_font = font.Font(root= window, family="Helvetica", size=10)
+    # ui_font.configure(size=max(8, int(round(base_font_size * res_scale))))
+
+    # # # apply font to ttk widgets via style
+    # # style = ttk.Style(window)
+    # # try:
+    # #     # style.configure("TLabel", font=ui_font)
+    # #     style.configure("TButton", font= ui_font)
+    # #     # style.configure("TEntry", font=ui_font)
+    # #     # style.configure("TCheckbutton", font=ui_font)
+    # #     # style.configure("TRadiobutton", font=ui_font)
+    # #     style.configure("TCombobox", font= ui_font)
+    # # except Exception:
+    # #     # some Tk versions/ttk themes may ignore some styles; continue anyway
+    # #     pass
+
 
     # Measurement Frame ===================================================================================================================================
 
