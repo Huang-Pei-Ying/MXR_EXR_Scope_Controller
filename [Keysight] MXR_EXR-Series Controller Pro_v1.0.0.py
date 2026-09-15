@@ -168,8 +168,8 @@ def main_window(scope_ip):
         config_initial.optionxform = str
         config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='UTF-8',)
 
-        select_VoltScale = config_initial['Scale_Offset_Selected_Values']['VoltScale']
-        select_VoltOffset = config_initial['Scale_Offset_Selected_Values']['VoltOffset']
+        select_VoltageScale = config_initial['Scale_Offset_Selected_Values']['VoltageScale']
+        select_VoltageOffset = config_initial['Scale_Offset_Selected_Values']['VoltageOffset']
         TimebaseScale = config_initial['Scale_Offset_Config']['TimebaseScale']
         TimebaseOffset = config_initial['Scale_Offset_Config']['TimebaseOffset']
         select_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
@@ -236,8 +236,8 @@ def main_window(scope_ip):
         # PCSegment = config_initial['Scope_Server_Segment']['PCSegment']
         # Segment= [ScopeSegment, PCSegment]
 
-        # strvar_voltage_scale.set(value= select_VoltScale)
-        # strvar_voltage_offset.set(value= select_VoltOffset)
+        # strvar_voltage_scale.set(value= select_VoltageScale)
+        # strvar_voltage_offset.set(value= select_VoltageOffset)
         # strvar_timebase_scale.set(value= TimebaseScale)
         # strvar_timebase_offset.set(value= TimebaseOffset)
         # strvar_trigger_level.set(value= select_TriggerLevel)
@@ -1665,8 +1665,8 @@ def main_window(scope_ip):
             config.optionxform = str
             config.read( os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='utf-8',)
             
-            # config.set('Scale_Offset_Selected_Values', 'VoltScale', strvar_voltage_scale.get())
-            # config.set('Scale_Offset_Selected_Values', 'VoltOffset', strvar_voltage_offset.get())
+            # config.set('Scale_Offset_Selected_Values', 'VoltageScale', strvar_voltage_scale.get())
+            # config.set('Scale_Offset_Selected_Values', 'VoltageOffset', strvar_voltage_offset.get())
             # config.set('Scale_Offset_Config', 'TimebaseScale', strvar_timebase_scale.get())
             # config.set('Scale_Offset_Config', 'TimebaseOffset', strvar_timebase_offset.get())
             # config.set('Scale_Offset_Selected_Values', 'TriggerLevel', strvar_trigger_level.get())
@@ -1767,8 +1767,8 @@ def main_window(scope_ip):
         config_initial.read(config_file, encoding='UTF-8')
         
         # Scale
-        VoltScale_options = config_initial['Scale_Offset_Config'].get('VoltScale', '').split(',')
-        VoltOffset_options = config_initial['Scale_Offset_Config'].get('VoltOffset', '').split(',')
+        VoltageScale_options = config_initial['Scale_Offset_Config'].get('VoltageScale', '').split(',')
+        VoltageOffset_options = config_initial['Scale_Offset_Config'].get('VoltageOffset', '').split(',')
         TriggerLevel_options = config_initial['Scale_Offset_Config'].get('TriggerLevel', '').split(',')
 
         # Threshold
@@ -1790,8 +1790,8 @@ def main_window(scope_ip):
 
         # 從這裡返回值供其他部分調用
         return {
-            'VoltScale': VoltScale_options, 
-            'VoltOffset': VoltOffset_options, 
+            'VoltageScale': VoltageScale_options, 
+            'VoltageOffset': VoltageOffset_options, 
             'TriggerLevel': TriggerLevel_options, 
             'GeneralTopPercent': GeneralTopPercent_options,
             'GeneralMiddlePercent': GeneralMiddlePercent_options, 
@@ -1810,8 +1810,8 @@ def main_window(scope_ip):
             'config_file': config_file,  # 儲存config文件路徑以便後續使用
 
             'selected_values': {
-                'VoltScale': config_initial['Scale_Offset_Selected_Values'].get('VoltScale', ''),
-                'VoltOffset': config_initial['Scale_Offset_Selected_Values'].get('VoltOffset', ''),
+                'VoltageScale': config_initial['Scale_Offset_Selected_Values'].get('VoltageScale', ''),
+                'VoltageOffset': config_initial['Scale_Offset_Selected_Values'].get('VoltageOffset', ''),
                 'TriggerLevel': config_initial['Scale_Offset_Selected_Values'].get('TriggerLevel', ''),
                 'GeneralTopPercent': config_initial['Threshold_Selected_Values'].get('GeneralTopPercent', ''),
                 'GeneralMiddlePercent': config_initial['Threshold_Selected_Values'].get('GeneralMiddlePercent', ''),
@@ -2179,8 +2179,8 @@ def main_window(scope_ip):
 
 
     window.rowconfigure(0 , weight= 1, uniform= 'row')
-    window.columnconfigure(0 , weight= 1, uniform= 'col')
-    window.columnconfigure(1 , weight= 2, uniform= 'col')
+    window.columnconfigure(0 , weight= 2, uniform= 'col')
+    window.columnconfigure(1 , weight= 5, uniform= 'col')
 
     frame_left= tk.Frame(master= window, background= colors['window'][0])
     frame_right= tk.Frame(master= window, background= colors['window'][0])
@@ -2207,7 +2207,7 @@ def main_window(scope_ip):
     strvar_voltage_scale= tk.StringVar()
     combobox_voltage_scale = ttk.Combobox(
         frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_scale, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltScale', ini_selected_section= 'Scale_Offset_Selected_Values')
+    execute_commbobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
     
     # voltage_offset
     button_voltage_offset = ttk.Button(
@@ -2219,7 +2219,7 @@ def main_window(scope_ip):
     strvar_voltage_offset= tk.StringVar()
     combobox_voltage_offset = ttk.Combobox(
         frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_offset, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
+    execute_commbobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
     
     # timebase scale
     button_timebase_scale = ttk.Button(
@@ -3235,14 +3235,14 @@ def main_window(scope_ip):
     frame_right_top.rowconfigure(0, weight= 1, uniform= 'row')  # measurement
     frame_right_top.columnconfigure(0, weight= 1, uniform= 'col')
 
-    frame_right_bottom_left.rowconfigure(0, weight= 3, uniform= 'row')  # marker
+    frame_right_bottom_left.rowconfigure(0, weight= 2, uniform= 'row')  # marker
     frame_right_bottom_left.rowconfigure(1, weight= 2, uniform= 'row')  # label/bookmark
     frame_right_bottom_left.rowconfigure(2, weight= 1, uniform= 'row')  # save image
     frame_right_bottom_left.columnconfigure(0, weight= 1, uniform= 'col')
 
-    frame_right_bottom_right.rowconfigure(0, weight= 1, uniform= 'row')  # save others
-    frame_right_bottom_right.rowconfigure(1, weight= 1, uniform= 'row')  # load waveform
-    frame_right_bottom_right.rowconfigure(2, weight= 2, uniform= 'row')  # load setup
+    frame_right_bottom_right.rowconfigure(0, weight= 2, uniform= 'row')  # save others
+    frame_right_bottom_right.rowconfigure(1, weight= 2, uniform= 'row')  # load waveform
+    frame_right_bottom_right.rowconfigure(2, weight= 3, uniform= 'row')  # load setup
     frame_right_bottom_right.columnconfigure(0, weight= 1, uniform= 'col')
 
     ### scale/offset/trigger
@@ -3305,7 +3305,7 @@ def main_window(scope_ip):
 
     frame_measurement_base.rowconfigure(0, weight= 1, uniform= 'row')
     frame_measurement_base.columnconfigure(0, weight= 2, uniform= 'col')
-    frame_measurement_base.columnconfigure(1, weight= 4, uniform= 'col')
+    frame_measurement_base.columnconfigure(1, weight= 6, uniform= 'col')
     frame_measurement_base.columnconfigure(2, weight= 1, uniform= 'col')
 
     frame_measurement_top_left.rowconfigure(0, weight= 3, uniform= 'row')
@@ -3318,15 +3318,16 @@ def main_window(scope_ip):
     for j in range(5):
         frame_measurement_top_right.columnconfigure(j, weight= 1, uniform= 'col')
     
-    for i in range(5):
-        frame_measurement_base_left.rowconfigure(i, weight= 1, uniform= 'row')
+    frame_measurement_base_left.rowconfigure(0, weight= 1, uniform= 'row')
+    frame_measurement_base_left.rowconfigure(1, weight= 5, uniform= 'row')
     frame_measurement_base_left.columnconfigure(0, weight= 1, uniform= 'col')
     frame_measurement_base_left.columnconfigure(1, weight= 1, uniform= 'col')
 
     for i in range(5):
         frame_measurement_base_middle.rowconfigure(i, weight= 1, uniform= 'row')
-    for j in range(5):
-        frame_measurement_base_middle.columnconfigure(j, weight= 1, uniform= 'col')
+    frame_measurement_base_middle.columnconfigure(0, weight= 2, uniform= 'col')
+    for j in range(1, 5):
+        frame_measurement_base_middle.columnconfigure(j, weight= 3, uniform= 'col')
 
     frame_measurement_base_right.rowconfigure(0, weight= 1, uniform= 'row')
     frame_measurement_base_right.columnconfigure(0, weight= 1, uniform= 'col')
@@ -3377,9 +3378,9 @@ def main_window(scope_ip):
 
     frame_save_others_top.rowconfigure(0, weight= 1, uniform= 'row')
     frame_save_others_top.rowconfigure(1, weight= 1, uniform= 'row')
-    frame_save_others_top.columnconfigure(0, weight= 1, uniform= 'col')
+    frame_save_others_top.columnconfigure(0, weight= 2, uniform= 'col')
     frame_save_others_top.columnconfigure(1, weight= 1, uniform= 'col')
-    frame_save_others_top.columnconfigure(2, weight= 2, uniform= 'col')
+    frame_save_others_top.columnconfigure(2, weight= 5, uniform= 'col')
 
     frame_save_others_base.rowconfigure(0, weight= 1, uniform= 'row')
     frame_save_others_base.rowconfigure(1, weight= 1, uniform= 'row')
@@ -3395,9 +3396,9 @@ def main_window(scope_ip):
     labelframe_load_waveform.columnconfigure(0, weight= 1, uniform= 'col')
 
     frame_load_waveform_top.rowconfigure(0, weight= 1, uniform= 'row')
-    frame_load_waveform_top.columnconfigure(0, weight= 1, uniform= 'col')
+    frame_load_waveform_top.columnconfigure(0, weight= 2, uniform= 'col')
     frame_load_waveform_top.columnconfigure(1, weight= 1, uniform= 'col')
-    frame_load_waveform_top.columnconfigure(2, weight= 2, uniform= 'col')
+    frame_load_waveform_top.columnconfigure(2, weight= 5, uniform= 'col')
 
     frame_load_waveform_base.rowconfigure(0, weight= 1, uniform= 'row')
     frame_load_waveform_base.rowconfigure(1, weight= 1, uniform= 'row')
@@ -3417,9 +3418,9 @@ def main_window(scope_ip):
 
     frame_load_setup_1.rowconfigure(0, weight= 1, uniform= 'row')
     frame_load_setup_1.rowconfigure(1, weight= 1, uniform= 'row')
-    frame_load_setup_1.columnconfigure(0, weight= 1, uniform= 'col')
+    frame_load_setup_1.columnconfigure(0, weight= 2, uniform= 'col')
     frame_load_setup_1.columnconfigure(1, weight= 1, uniform= 'col')
-    frame_load_setup_1.columnconfigure(2, weight= 3, uniform= 'col')
+    frame_load_setup_1.columnconfigure(2, weight= 5, uniform= 'col')
 
     frame_load_setup_2.rowconfigure(0, weight= 1, uniform= 'row')
     frame_load_setup_2.rowconfigure(1, weight= 1, uniform= 'row')
@@ -3591,9 +3592,9 @@ def main_window(scope_ip):
     
     label_delta_setting.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
 
-    radiobutton_double_channels.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    radiobutton_double_channels.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw', columnspan= 2)
     checkbutton_modify_delta_name.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_modify_delta_name.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'nesw')
+    combobox_modify_delta_name.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
 
     label_delta_start.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     label_delta_arrow.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
@@ -3623,7 +3624,7 @@ def main_window(scope_ip):
     combobox_delta_position_stop.grid(row= 3, column= 4, padx= 2, pady= 2, sticky= 'nesw')
     button_deita_position_switch.grid(row= 4, column= 4, padx= 5, pady= 5, sticky= 'nesw')
 
-    button_measurement_deltatime.grid(row= 0, column= 0, padx= 30, pady= 30, sticky= 'nesw')
+    button_measurement_deltatime.grid(row= 0, column= 0, padx= 30, pady= 50, sticky= 'nesw')
     
     ###########################
     ### Marker ==============================================================================================================================================
@@ -3657,47 +3658,47 @@ def main_window(scope_ip):
     radiobutton_label.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     radiobutton_bookmark.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'nesw')
 
-    button_label_channel_1_ckeck.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_channel_1.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_channel_1_delete.grid(row= 0, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_channel_1_ckeck.grid(row= 0, column= 0, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_channel_1.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    button_label_channel_1_delete.grid(row= 0, column= 2, padx= 5, pady= 5, sticky= 'ew')
 
-    button_label_channel_2_ckeck.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_channel_2.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_channel_2_delete.grid(row= 1, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_channel_2_ckeck.grid(row= 1, column= 0, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_channel_2.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    button_label_channel_2_delete.grid(row= 1, column= 2, padx= 5, pady= 5, sticky= 'ew')
 
-    button_label_channel_3_ckeck.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_channel_3.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_channel_3_delete.grid(row= 2, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_channel_3_ckeck.grid(row= 2, column= 0, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_channel_3.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    button_label_channel_3_delete.grid(row= 2, column= 2, padx= 5, pady= 5, sticky= 'ew')
 
-    button_label_channel_4_ckeck.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_channel_4.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_channel_4_delete.grid(row= 3, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_channel_4_ckeck.grid(row= 3, column= 0, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_channel_4.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    button_label_channel_4_delete.grid(row= 3, column= 2, padx= 5, pady= 5, sticky= 'ew')
 
-    button_label_wmemory_1_ckeck.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_wmemory_1.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_wmemory_1_delete.grid(row= 0, column= 5, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_wmemory_1_ckeck.grid(row= 0, column= 3, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_wmemory_1.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'ew')
+    button_label_wmemory_1_delete.grid(row= 0, column= 5, padx= 5, pady= 5, sticky= 'ew')
 
-    button_label_wmemory_2_ckeck.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_wmemory_2.grid(row= 1, column= 4, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_wmemory_2_delete.grid(row= 1, column= 5, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_wmemory_2_ckeck.grid(row= 1, column= 3, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_wmemory_2.grid(row= 1, column= 4, padx= 2, pady= 2, sticky= 'ew')
+    button_label_wmemory_2_delete.grid(row= 1, column= 5, padx= 5, pady= 5, sticky= 'ew')
 
-    button_label_wmemory_3_ckeck.grid(row= 2, column= 3, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_wmemory_3.grid(row= 2, column= 4, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_wmemory_3_delete.grid(row= 2, column= 5, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_wmemory_3_ckeck.grid(row= 2, column= 3, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_wmemory_3.grid(row= 2, column= 4, padx= 2, pady= 2, sticky= 'ew')
+    button_label_wmemory_3_delete.grid(row= 2, column= 5, padx= 5, pady= 5, sticky= 'ew')
 
-    button_label_wmemory_4_ckeck.grid(row= 3, column= 3, padx= 2, pady= 2, sticky= 'nesw')
-    entry_label_wmemory_4.grid(row= 3, column= 4, padx= 2, pady= 2, sticky= 'nesw')
-    button_label_wmemory_4_delete.grid(row= 3, column= 5, padx= 2, pady= 2, sticky= 'nesw')
+    button_label_wmemory_4_ckeck.grid(row= 3, column= 3, padx= 5, pady= 5, sticky= 'ew')
+    entry_label_wmemory_4.grid(row= 3, column= 4, padx= 2, pady= 2, sticky= 'ew')
+    button_label_wmemory_4_delete.grid(row= 3, column= 5, padx= 5, pady= 5, sticky= 'ew')
 
     ###########################
     ### Save Image – in PC ==============================================================================================================================================
     label_save_img_pcfolder.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     entry_save_img_pcfolder.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    button_browse_img_pcfolder.grid(row= 0, column= 2, padx= 2, pady= 2, sticky= 'ew')
+    button_browse_img_pcfolder.grid(row= 0, column= 2, padx= 5, pady= 5, sticky= 'ew')
     
     label_save_img_name.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     entry_save_img_name.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    button_save_img_name.grid(row= 1, column= 2, padx= 2, pady= 2, sticky= 'ew')
+    button_save_img_name.grid(row= 1, column= 2, padx= 5, pady= 5, sticky= 'ew')
 
     ###########################
     ### Save Others – in Scope ==============================================================================================================================================
@@ -3709,7 +3710,7 @@ def main_window(scope_ip):
     combobox_save_others_server_segment.grid(row= 0, column= 2, padx= 2, pady= 2, sticky= 'w')
 
     radiobutton_save_others_wfmfile.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    radiobutton_save_others_setupfile.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'nesw')
+    radiobutton_save_others_setupfile.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'nesw', columnspan= 2)
 
     label_save_others_scopefolder.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     entry_save_others_scopefolder.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew', columnspan= 3)
@@ -3733,7 +3734,7 @@ def main_window(scope_ip):
 
     label_load_waveform_scopefolder.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     entry_load_waveform_scopefolder.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew', columnspan= 3)
-    button_load_waveform_browse_scopefolder.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'ew', columnspan= 2)
+    button_load_waveform_browse_scopefolder.grid(row= 0, column= 4, padx= 2, pady= 6, sticky= 'ew', columnspan= 2)
 
     label_load_waveform_wmemory.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     combobox_load_waveform_wmemory.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
