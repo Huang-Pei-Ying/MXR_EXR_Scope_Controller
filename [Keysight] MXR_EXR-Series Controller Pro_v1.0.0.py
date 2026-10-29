@@ -168,51 +168,71 @@ def main_window(scope_ip):
         config_initial.optionxform = str
         config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='UTF-8',)
 
-        select_VoltageScale = config_initial['Scale_Offset_Selected_Values']['VoltageScale']
-        select_VoltageOffset = config_initial['Scale_Offset_Selected_Values']['VoltageOffset']
+        selected_VoltageScale = config_initial['Scale_Offset_Selected_Values']['VoltageScale']
+        selected_VoltageOffset = config_initial['Scale_Offset_Selected_Values']['VoltageOffset']
         TimebaseScale = config_initial['Scale_Offset_Config']['TimebaseScale']
         TimebaseOffset = config_initial['Scale_Offset_Config']['TimebaseOffset']
-        select_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
-        TriggerChan = config_initial['Scale_Offset_Config']['TriggerChan']
-        WfmIntensity = config_initial['Scale_Offset_Config']['WfmIntensity']
+        selected_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
+        TriggerChannel = config_initial['Scale_Offset_Config']['TriggerChannel']
 
+        selected_GeneralTopPercent = config_initial['Threshold_Selected_Values']['GeneralTopPercent']
+        selected_GeneralMiddlePercent = config_initial['Threshold_Selected_Values']['GeneralMiddlePercent']
+        selected_GeneralBasePercent = config_initial['Threshold_Selected_Values']['GeneralBasePercent']
+        selected_GeneralTopValue = config_initial['Threshold_Selected_Values']['GeneralTopValue']
+        selected_GeneralMiddleValue = config_initial['Threshold_Selected_Values']['GeneralMiddleValue']
+        selected_GeneralBaseValue = config_initial['Threshold_Selected_Values']['GeneralBaseValue']
+        selected_RFTopPercent = config_initial['Threshold_Selected_Values']['RFTopPercent']
+        selected_RFBasePercent = config_initial['Threshold_Selected_Values']['RFBasePercent']
+        selected_RFTopValue = config_initial['Threshold_Selected_Values']['RFTopValue']
+        selected_RFBaseValue = config_initial['Threshold_Selected_Values']['RFBaseValue']
+        
+        SamplingRate = config_initial['Acquisition']['SamplingRate']
+        MemoryDepth = config_initial['Acquisition']['MemoryDepth']
+        WfmIntensity = config_initial['Acquisition']['WfmIntensity']
+
+        ChannelTypeChoice = config_initial['Channel']['ChannelTypeChoice']
+        ChannelSingle = config_initial['Channel']['ChannelSingle']
+        ChannelDoubleStart = config_initial['Channel']['ChannelDoubleStart']
+        ChannelDoubleStop = config_initial['Channel']['ChannelDoubleStop']
+
+        DeltaStartChannel = config_initial['Delta_Setup_Config']['DeltaStartChannel']
         DeltaStartEdge = config_initial['Delta_Setup_Config']['DeltaStartEdge']
         DeltaStartNum = config_initial['Delta_Setup_Config']['DeltaStartNum']
         DeltaStartPosition = config_initial['Delta_Setup_Config']['DeltaStartPosition']
+        DeltaStopChannel = config_initial['Delta_Setup_Config']['DeltaStopChannel']
         DeltaStopEdge = config_initial['Delta_Setup_Config']['DeltaStopEdge']
         DeltaStopNum = config_initial['Delta_Setup_Config']['DeltaStopNum']
         DeltaStopPosition = config_initial['Delta_Setup_Config']['DeltaStopPosition']
 
-        select_GeneralTopPercent = config_initial['Threshold_Selected_Values']['GeneralTopPercent']
-        select_GeneralMiddlePercent = config_initial['Threshold_Selected_Values']['GeneralMiddlePercent']
-        select_GeneralBasePercent = config_initial['Threshold_Selected_Values']['GeneralBasePercent']
-        select_GeneralTopValue = config_initial['Threshold_Selected_Values']['GeneralTopValue']
-        select_GeneralMiddleValue = config_initial['Threshold_Selected_Values']['GeneralMiddleValue']
-        select_GeneralBaseValue = config_initial['Threshold_Selected_Values']['GeneralBaseValue']
-        select_RFTopPercent = config_initial['Threshold_Selected_Values']['RFTopPercent']
-        select_RFBasePercent = config_initial['Threshold_Selected_Values']['RFBasePercent']
-        select_RFTopValue = config_initial['Threshold_Selected_Values']['RFTopValue']
-        select_RFBaseValue = config_initial['Threshold_Selected_Values']['RFBaseValue']
-        SamplingRate = config_initial['Acquisition']['SamplingRate']
-        MemoryDepth = config_initial['Acquisition']['MemoryDepth']
+        MultiColorChoice = config_initial['Measurement']['MultiColorChoice']
+        Measurement_1 = config_initial['Measurement']['Measurement_1']
+        Measurement_2 = config_initial['Measurement']['Measurement_2']
+        Measurement_3 = config_initial['Measurement']['Measurement_3']
+        Measurement_4 = config_initial['Measurement']['Measurement_4']
+        Measurement_5 = config_initial['Measurement']['Measurement_5']
+        Measurement_6 = config_initial['Measurement']['Measurement_6']
+        Measurement_7 = config_initial['Measurement']['Measurement_7']
+        Measurement_8 = config_initial['Measurement']['Measurement_8']
+        Measurement_9 = config_initial['Measurement']['Measurement_9']
+        Measurement_10 = config_initial['Measurement']['Measurement_10']
+        Measurement_11 = config_initial['Measurement']['Measurement_11']
+        Measurement_12 = config_initial['Measurement']['Measurement_12']
 
-        ChanLabel_1 = config_initial['Label_Setup_Config']['ChanLabel_1']
-        ChanLabel_2 = config_initial['Label_Setup_Config']['ChanLabel_2']
-        ChanLabel_3 = config_initial['Label_Setup_Config']['ChanLabel_3']
-        ChanLabel_4 = config_initial['Label_Setup_Config']['ChanLabel_4']
-        WMeLabel_1 = config_initial['Label_Setup_Config']['WMeLabel_1']
-        WMeLabel_2 = config_initial['Label_Setup_Config']['WMeLabel_2']
-        WMeLabel_3 = config_initial['Label_Setup_Config']['WMeLabel_3']
-        WMeLabel_4 = config_initial['Label_Setup_Config']['WMeLabel_4']
-
-        ChanSingle = config_initial['Chan_Delta']['ChanSingle']
-        ChanStart = config_initial['Chan_Delta']['ChanStart']
-        ChanStop = config_initial['Chan_Delta']['ChanStop']
+        LabelTypeChoice = config_initial['Label_Setup_Config']['LabelTypeChoice']
+        ChannelLabel_1 = config_initial['Label_Setup_Config']['ChannelLabel_1']
+        ChannelLabel_2 = config_initial['Label_Setup_Config']['ChannelLabel_2']
+        ChannelLabel_3 = config_initial['Label_Setup_Config']['ChannelLabel_3']
+        ChannelLabel_4 = config_initial['Label_Setup_Config']['ChannelLabel_4']
+        WmemoryLabel_1 = config_initial['Label_Setup_Config']['WmemoryLabel_1']
+        WmemoryLabel_2 = config_initial['Label_Setup_Config']['WmemoryLabel_2']
+        WmemoryLabel_3 = config_initial['Label_Setup_Config']['WmemoryLabel_3']
+        WmemoryLabel_4 = config_initial['Label_Setup_Config']['WmemoryLabel_4']
 
         # SaveImgFolder = config_initial['Save_Setup_Config']['SaveImgFolder']
         # SaveImgLocation = config_initial['Save_Setup_Config']['SaveImgLocation']
         SaveImgPCFolder = config_initial['Save_Setup_Config']['SaveImgPCFolder']
         SaveImgName = config_initial['Save_Setup_Config']['SaveImgName']
+        
         SaveWMeFolder = config_initial['Save_Setup_Config']['SaveWMeFolder']
         SaveWMeLocation = config_initial['Save_Setup_Config']['SaveWMeLocation']
         SaveWMePCFolder = config_initial['Save_Setup_Config']['SaveWMePCFolder']
@@ -2231,6 +2251,10 @@ def main_window(scope_ip):
     strvar_timebase_scale= tk.StringVar()
     entry_timebase_scale = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale, style= 'TEntry', justify= 'center')
    
+    strvar_timebase_scale_unit= tk.StringVar()
+    combobox_timebase_scale_unit = ttk.Combobox(
+        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
+
     # timebase offset
     button_timebase_offset= ttk.Button(
         master= frame_scalearea_top, text= 'Timebase Offset (sec)', width= button_width_scale_area, padding= 1, 
@@ -2241,6 +2265,10 @@ def main_window(scope_ip):
     strvar_timebase_offset= tk.StringVar()
     entry_timebase_offset = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset, style= 'TEntry', justify= 'center')
    
+    strvar_timebase_offset_unit= tk.StringVar()
+    combobox_timebase_offset_unit = ttk.Combobox(
+        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
+
     # trigger channel
     button_trigger_channel = ttk.Button(
         master= frame_scalearea_top, text= 'Trigger Channel', width= button_width_scale_area, padding= 1,
@@ -3252,11 +3280,11 @@ def main_window(scope_ip):
 
     for i in range(4):
         frame_scalearea_top.rowconfigure(i, weight= 1, uniform= 'row')
-    for j in range(4):
-        if j % 2 == 0:
-            frame_scalearea_top.columnconfigure(j, weight= 2, uniform= 'col')
-        else:
-            frame_scalearea_top.columnconfigure(j, weight= 1, uniform= 'col')
+    frame_scalearea_top.columnconfigure(0, weight= 7, uniform= 'col')
+    frame_scalearea_top.columnconfigure(1, weight= 3, uniform= 'col')
+    frame_scalearea_top.columnconfigure(2, weight= 7, uniform= 'col')
+    frame_scalearea_top.columnconfigure(3, weight= 3, uniform= 'col')
+    frame_scalearea_top.columnconfigure(4, weight= 2, uniform= 'col')
     
     frame_scalearea_bottom.rowconfigure(0, weight= 1, uniform= 'row')
     frame_scalearea_bottom.columnconfigure(0, weight= 2, uniform= 'col')
@@ -3458,12 +3486,14 @@ def main_window(scope_ip):
     
     button_timebase_scale.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'ew')
     entry_timebase_scale.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    combobox_timebase_scale_unit.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'ew')
     
     button_voltage_offset.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'ew')
     combobox_voltage_offset.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
     
     button_timebase_offset.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'ew')
     entry_timebase_offset.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    combobox_timebase_offset_unit.grid(row= 1, column= 4, padx= 2, pady= 2, sticky= 'ew')
     
     button_trigger_channel.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'ew')
     combobox_trigger_channel.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
