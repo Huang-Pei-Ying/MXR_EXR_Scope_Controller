@@ -228,33 +228,37 @@ def main_window(scope_ip):
         WmemoryLabel_3 = config_initial['Label_Setup_Config']['WmemoryLabel_3']
         WmemoryLabel_4 = config_initial['Label_Setup_Config']['WmemoryLabel_4']
 
-        # SaveImgFolder = config_initial['Save_Setup_Config']['SaveImgFolder']
-        # SaveImgLocation = config_initial['Save_Setup_Config']['SaveImgLocation']
-        SaveImgPCFolder = config_initial['Save_Setup_Config']['SaveImgPCFolder']
-        SaveImgName = config_initial['Save_Setup_Config']['SaveImgName']
+        SaveImgPCFolder = config_initial['Save_Img_Setup_Config']['SaveImgPCFolder']
+        SaveImgName = config_initial['Save_Img_Setup_Config']['SaveImgName']
         
-        SaveWMeFolder = config_initial['Save_Setup_Config']['SaveWMeFolder']
-        SaveWMeLocation = config_initial['Save_Setup_Config']['SaveWMeLocation']
-        SaveWMePCFolder = config_initial['Save_Setup_Config']['SaveWMePCFolder']
-        SaveWMeName = config_initial['Save_Setup_Config']['SaveWMeName']
+        SaveOtherLocation = config_initial['Save_Other_Setup_Config']['SaveOtherLocation']
+        SaveOtherServerCode = config_initial['Save_Other_Setup_Config']['SaveOtherServerCode']
+        SaveOtherFileType = config_initial['Save_Other_Setup_Config']['SaveOtherFileType']
+        SaveOtherFolder = config_initial['Save_Other_Setup_Config']['SaveOtherFolder']
+        SaveOtherChannel = config_initial['Save_Other_Setup_Config']['SaveOtherChannel']
+        SaveOtherFileName = config_initial['Save_Other_Setup_Config']['SaveOtherFileName']
 
-        LoadWMe1 = config_initial['Load_WMemory_Setup_Config']['LoadWMe1']
-        LoadWMe2 = config_initial['Load_WMemory_Setup_Config']['LoadWMe2']
-        LoadWMe3 = config_initial['Load_WMemory_Setup_Config']['LoadWMe3']
-        LoadWMe4 = config_initial['Load_WMemory_Setup_Config']['LoadWMe4']
+        LoadWMemoryLocation = config_initial['Load_WMemory_Setup_Config']['LoadWMemoryLocation']
+        LoadWMemoryServerCode = config_initial['Load_WMemory_Setup_Config']['LoadWMemoryServerCode']
+        LoadWMemoryFolder = config_initial['Load_WMemory_Setup_Config']['LoadWMemoryFolder']
+        LoadWMemoryChannel = config_initial['Load_WMemory_Setup_Config']['LoadWMemoryChannel']
+        LoadWMemoryFileName = config_initial['Load_WMemory_Setup_Config']['LoadWMemoryFileName']
+
+        LoadSetupFile_Type = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFile_Type']
+        LoadSetupFileLocation = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileLocation']
+        LoadSetupFileServerCode = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileServerCode']
+        LoadSetupFileFolder = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileFolder']
+        LoadSetupFileFileName = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileFileName']
+        LoadSetupFileSubLabel = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileSubLabel']
+        LoadSetupFileSubTime = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileSubTime']
+        LoadSetupFileSubVoltage = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileSubVoltage']
+        LoadSetupFileInterface = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileInterface']
+        LoadSetupFileClass = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileClass']
+        LoadSetupFileName = config_initial['Load_SetupFile_Setup_Config']['LoadSetupFileName']
 
         setupfile_interface_list = []
         for i in range(len(config_initial['Setupfile_Interface'])):
             setupfile_interface_list.append(config_initial['Setupfile_Interface'][f'Interface_{i}'])
-        setupfile_interface_list.append('')
-
-        SetupFileInterface = config_initial['Load_WMemory_Setup_Config']['SetupFileInterface']
-        SetupFileClass = config_initial['Load_WMemory_Setup_Config']['SetupFileClass']
-        LoadSetup = config_initial['Load_WMemory_Setup_Config']['LoadSetup']
-
-        # ScopeSegment = config_initial['Scope_Server_Segment']['ScopeSegment']
-        # PCSegment = config_initial['Scope_Server_Segment']['PCSegment']
-        # Segment= [ScopeSegment, PCSegment]
 
         # strvar_voltage_scale.set(value= select_VoltageScale)
         # strvar_voltage_offset.set(value= select_VoltageOffset)
@@ -313,7 +317,7 @@ def main_window(scope_ip):
         # strvar_setupfile_interface.set(value= SetupFileInterface)
         # strvar_setupfile_class.set(value= SetupFileClass)
         # strvar_setup.set(value= LoadSetup)
-        if SetupFileInterface == '' or SetupFileInterface == 'User':
+        if LoadSetupFileInterface == '' or LoadSetupFileInterface == 'User':
             combobox_load_setup_standard_subfolder.config(state= 'disabled')
         combobox_load_setup_standard_interface.config(values= setupfile_interface_list)
         select_load_setup_standard_interface(event= combobox_load_setup_standard_interface.bind("<<ComboboxSelected>>"), pc_segment= disk_segment)
@@ -2030,7 +2034,7 @@ def main_window(scope_ip):
     config_file_path = config_data['config_file']
 
 
-    def execute_commbobox_function(combobox, combobox_var, ini_dict_key, ini_option_section, ini_option_key, ini_selected_section):
+    def execute_combobox_function(combobox, combobox_var, ini_dict_key, ini_option_section, ini_option_key, ini_selected_section):
         combobox['values'] = config_data[ini_dict_key]  # 設置初始選項
         combobox.bind('<Return>', lambda event: add_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
         combobox.bind('<Delete>', lambda event: delete_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
@@ -2227,7 +2231,7 @@ def main_window(scope_ip):
     strvar_voltage_scale= tk.StringVar()
     combobox_voltage_scale = ttk.Combobox(
         frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_scale, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
+    execute_combobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
     
     # voltage_offset
     button_voltage_offset = ttk.Button(
@@ -2239,7 +2243,7 @@ def main_window(scope_ip):
     strvar_voltage_offset= tk.StringVar()
     combobox_voltage_offset = ttk.Combobox(
         frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_offset, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
+    execute_combobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
     
     # timebase scale
     button_timebase_scale = ttk.Button(
@@ -2290,7 +2294,7 @@ def main_window(scope_ip):
     strvar_trigger_level= tk.StringVar()
     combobox_trigger_level = ttk.Combobox(
         frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_trigger_level, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(combobox= combobox_trigger_level, combobox_var= strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
+    execute_combobox_function(combobox= combobox_trigger_level, combobox_var= strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
 
     frame_scalearea_bottom= tk.Frame(master= labelframe_scale_offset_trigger, background= colors['labelframe'][0])
     # buttons
@@ -2328,7 +2332,7 @@ def main_window(scope_ip):
     strvar_general_threshold_value_top= tk.StringVar()
     combobox_general_threshold_value_top = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_value_top, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_general_threshold_value_top, combobox_var= strvar_general_threshold_value_top, ini_dict_key= 'GeneralTopValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopValue', ini_selected_section= 'Threshold_Selected_Values')
     
     ## general threshold - value Middle
@@ -2338,7 +2342,7 @@ def main_window(scope_ip):
     strvar_general_threshold_value_middle= tk.StringVar()
     combobox_general_threshold_value_middle = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_value_middle, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_general_threshold_value_middle, combobox_var= strvar_general_threshold_value_middle, ini_dict_key= 'GeneralMiddleValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddleValue', ini_selected_section= 'Threshold_Selected_Values')
     
     ## general threshold - value Base
@@ -2348,7 +2352,7 @@ def main_window(scope_ip):
     strvar_general_threshold_value_base= tk.StringVar()
     combobox_general_threshold_value_base = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_value_base, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_general_threshold_value_base, combobox_var= strvar_general_threshold_value_base, ini_dict_key= 'GeneralBaseValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBaseValue', ini_selected_section= 'Threshold_Selected_Values')
 
     # general threshold - percent ######
@@ -2365,7 +2369,7 @@ def main_window(scope_ip):
     strvar_general_threshold_percent_top= tk.StringVar()
     combobox_general_threshold_percent_top = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_percent_top, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_general_threshold_percent_top, combobox_var= strvar_general_threshold_percent_top, ini_dict_key= 'GeneralTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopPercent', ini_selected_section= 'Threshold_Selected_Values')
     
     ## general threshold - percent Middle
@@ -2375,7 +2379,7 @@ def main_window(scope_ip):
     strvar_general_threshold_percent_middle= tk.StringVar()
     combobox_general_threshold_percent_middle = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_percent_middle, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_general_threshold_percent_middle, combobox_var= strvar_general_threshold_percent_middle, ini_dict_key= 'GeneralMiddlePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddlePercent', ini_selected_section= 'Threshold_Selected_Values')
     
     ## general threshold - percent Base
@@ -2385,7 +2389,7 @@ def main_window(scope_ip):
     strvar_general_threshold_percent_base= tk.StringVar()
     combobox_general_threshold_percent_base = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_percent_base, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_general_threshold_percent_base, combobox_var= strvar_general_threshold_percent_base, ini_dict_key= 'GeneralBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBasePercent', ini_selected_section= 'Threshold_Selected_Values')
     
     # Rise/Fall threshold - value ######
@@ -2402,7 +2406,7 @@ def main_window(scope_ip):
     strvar_RF_threshold_value_top= tk.StringVar()
     combobox_RF_threshold_value_top = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_value_top, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_RF_threshold_value_top, combobox_var= strvar_RF_threshold_value_top, ini_dict_key= 'RFTopValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopValue', ini_selected_section= 'Threshold_Selected_Values')
     
     ## Rise/Fall threshold - value Base
@@ -2412,7 +2416,7 @@ def main_window(scope_ip):
     strvar_RF_threshold_value_base= tk.StringVar()
     combobox_RF_threshold_value_base = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_value_base, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_RF_threshold_value_base, combobox_var= strvar_RF_threshold_value_base, ini_dict_key= 'RFBaseValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBaseValue', ini_selected_section= 'Threshold_Selected_Values')
 
     # Rise/Fall threshold - percent ######
@@ -2429,7 +2433,7 @@ def main_window(scope_ip):
     strvar_RF_threshold_percent_top= tk.StringVar()
     combobox_RF_threshold_percent_top = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_percent_top, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_RF_threshold_percent_top, combobox_var= strvar_RF_threshold_percent_top, ini_dict_key= 'RFTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopPercent', ini_selected_section= 'Threshold_Selected_Values')
     
     ## Rise/Fall threshold - percent Base
@@ -2439,7 +2443,7 @@ def main_window(scope_ip):
     strvar_RF_threshold_percent_base= tk.StringVar()
     combobox_RF_threshold_percent_base = ttk.Combobox(
         master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_percent_base, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_RF_threshold_percent_base, combobox_var= strvar_RF_threshold_percent_base, ini_dict_key= 'RFBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     ################################################
@@ -3076,7 +3080,7 @@ def main_window(scope_ip):
     strvar_save_others_server_segment= tk.StringVar()
     combobox_save_others_server_segment= ttk.Combobox(
         master= frame_save_others_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_save_others_server_segment, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_save_others_server_segment, combobox_var= strvar_save_others_server_segment, ini_dict_key= 'SaveOthersScopeSegment', ini_option_section= 'Scope_Server_Segment', ini_option_key= 'SaveOthersScopeSegment', ini_selected_section= 'Scope_Server_Segment_Selected_Values')
     
     intvar_save_others_filetype= tk.IntVar()
@@ -3134,7 +3138,7 @@ def main_window(scope_ip):
     strvar_load_waveform_server_segment= tk.StringVar()
     combobox_load_waveform_server_segment= ttk.Combobox(
         master= frame_load_waveform_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_load_waveform_server_segment, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_load_waveform_server_segment, combobox_var= strvar_load_waveform_server_segment, ini_dict_key= 'LoadWmemoryScopeSegment', ini_option_section= 'Scope_Server_Segment', ini_option_key= 'LoadWmemoryScopeSegment', ini_selected_section= 'Scope_Server_Segment_Selected_Values')
 
     label_load_waveform_scopefolder= tk.Label(
@@ -3198,7 +3202,7 @@ def main_window(scope_ip):
     strvar_load_setup_loacation_server= tk.StringVar()
     combobox_load_setup_loacation_server= ttk.Combobox(
         master= frame_load_setup_1, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_load_setup_loacation_server, style= 'TCombobox', justify= 'center')
-    execute_commbobox_function(
+    execute_combobox_function(
         combobox= combobox_load_setup_loacation_server, combobox_var= strvar_load_setup_loacation_server, ini_dict_key= 'LoadSetupScopeSegment', ini_option_section= 'Scope_Server_Segment', ini_option_key= 'LoadSetupScopeSegment', ini_selected_section= 'Scope_Server_Segment_Selected_Values')
 
     label_load_setup_user_defined_folder= tk.Label(
