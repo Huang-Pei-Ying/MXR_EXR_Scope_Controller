@@ -16,6 +16,9 @@ from tkinter import font
 from pathlib import Path
 
 
+from gui_frames.scale_frame import ScaleLabelFrame
+
+
 
 window_name= '[Keysight] MXR/EXR-Series Controller Pro_v1.0.0'
 
@@ -1808,9 +1811,9 @@ def main_window(scope_ip):
         RFBaseValue_options = config_initial['Threshold_Setup_Config'].get('RFBaseValue', '').split(',')
 
         # Scope Segment
-        SaveOthersScopeSegment_options = config_initial['Scope_Server_Segment'].get('SaveOthersScopeSegment', '').split(',')
-        LoadWmemoryScopeSegment_options = config_initial['Scope_Server_Segment'].get('LoadWmemoryScopeSegment', '').split(',')
-        LoadSetupScopeSegment_options = config_initial['Scope_Server_Segment'].get('LoadSetupScopeSegment', '').split(',')
+        SaveOtherServerCode_options = config_initial['Save_Other_Setup_Config'].get('SaveOtherServerCode', '').split(',')
+        LoadWMemoryServerCode_options = config_initial['Load_WMemory_Setup_Config'].get('LoadWMemoryServerCode', '').split(',')
+        LoadSetupFileServerCode_options = config_initial['Load_SetupFile_Setup_Config'].get('LoadSetupFileServerCode', '').split(',')
 
         # 從這裡返回值供其他部分調用
         return {
@@ -1827,9 +1830,9 @@ def main_window(scope_ip):
             'RFBasePercent': RFBasePercent_options, 
             'RFTopValue': RFTopValue_options, 
             'RFBaseValue': RFBaseValue_options, 
-            'SaveOthersScopeSegment': SaveOthersScopeSegment_options,
-            'LoadWmemoryScopeSegment': LoadWmemoryScopeSegment_options,
-            'LoadSetupScopeSegment': LoadSetupScopeSegment_options,
+            'SaveOtherServerCode': SaveOtherServerCode_options,
+            'LoadWMemoryServerCode': LoadWMemoryServerCode_options,
+            'LoadSetupFileServerCode': LoadSetupFileServerCode_options,
             
             'config_file': config_file,  # 儲存config文件路徑以便後續使用
 
@@ -1847,9 +1850,9 @@ def main_window(scope_ip):
                 'RFBasePercent': config_initial['Threshold_Selected_Values'].get('RFBasePercent', ''),
                 'RFTopValue': config_initial['Threshold_Selected_Values'].get('RFTopValue', ''),
                 'RFBaseValue': config_initial['Threshold_Selected_Values'].get('RFBaseValue', ''),
-                'SaveOthersScopeSegment': config_initial['Scope_Server_Segment_Selected_Values'].get('SaveOthersScopeSegment', ''),
-                'LoadWmemoryScopeSegment': config_initial['Scope_Server_Segment_Selected_Values'].get('LoadWmemoryScopeSegment', ''),
-                'LoadSetupScopeSegment': config_initial['Scope_Server_Segment_Selected_Values'].get('LoadSetupScopeSegment', ''),
+                'SaveOtherServerCode': config_initial['Save_Other_Selected_Values'].get('SaveOtherServerCode', ''),
+                'LoadWMemoryServerCode': config_initial['Load_WMemory_Selected_Values'].get('LoadWMemoryServerCode', ''),
+                'LoadSetupFileServerCode': config_initial['Load_SetupFile_Selected_Values'].get('LoadSetupFileServerCode', ''),
                 }        
         }
 
@@ -2215,104 +2218,106 @@ def main_window(scope_ip):
     # Left Area  ==============================================================================================================================================
     
     # Scale/Offset/Trigger  ===================================================================================================================================
-    labelframe_scale_offset_trigger= tk.LabelFrame(master= frame_left, text= 'Scale/Offset/Trigger', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+    # labelframe_scale_offset_trigger= tk.LabelFrame(master= frame_left, text= 'Scale/Offset/Trigger', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
     entry_width_scale_area= set_entry_width(base_entry_width= 20)
     button_width_scale_area, button_height_scale_area= set_button_size(base_btn_w= 20, base_btn_h= 1)
 
-    frame_scalearea_top= tk.Frame(master= labelframe_scale_offset_trigger, background= colors['labelframe'][0])
-    # voltage_scale
-    button_voltage_scale = ttk.Button(
-        master= frame_scalearea_top, text= 'Voltage Scale (V)', width= button_width_scale_area,  padding= 1, 
-        style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    strvar_voltage_scale= tk.StringVar()
-    combobox_voltage_scale = ttk.Combobox(
-        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_scale, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
-    
-    # voltage_offset
-    button_voltage_offset = ttk.Button(
-        master= frame_scalearea_top, text= 'Voltage Offset (V)', width= button_width_scale_area,  padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    strvar_voltage_offset= tk.StringVar()
-    combobox_voltage_offset = ttk.Combobox(
-        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_offset, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
-    
-    # timebase scale
-    button_timebase_scale = ttk.Button(
-        master= frame_scalearea_top, text= 'Timebase Scale (sec)', width= button_width_scale_area, padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    strvar_timebase_scale= tk.StringVar()
-    entry_timebase_scale = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale, style= 'TEntry', justify= 'center')
-   
-    strvar_timebase_scale_unit= tk.StringVar()
-    combobox_timebase_scale_unit = ttk.Combobox(
-        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
+    scale_frame = ScaleLabelFrame(master= window, settings= '', colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
-    # timebase offset
-    button_timebase_offset= ttk.Button(
-        master= frame_scalearea_top, text= 'Timebase Offset (sec)', width= button_width_scale_area, padding= 1, 
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
+    # frame_scalearea_top= tk.Frame(master= labelframe_scale_offset_trigger, background= colors['labelframe'][0])
+    # # voltage_scale
+    # button_voltage_scale = ttk.Button(
+    #     master= frame_scalearea_top, text= 'Voltage Scale (V)', width= button_width_scale_area,  padding= 1, 
+    #     style= 'normal_height.TButton',
+    #     # command= lambda: mxr.
+    #     )
     
-    strvar_timebase_offset= tk.StringVar()
-    entry_timebase_offset = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset, style= 'TEntry', justify= 'center')
+    # strvar_voltage_scale= tk.StringVar()
+    # combobox_voltage_scale = ttk.Combobox(
+    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_scale, style= 'TCombobox', justify= 'center')
+    # execute_combobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
+    
+    # # voltage_offset
+    # button_voltage_offset = ttk.Button(
+    #     master= frame_scalearea_top, text= 'Voltage Offset (V)', width= button_width_scale_area,  padding= 1,
+    #     # style= 'normal_height.TButton',
+    #     # command= lambda: mxr.
+    #     )
+    
+    # strvar_voltage_offset= tk.StringVar()
+    # combobox_voltage_offset = ttk.Combobox(
+    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_offset, style= 'TCombobox', justify= 'center')
+    # execute_combobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
+    
+    # # timebase scale
+    # button_timebase_scale = ttk.Button(
+    #     master= frame_scalearea_top, text= 'Timebase Scale (sec)', width= button_width_scale_area, padding= 1,
+    #     # style= 'normal_height.TButton',
+    #     # command= lambda: mxr.
+    #     )
+    
+    # strvar_timebase_scale= tk.StringVar()
+    # entry_timebase_scale = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale, style= 'TEntry', justify= 'center')
    
-    strvar_timebase_offset_unit= tk.StringVar()
-    combobox_timebase_offset_unit = ttk.Combobox(
-        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
+    # strvar_timebase_scale_unit= tk.StringVar()
+    # combobox_timebase_scale_unit = ttk.Combobox(
+    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
 
-    # trigger channel
-    button_trigger_channel = ttk.Button(
-        master= frame_scalearea_top, text= 'Trigger Channel', width= button_width_scale_area, padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
+    # # timebase offset
+    # button_timebase_offset= ttk.Button(
+    #     master= frame_scalearea_top, text= 'Timebase Offset (sec)', width= button_width_scale_area, padding= 1, 
+    #     # style= 'normal_height.TButton',
+    #     # command= lambda: mxr.
+    #     )
     
-    strvar_trigger_channel= tk.StringVar()
-    combobox_trigger_channel = ttk.Combobox(
-        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_trigger_channel, style= 'TCombobox', justify= 'center', values= ['1', '2', '3', '4'])
+    # strvar_timebase_offset= tk.StringVar()
+    # entry_timebase_offset = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset, style= 'TEntry', justify= 'center')
    
-    # trigger level
-    button_trigger_level = ttk.Button(
-        master= frame_scalearea_top, text= 'Trigger Level (V)', width= button_width_scale_area, padding= 1, 
-        # style= 'normal_height.TButton', 
-        # command= lambda: mxr.
-        )
-    
-    strvar_trigger_level= tk.StringVar()
-    combobox_trigger_level = ttk.Combobox(
-        frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_trigger_level, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(combobox= combobox_trigger_level, combobox_var= strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
+    # strvar_timebase_offset_unit= tk.StringVar()
+    # combobox_timebase_offset_unit = ttk.Combobox(
+    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
 
-    frame_scalearea_bottom= tk.Frame(master= labelframe_scale_offset_trigger, background= colors['labelframe'][0])
-    # buttons
-    button_trigger_mode = ttk.Button(
-        master= frame_scalearea_bottom, text= 'Trigger Mode', width= button_width_scale_area, padding= 2, 
-        style= 'double_height.TButton', 
-        # command= lambda: mxr.
-        )
-    button_trigger_slope = ttk.Button(
-        master= frame_scalearea_bottom, text= 'Trigger Slope', width= button_width_scale_area, padding= 2, 
-        # style= 'double_height.TButton', 
-        # command= lambda: mxr.
-        )
-    button_set_all = ttk.Button(
-        master= frame_scalearea_bottom, text= 'All Set', width= button_width_scale_area, padding= 2, 
-        # style= 'special.TButton', 
-        # command= lambda: mxr.
-        )
+    # # trigger channel
+    # button_trigger_channel = ttk.Button(
+    #     master= frame_scalearea_top, text= 'Trigger Channel', width= button_width_scale_area, padding= 1,
+    #     # style= 'normal_height.TButton',
+    #     # command= lambda: mxr.
+    #     )
+    
+    # strvar_trigger_channel= tk.StringVar()
+    # combobox_trigger_channel = ttk.Combobox(
+    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_trigger_channel, style= 'TCombobox', justify= 'center', values= ['1', '2', '3', '4'])
+   
+    # # trigger level
+    # button_trigger_level = ttk.Button(
+    #     master= frame_scalearea_top, text= 'Trigger Level (V)', width= button_width_scale_area, padding= 1, 
+    #     # style= 'normal_height.TButton', 
+    #     # command= lambda: mxr.
+    #     )
+    
+    # strvar_trigger_level= tk.StringVar()
+    # combobox_trigger_level = ttk.Combobox(
+    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_trigger_level, style= 'TCombobox', justify= 'center')
+    # execute_combobox_function(combobox= combobox_trigger_level, combobox_var= strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
+
+    # frame_scalearea_bottom= tk.Frame(master= labelframe_scale_offset_trigger, background= colors['labelframe'][0])
+    # # buttons
+    # button_trigger_mode = ttk.Button(
+    #     master= frame_scalearea_bottom, text= 'Trigger Mode', width= button_width_scale_area, padding= 2, 
+    #     style= 'double_height.TButton', 
+    #     # command= lambda: mxr.
+    #     )
+    # button_trigger_slope = ttk.Button(
+    #     master= frame_scalearea_bottom, text= 'Trigger Slope', width= button_width_scale_area, padding= 2, 
+    #     # style= 'double_height.TButton', 
+    #     # command= lambda: mxr.
+    #     )
+    # button_set_all = ttk.Button(
+    #     master= frame_scalearea_bottom, text= 'All Set', width= button_width_scale_area, padding= 2, 
+    #     # style= 'special.TButton', 
+    #     # command= lambda: mxr.
+    #     )
     
     ################################################
     # Threshold  ===================================================================================================================================
@@ -3081,7 +3086,7 @@ def main_window(scope_ip):
     combobox_save_others_server_segment= ttk.Combobox(
         master= frame_save_others_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_save_others_server_segment, style= 'TCombobox', justify= 'center')
     execute_combobox_function(
-        combobox= combobox_save_others_server_segment, combobox_var= strvar_save_others_server_segment, ini_dict_key= 'SaveOthersScopeSegment', ini_option_section= 'Scope_Server_Segment', ini_option_key= 'SaveOthersScopeSegment', ini_selected_section= 'Scope_Server_Segment_Selected_Values')
+        combobox= combobox_save_others_server_segment, combobox_var= strvar_save_others_server_segment, ini_dict_key= 'SaveOtherServerCode', ini_option_section= 'Save_Other_Setup_Config', ini_option_key= 'SaveOtherServerCode', ini_selected_section= 'Save_Other_Selected_Values')
     
     intvar_save_others_filetype= tk.IntVar()
     radiobutton_save_others_wfmfile= ttk.Radiobutton(
@@ -3139,7 +3144,7 @@ def main_window(scope_ip):
     combobox_load_waveform_server_segment= ttk.Combobox(
         master= frame_load_waveform_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_load_waveform_server_segment, style= 'TCombobox', justify= 'center')
     execute_combobox_function(
-        combobox= combobox_load_waveform_server_segment, combobox_var= strvar_load_waveform_server_segment, ini_dict_key= 'LoadWmemoryScopeSegment', ini_option_section= 'Scope_Server_Segment', ini_option_key= 'LoadWmemoryScopeSegment', ini_selected_section= 'Scope_Server_Segment_Selected_Values')
+        combobox= combobox_load_waveform_server_segment, combobox_var= strvar_load_waveform_server_segment, ini_dict_key= 'LoadWMemoryServerCode', ini_option_section= 'Load_WMemory_Setup_Config', ini_option_key= 'LoadWMemoryServerCode', ini_selected_section= 'Load_WMemory_Selected_Values')
 
     label_load_waveform_scopefolder= tk.Label(
         master= frame_load_waveform_base, text= 'Folder', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -3203,7 +3208,7 @@ def main_window(scope_ip):
     combobox_load_setup_loacation_server= ttk.Combobox(
         master= frame_load_setup_1, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_load_setup_loacation_server, style= 'TCombobox', justify= 'center')
     execute_combobox_function(
-        combobox= combobox_load_setup_loacation_server, combobox_var= strvar_load_setup_loacation_server, ini_dict_key= 'LoadSetupScopeSegment', ini_option_section= 'Scope_Server_Segment', ini_option_key= 'LoadSetupScopeSegment', ini_selected_section= 'Scope_Server_Segment_Selected_Values')
+        combobox= combobox_load_setup_loacation_server, combobox_var= strvar_load_setup_loacation_server, ini_dict_key= 'LoadSetupFileServerCode', ini_option_section= 'Load_SetupFile_Setup_Config', ini_option_key= 'LoadSetupFileServerCode', ini_selected_section= 'Load_SetupFile_Selected_Values')
 
     label_load_setup_user_defined_folder= tk.Label(
         master= frame_load_setup_2, text= 'Folder', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -3278,23 +3283,23 @@ def main_window(scope_ip):
     frame_right_bottom_right.columnconfigure(0, weight= 1, uniform= 'col')
 
     ### scale/offset/trigger
-    labelframe_scale_offset_trigger.rowconfigure(0, weight= 3, uniform= 'row')
-    labelframe_scale_offset_trigger.rowconfigure(1, weight= 1, uniform= 'row')
-    labelframe_scale_offset_trigger.columnconfigure(0, weight= 1, uniform= 'col')
+    # labelframe_scale_offset_trigger.rowconfigure(0, weight= 3, uniform= 'row')
+    # labelframe_scale_offset_trigger.rowconfigure(1, weight= 1, uniform= 'row')
+    # labelframe_scale_offset_trigger.columnconfigure(0, weight= 1, uniform= 'col')
 
-    for i in range(4):
-        frame_scalearea_top.rowconfigure(i, weight= 1, uniform= 'row')
-    frame_scalearea_top.columnconfigure(0, weight= 7, uniform= 'col')
-    frame_scalearea_top.columnconfigure(1, weight= 3, uniform= 'col')
-    frame_scalearea_top.columnconfigure(2, weight= 7, uniform= 'col')
-    frame_scalearea_top.columnconfigure(3, weight= 3, uniform= 'col')
-    frame_scalearea_top.columnconfigure(4, weight= 2, uniform= 'col')
+    # for i in range(4):
+    #     frame_scalearea_top.rowconfigure(i, weight= 1, uniform= 'row')
+    # frame_scalearea_top.columnconfigure(0, weight= 7, uniform= 'col')
+    # frame_scalearea_top.columnconfigure(1, weight= 3, uniform= 'col')
+    # frame_scalearea_top.columnconfigure(2, weight= 7, uniform= 'col')
+    # frame_scalearea_top.columnconfigure(3, weight= 3, uniform= 'col')
+    # frame_scalearea_top.columnconfigure(4, weight= 2, uniform= 'col')
     
-    frame_scalearea_bottom.rowconfigure(0, weight= 1, uniform= 'row')
-    frame_scalearea_bottom.columnconfigure(0, weight= 2, uniform= 'col')
-    frame_scalearea_bottom.columnconfigure(1, weight= 2, uniform= 'col')
-    frame_scalearea_bottom.columnconfigure(2, weight= 1, uniform= 'col')
-    frame_scalearea_bottom.columnconfigure(3, weight= 2, uniform= 'col')
+    # frame_scalearea_bottom.rowconfigure(0, weight= 1, uniform= 'row')
+    # frame_scalearea_bottom.columnconfigure(0, weight= 2, uniform= 'col')
+    # frame_scalearea_bottom.columnconfigure(1, weight= 2, uniform= 'col')
+    # frame_scalearea_bottom.columnconfigure(2, weight= 1, uniform= 'col')
+    # frame_scalearea_bottom.columnconfigure(3, weight= 2, uniform= 'col')
     ###########################
     ### threshold
     for i in range(7):
@@ -3475,40 +3480,41 @@ def main_window(scope_ip):
 
     
     # Left Grid  ==============================================================================================================================================
-    labelframe_scale_offset_trigger.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    scale_frame.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     labelframe_threshold.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     labelframe_channel.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     labelframe_control.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     labelframe_acquisition.grid(row= 4, column= 0, padx= 2, pady= 2, sticky= 'nesw')
 
-    ## Scale/Offset/Trigger  ==============================================================================================================================================
-    frame_scalearea_top.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    frame_scalearea_bottom.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    ### top area
-    button_voltage_scale.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    combobox_voltage_scale.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # ## Scale/Offset/Trigger  ==============================================================================================================================================
+    scale_frame.grid(row= 0, column= 0)
+    # frame_scalearea_top.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # frame_scalearea_bottom.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # ### top area
+    # button_voltage_scale.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'ew')
+    # combobox_voltage_scale.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew')
     
-    button_timebase_scale.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'ew')
-    entry_timebase_scale.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    combobox_timebase_scale_unit.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'ew')
+    # button_timebase_scale.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'ew')
+    # entry_timebase_scale.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    # combobox_timebase_scale_unit.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'ew')
     
-    button_voltage_offset.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    combobox_voltage_offset.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # button_voltage_offset.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'ew')
+    # combobox_voltage_offset.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
     
-    button_timebase_offset.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'ew')
-    entry_timebase_offset.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    combobox_timebase_offset_unit.grid(row= 1, column= 4, padx= 2, pady= 2, sticky= 'ew')
+    # button_timebase_offset.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'ew')
+    # entry_timebase_offset.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    # combobox_timebase_offset_unit.grid(row= 1, column= 4, padx= 2, pady= 2, sticky= 'ew')
     
-    button_trigger_channel.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    combobox_trigger_channel.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # button_trigger_channel.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'ew')
+    # combobox_trigger_channel.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
     
-    button_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    combobox_trigger_level.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # button_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'ew')
+    # combobox_trigger_level.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'ew')
     
-    ### bottom area
-    button_trigger_mode.grid(row= 0, column= 0, padx= 5, pady= 10, sticky= 'nsew')
-    button_trigger_slope.grid(row= 0, column= 1, padx= 5, pady= 10, sticky= 'nsew')
-    button_set_all.grid(row= 0, column= 3, padx= 20, pady= 10, sticky= 'nsew')
+    # ### bottom area
+    # button_trigger_mode.grid(row= 0, column= 0, padx= 5, pady= 10, sticky= 'nsew')
+    # button_trigger_slope.grid(row= 0, column= 1, padx= 5, pady= 10, sticky= 'nsew')
+    # button_set_all.grid(row= 0, column= 3, padx= 20, pady= 10, sticky= 'nsew')
     ###########################
     ## Threshold  ==============================================================================================================================================
     button_general_threshold_value.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)

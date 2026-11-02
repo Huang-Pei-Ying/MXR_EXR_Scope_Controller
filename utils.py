@@ -1,124 +1,12 @@
+import os
+from PIL import Image
+import configparser
+import tkinter as tk
+from tkinter import filedialog
+import string
+from pathlib import Path
 
 
-
-
-
-
-
-
-
-
-
-
-def delete_combobox_option(combobox, combobox_value, options, config_file, section, key, selected_section):
-    selected_option = combobox_value.get().strip()
-    if selected_option in options:
-        options.remove(selected_option)
-        combobox['values'] = options
-        combobox_value.set('')  # 清空當前選擇
-        save_option_to_ini(config_file, section, key, options, selected_section, combobox.get())
-
-def move_mouse_entry_end(entry):
-    """將 Entry 的內容視圖滾動到最後，並設置游標到最後一位"""
-    entry.focus()           # 設置 Entry 欄位獲取焦點
-    entry.icursor(tk.END)   # 將游標移動到文本的最後一位
-    entry.xview_moveto(1)   # 滾動視圖到最後一部分，1 表比例最右邊
-
-def on_mouse_wheel(event):
-    try:
-        value = int(entry_waveform_intensity.get())
-    except ValueError:
-        value = 0
-
-    if event.delta > 0:
-        value += waveform_intensity_step
-    else:
-        value -= waveform_intensity_step
-
-    value = max(waveform_intensity_min_value, min(waveform_intensity_max_value, value))
-    entry_waveform_intensity.delete(0, tk.END)
-    entry_waveform_intensity.insert(0, str(value))
-    update_intensity_color(value)
-
-def recall_combobox_option_from_inifile():
-    config_initial = configparser.ConfigParser()
-    config_initial.optionxform = str
-    config_file = os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini')
-    config_initial.read(config_file, encoding='UTF-8')
-    
-    # Scale
-    VoltScale_options = config_initial['Scale_Offset_Config'].get('VoltScale', '').split(',')
-    VoltOffset_options = config_initial['Scale_Offset_Config'].get('VoltOffset', '').split(',')
-    TriggerLevel_options = config_initial['Scale_Offset_Config'].get('TriggerLevel', '').split(',')
-
-    # Threshold
-    GeneralTopPercent_options = config_initial['Threshold_Setup_Config'].get('GeneralTopPercent', '').split(',')
-    GeneralMiddlePercent_options = config_initial['Threshold_Setup_Config'].get('GeneralMiddlePercent', '').split(',')
-    GeneralBasePercent_options = config_initial['Threshold_Setup_Config'].get('GeneralBasePercent', '').split(',')
-    GeneralTopValue_options = config_initial['Threshold_Setup_Config'].get('GeneralTopValue', '').split(',')
-    GeneralMiddleValue_options = config_initial['Threshold_Setup_Config'].get('GeneralMiddleValue', '').split(',')
-    GeneralBaseValue_options = config_initial['Threshold_Setup_Config'].get('GeneralBaseValue', '').split(',')
-    RFTopPercent_options = config_initial['Threshold_Setup_Config'].get('RFTopPercent', '').split(',')
-    RFBasePercent_options = config_initial['Threshold_Setup_Config'].get('RFBasePercent', '').split(',')
-    RFTopValue_options = config_initial['Threshold_Setup_Config'].get('RFTopValue', '').split(',')
-    RFBaseValue_options = config_initial['Threshold_Setup_Config'].get('RFBaseValue', '').split(',')
-
-    # Scope Segment
-    SaveOthersScopeSegment_options = config_initial['Scope_Server_Segment'].get('SaveOthersScopeSegment', '').split(',')
-    LoadWmemoryScopeSegment_options = config_initial['Scope_Server_Segment'].get('LoadWmemoryScopeSegment', '').split(',')
-    LoadSetupScopeSegment_options = config_initial['Scope_Server_Segment'].get('LoadSetupScopeSegment', '').split(',')
-
-    # 從這裡返回值供其他部分調用
-    return {
-        'VoltScale': VoltScale_options, 
-        'VoltOffset': VoltOffset_options, 
-        'TriggerLevel': TriggerLevel_options, 
-        'GeneralTopPercent': GeneralTopPercent_options,
-        'GeneralMiddlePercent': GeneralMiddlePercent_options, 
-        'GeneralBasePercent': GeneralBasePercent_options, 
-        'GeneralTopValue': GeneralTopValue_options, 
-        'GeneralMiddleValue': GeneralMiddleValue_options, 
-        'GeneralBaseValue': GeneralBaseValue_options, 
-        'RFTopPercent': RFTopPercent_options, 
-        'RFBasePercent': RFBasePercent_options, 
-        'RFTopValue': RFTopValue_options, 
-        'RFBaseValue': RFBaseValue_options, 
-        'SaveOthersScopeSegment': SaveOthersScopeSegment_options,
-        'LoadWmemoryScopeSegment': LoadWmemoryScopeSegment_options,
-        'LoadSetupScopeSegment': LoadSetupScopeSegment_options,
-        
-        'config_file': config_file,  # 儲存config文件路徑以便後續使用
-
-        'selected_values': {
-            'VoltScale': config_initial['Scale_Offset_Selected_Values'].get('VoltScale', ''),
-            'VoltOffset': config_initial['Scale_Offset_Selected_Values'].get('VoltOffset', ''),
-            'TriggerLevel': config_initial['Scale_Offset_Selected_Values'].get('TriggerLevel', ''),
-            'GeneralTopPercent': config_initial['Threshold_Selected_Values'].get('GeneralTopPercent', ''),
-            'GeneralMiddlePercent': config_initial['Threshold_Selected_Values'].get('GeneralMiddlePercent', ''),
-            'GeneralBasePercent': config_initial['Threshold_Selected_Values'].get('GeneralBasePercent', ''),
-            'GeneralTopValue': config_initial['Threshold_Selected_Values'].get('GeneralTopValue', ''),
-            'GeneralMiddleValue': config_initial['Threshold_Selected_Values'].get('GeneralMiddleValue', ''),
-            'GeneralBaseValue': config_initial['Threshold_Selected_Values'].get('GeneralBaseValue', ''),
-            'RFTopPercent': config_initial['Threshold_Selected_Values'].get('RFTopPercent', ''),
-            'RFBasePercent': config_initial['Threshold_Selected_Values'].get('RFBasePercent', ''),
-            'RFTopValue': config_initial['Threshold_Selected_Values'].get('RFTopValue', ''),
-            'RFBaseValue': config_initial['Threshold_Selected_Values'].get('RFBaseValue', ''),
-            'SaveOthersScopeSegment': config_initial['Scope_Server_Segment_Selected_Values'].get('SaveOthersScopeSegment', ''),
-            'LoadWmemoryScopeSegment': config_initial['Scope_Server_Segment_Selected_Values'].get('LoadWmemoryScopeSegment', ''),
-            'LoadSetupScopeSegment': config_initial['Scope_Server_Segment_Selected_Values'].get('LoadSetupScopeSegment', ''),
-            }        
-    }
-
-def rgba_to_rgb_composite(in_path, out_path, background=(0, 0, 0)):
-    img = Image.open(in_path)
-    # 確保有 alpha 通道用 RGBA
-    if img.mode != 'RGBA':
-        img = img.convert('RGBA')
-    # 建一個同尺寸的背景（含不透明 alpha）
-    bg = Image.new('RGBA', img.size, background + (255,))
-    # 將原圖疊在背景上，並去掉 alpha
-    composed = Image.alpha_composite(bg, img).convert('RGB')
-    composed.save(out_path, format='PNG')
 
 def save_option_to_ini(config_file, section, key, updated_options, selected_section, selected_value):
     config = configparser.ConfigParser()
@@ -138,6 +26,141 @@ def save_option_to_ini(config_file, section, key, updated_options, selected_sect
     # 寫回INI文件
     with open(config_file, 'w') as configfile:
         config.write(configfile)
+
+def recall_combobox_option_from_inifile():
+    config_initial = configparser.ConfigParser()
+    config_initial.optionxform = str
+    config_file = os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini')
+    config_initial.read(config_file, encoding='UTF-8')
+    
+    # Scale
+    VoltageScale_options = config_initial['Scale_Offset_Config'].get('VoltScale', '').split(',')
+    VoltageOffset_options = config_initial['Scale_Offset_Config'].get('VoltOffset', '').split(',')
+    TriggerLevel_options = config_initial['Scale_Offset_Config'].get('TriggerLevel', '').split(',')
+
+    # Threshold
+    GeneralTopPercent_options = config_initial['Threshold_Setup_Config'].get('GeneralTopPercent', '').split(',')
+    GeneralMiddlePercent_options = config_initial['Threshold_Setup_Config'].get('GeneralMiddlePercent', '').split(',')
+    GeneralBasePercent_options = config_initial['Threshold_Setup_Config'].get('GeneralBasePercent', '').split(',')
+    GeneralTopValue_options = config_initial['Threshold_Setup_Config'].get('GeneralTopValue', '').split(',')
+    GeneralMiddleValue_options = config_initial['Threshold_Setup_Config'].get('GeneralMiddleValue', '').split(',')
+    GeneralBaseValue_options = config_initial['Threshold_Setup_Config'].get('GeneralBaseValue', '').split(',')
+    RFTopPercent_options = config_initial['Threshold_Setup_Config'].get('RFTopPercent', '').split(',')
+    RFBasePercent_options = config_initial['Threshold_Setup_Config'].get('RFBasePercent', '').split(',')
+    RFTopValue_options = config_initial['Threshold_Setup_Config'].get('RFTopValue', '').split(',')
+    RFBaseValue_options = config_initial['Threshold_Setup_Config'].get('RFBaseValue', '').split(',')
+
+    # Scope Segment
+    SaveOtherServerCode_options = config_initial['Save_Other_Setup_Config'].get('SaveOtherServerCode', '').split(',')
+    LoadWMemoryServerCode_options = config_initial['Load_WMemory_Setup_Config'].get('LoadWMemoryServerCode', '').split(',')
+    LoadSetupFileServerCode_options = config_initial['Load_SetupFile_Setup_Config'].get('LoadSetupFileServerCode', '').split(',')
+
+    # 從這裡返回值供其他部分調用
+    return {
+        'VoltScale': VoltageScale_options, 
+        'VoltOffset': VoltageOffset_options, 
+        'TriggerLevel': TriggerLevel_options, 
+        'GeneralTopPercent': GeneralTopPercent_options,
+        'GeneralMiddlePercent': GeneralMiddlePercent_options, 
+        'GeneralBasePercent': GeneralBasePercent_options, 
+        'GeneralTopValue': GeneralTopValue_options, 
+        'GeneralMiddleValue': GeneralMiddleValue_options, 
+        'GeneralBaseValue': GeneralBaseValue_options, 
+        'RFTopPercent': RFTopPercent_options, 
+        'RFBasePercent': RFBasePercent_options, 
+        'RFTopValue': RFTopValue_options, 
+        'RFBaseValue': RFBaseValue_options, 
+        'SaveOtherServerCode': SaveOtherServerCode_options,
+        'LoadWMemoryServerCode': LoadWMemoryServerCode_options,
+        'LoadSetupFileServerCode': LoadSetupFileServerCode_options,
+        
+        'config_file': config_file,  # 儲存config文件路徑以便後續使用
+
+        'selected_values': {
+            'VoltScale': config_initial['Scale_Offset_Selected_Values'].get('VoltScale', ''),
+            'VoltOffset': config_initial['Scale_Offset_Selected_Values'].get('VoltOffset', ''),
+            'TriggerLevel': config_initial['Scale_Offset_Selected_Values'].get('TriggerLevel', ''),
+            'GeneralTopPercent': config_initial['Threshold_Selected_Values'].get('GeneralTopPercent', ''),
+            'GeneralMiddlePercent': config_initial['Threshold_Selected_Values'].get('GeneralMiddlePercent', ''),
+            'GeneralBasePercent': config_initial['Threshold_Selected_Values'].get('GeneralBasePercent', ''),
+            'GeneralTopValue': config_initial['Threshold_Selected_Values'].get('GeneralTopValue', ''),
+            'GeneralMiddleValue': config_initial['Threshold_Selected_Values'].get('GeneralMiddleValue', ''),
+            'GeneralBaseValue': config_initial['Threshold_Selected_Values'].get('GeneralBaseValue', ''),
+            'RFTopPercent': config_initial['Threshold_Selected_Values'].get('RFTopPercent', ''),
+            'RFBasePercent': config_initial['Threshold_Selected_Values'].get('RFBasePercent', ''),
+            'RFTopValue': config_initial['Threshold_Selected_Values'].get('RFTopValue', ''),
+            'RFBaseValue': config_initial['Threshold_Selected_Values'].get('RFBaseValue', ''),
+            'SaveOtherServerCode': config_initial['Save_Other_Selected_Values'].get('SaveOtherServerCode', ''),
+            'LoadWMemoryServerCode': config_initial['Load_WMemory_Selected_Values'].get('LoadWMemoryServerCode', ''),
+            'LoadSetupFileServerCode': config_initial['Load_SetupFile_Selected_Values'].get('LoadSetupFileServerCode', ''),
+            }        
+    }
+
+# 獲取ini數據
+config_data = recall_combobox_option_from_inifile()
+# general_top_percent_options = config_data['GeneralTopPercent']
+config_file_path = config_data['config_file']
+
+def execute_combobox_function(combobox, combobox_var, ini_dict_key, ini_option_section, ini_option_key, ini_selected_section):
+    combobox['values'] = config_data[ini_dict_key]  # 設置初始選項
+    combobox.bind('<Return>', lambda event: add_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
+    combobox.bind('<Delete>', lambda event: delete_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
+
+def add_combobox_option(combobox, combobox_value, options, config_file, section, key, selected_section):
+    new_option = combobox_value.get().strip()
+    if new_option and new_option not in options:
+        options.append(new_option)
+        combobox['values'] = options
+        save_option_to_ini(config_file, section, key, options, selected_section, combobox.get())
+
+def delete_combobox_option(combobox, combobox_value, options, config_file, section, key, selected_section):
+    selected_option = combobox_value.get().strip()
+    if selected_option in options:
+        options.remove(selected_option)
+        combobox['values'] = options
+        combobox_value.set('')  # 清空當前選擇
+        save_option_to_ini(config_file, section, key, options, selected_section, combobox.get())
+
+
+
+def move_mouse_entry_end(entry):
+    """將 Entry 的內容視圖滾動到最後，並設置游標到最後一位"""
+    entry.focus()           # 設置 Entry 欄位獲取焦點
+    entry.icursor(tk.END)   # 將游標移動到文本的最後一位
+    entry.xview_moveto(1)   # 滾動視圖到最後一部分，1 表比例最右邊
+
+def on_mouse_wheel(event):
+
+    # 設定waveform intensity參數
+    waveform_intensity_step = 1
+    waveform_intensity_min_value = 0
+    waveform_intensity_max_value = 100
+
+    try:
+        value = int(entry_waveform_intensity.get())
+    except ValueError:
+        value = 0
+
+    if event.delta > 0:
+        value += waveform_intensity_step
+    else:
+        value -= waveform_intensity_step
+
+    value = max(waveform_intensity_min_value, min(waveform_intensity_max_value, value))
+    entry_waveform_intensity.delete(0, tk.END)
+    entry_waveform_intensity.insert(0, str(value))
+    update_intensity_color(value)
+
+def rgba_to_rgb_composite(in_path, out_path, background=(0, 0, 0)):
+    img = Image.open(in_path)
+    # 確保有 alpha 通道用 RGBA
+    if img.mode != 'RGBA':
+        img = img.convert('RGBA')
+    # 建一個同尺寸的背景（含不透明 alpha）
+    bg = Image.new('RGBA', img.size, background + (255,))
+    # 將原圖疊在背景上，並去掉 alpha
+    composed = Image.alpha_composite(bg, img).convert('RGB')
+    composed.save(out_path, format='PNG')
 
 def select_folder(entry_var, target_entry):
     # 打開檔案瀏覽器以選擇資料夾
@@ -250,23 +273,6 @@ def validate_number(new_value):
         return True
     return False  # 阻擋非數字字元
 
-# 獲取ini數據
-config_data = recall_combobox_option_from_inifile()
-# general_top_percent_options = config_data['GeneralTopPercent']
-config_file_path = config_data['config_file']
-
-
-def execute_commbobox_function(combobox, combobox_var, ini_dict_key, ini_option_section, ini_option_key, ini_selected_section):
-    combobox['values'] = config_data[ini_dict_key]  # 設置初始選項
-    combobox.bind('<Return>', lambda event: add_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
-    combobox.bind('<Delete>', lambda event: delete_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
-
-def add_combobox_option(combobox, combobox_value, options, config_file, section, key, selected_section):
-    new_option = combobox_value.get().strip()
-    if new_option and new_option not in options:
-        options.append(new_option)
-        combobox['values'] = options
-        save_option_to_ini(config_file, section, key, options, selected_section, combobox.get())
 
 def clear(string):
     string.set('')
