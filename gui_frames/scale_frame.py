@@ -4,11 +4,9 @@ import utils
 
 class ScaleLabelFrame(tk.LabelFrame):
     def __init__(self, master, settings, colors, button_width, entry_width):
-        super().__init__(master)
-        
-        self.labelframe_scale= tk.LabelFrame(master= self, text= 'Scale/Offset/Trigger', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
-        
-        self.frame_scalearea_top= tk.Frame(master= self.labelframe_scale, background= colors['labelframe'][0])
+        super().__init__(master, text= 'Scale/Offset/Trigger', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+                
+        self.frame_scalearea_top= tk.Frame(master= self, background= colors['labelframe'][0])
         # voltage_scale
         self.button_voltage_scale = ttk.Button(
             master= self.frame_scalearea_top, 
@@ -79,7 +77,7 @@ class ScaleLabelFrame(tk.LabelFrame):
             master= self.frame_scalearea_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_trigger_level, style= 'TCombobox', justify= 'center')
         utils.execute_combobox_function(combobox= self.combobox_trigger_level, combobox_var= self.strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
 
-        self.frame_scalearea_bottom= tk.Frame(master= self.labelframe_scale, background= colors['labelframe'][0])
+        self.frame_scalearea_bottom= tk.Frame(master= self, background= colors['labelframe'][0])
         # buttons
         self.button_trigger_mode = ttk.Button(
             master= self.frame_scalearea_bottom, text= 'Trigger Mode', width= button_width, padding= 2, 
@@ -100,9 +98,9 @@ class ScaleLabelFrame(tk.LabelFrame):
         ################################################
 
         ### Weight        
-        self.labelframe_scale.rowconfigure(0, weight= 3, uniform= 'row')
-        self.labelframe_scale.rowconfigure(1, weight= 1, uniform= 'row')
-        self.labelframe_scale.columnconfigure(0, weight= 1, uniform= 'col')
+        self.rowconfigure(0, weight= 3, uniform= 'row')
+        self.rowconfigure(1, weight= 1, uniform= 'row')
+        self.columnconfigure(0, weight= 1, uniform= 'col')
         
         for i in range(4):
             self.frame_scalearea_top.rowconfigure(i, weight= 1, uniform= 'row')
@@ -119,7 +117,6 @@ class ScaleLabelFrame(tk.LabelFrame):
         ###########################
 
         ## Grid  ==============================================================================================================================================
-        self.labelframe_scale.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
         self.frame_scalearea_top.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
         self.frame_scalearea_bottom.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
         ### top area
@@ -140,3 +137,15 @@ class ScaleLabelFrame(tk.LabelFrame):
         self.button_trigger_slope.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'w')
         self.button_set_all.grid(row= 0, column= 2, padx= 2, pady= 2, sticky= 'w')
         ###########################
+        
+        ## settings  ==============================================================================================================================================
+        settings.apply('Scale_Offset_Selected_Values', {
+            'VoltageScale': self.strvar_voltage_scale, 
+            'VoltageOffset': self.strvar_voltage_offset, 
+            'TriggerLevel': self.strvar_trigger_level, 
+        })
+        settings.apply('Scale_Offset_Config', {
+            'TimebaseScale': self.strvar_timebase_scale, 
+            'TimebaseOffset': self.strvar_timebase_offset, 
+            'TriggerChannel': self.strvar_trigger_channel, 
+        })

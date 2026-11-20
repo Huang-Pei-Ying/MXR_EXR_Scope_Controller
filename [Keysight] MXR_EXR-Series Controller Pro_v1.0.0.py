@@ -15,8 +15,8 @@ import ctypes
 from tkinter import font
 from pathlib import Path
 
-
-from gui_frames.scale_frame import ScaleLabelFrame
+from ini_setting import Settings
+from gui_frames import ScaleLabelFrame, ThresholdLabelFrame
 
 
 
@@ -171,23 +171,23 @@ def main_window(scope_ip):
         config_initial.optionxform = str
         config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='UTF-8',)
 
-        selected_VoltageScale = config_initial['Scale_Offset_Selected_Values']['VoltageScale']
-        selected_VoltageOffset = config_initial['Scale_Offset_Selected_Values']['VoltageOffset']
-        TimebaseScale = config_initial['Scale_Offset_Config']['TimebaseScale']
-        TimebaseOffset = config_initial['Scale_Offset_Config']['TimebaseOffset']
-        selected_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
-        TriggerChannel = config_initial['Scale_Offset_Config']['TriggerChannel']
+        # selected_VoltageScale = config_initial['Scale_Offset_Selected_Values']['VoltageScale']
+        # selected_VoltageOffset = config_initial['Scale_Offset_Selected_Values']['VoltageOffset']
+        # TimebaseScale = config_initial['Scale_Offset_Config']['TimebaseScale']
+        # TimebaseOffset = config_initial['Scale_Offset_Config']['TimebaseOffset']
+        # selected_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
+        # TriggerChannel = config_initial['Scale_Offset_Config']['TriggerChannel']
 
-        selected_GeneralTopPercent = config_initial['Threshold_Selected_Values']['GeneralTopPercent']
-        selected_GeneralMiddlePercent = config_initial['Threshold_Selected_Values']['GeneralMiddlePercent']
-        selected_GeneralBasePercent = config_initial['Threshold_Selected_Values']['GeneralBasePercent']
-        selected_GeneralTopValue = config_initial['Threshold_Selected_Values']['GeneralTopValue']
-        selected_GeneralMiddleValue = config_initial['Threshold_Selected_Values']['GeneralMiddleValue']
-        selected_GeneralBaseValue = config_initial['Threshold_Selected_Values']['GeneralBaseValue']
-        selected_RFTopPercent = config_initial['Threshold_Selected_Values']['RFTopPercent']
-        selected_RFBasePercent = config_initial['Threshold_Selected_Values']['RFBasePercent']
-        selected_RFTopValue = config_initial['Threshold_Selected_Values']['RFTopValue']
-        selected_RFBaseValue = config_initial['Threshold_Selected_Values']['RFBaseValue']
+        # selected_GeneralTopPercent = config_initial['Threshold_Selected_Values']['GeneralTopPercent']
+        # selected_GeneralMiddlePercent = config_initial['Threshold_Selected_Values']['GeneralMiddlePercent']
+        # selected_GeneralBasePercent = config_initial['Threshold_Selected_Values']['GeneralBasePercent']
+        # selected_GeneralTopValue = config_initial['Threshold_Selected_Values']['GeneralTopValue']
+        # selected_GeneralMiddleValue = config_initial['Threshold_Selected_Values']['GeneralMiddleValue']
+        # selected_GeneralBaseValue = config_initial['Threshold_Selected_Values']['GeneralBaseValue']
+        # selected_RFTopPercent = config_initial['Threshold_Selected_Values']['RFTopPercent']
+        # selected_RFBasePercent = config_initial['Threshold_Selected_Values']['RFBasePercent']
+        # selected_RFTopValue = config_initial['Threshold_Selected_Values']['RFTopValue']
+        # selected_RFBaseValue = config_initial['Threshold_Selected_Values']['RFBaseValue']
         
         SamplingRate = config_initial['Acquisition']['SamplingRate']
         MemoryDepth = config_initial['Acquisition']['MemoryDepth']
@@ -2042,8 +2042,8 @@ def main_window(scope_ip):
         combobox.bind('<Return>', lambda event: add_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
         combobox.bind('<Delete>', lambda event: delete_combobox_option(combobox, combobox_var, config_data[ini_dict_key], config_file_path, ini_option_section, ini_option_key, ini_selected_section))
 
-
-
+    # 整個程式只讀取一次 INI
+    settings = Settings(f"{os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini')}")
 
     # Get physical resolution (prefer EnumDisplaySettings)
     if sys.platform == "win32":
@@ -2218,110 +2218,17 @@ def main_window(scope_ip):
     # Left Area  ==============================================================================================================================================
     
     # Scale/Offset/Trigger  ===================================================================================================================================
-    # labelframe_scale_offset_trigger= tk.LabelFrame(master= frame_left, text= 'Scale/Offset/Trigger', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
-
     entry_width_scale_area= set_entry_width(base_entry_width= 20)
     button_width_scale_area, button_height_scale_area= set_button_size(base_btn_w= 20, base_btn_h= 1)
 
-    scale_frame = ScaleLabelFrame(master= window, settings= '', colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    scale_frame = ScaleLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
-    # frame_scalearea_top= tk.Frame(master= labelframe_scale_offset_trigger, background= colors['labelframe'][0])
-    # # voltage_scale
-    # button_voltage_scale = ttk.Button(
-    #     master= frame_scalearea_top, text= 'Voltage Scale (V)', width= button_width_scale_area,  padding= 1, 
-    #     style= 'normal_height.TButton',
-    #     # command= lambda: mxr.
-    #     )
-    
-    # strvar_voltage_scale= tk.StringVar()
-    # combobox_voltage_scale = ttk.Combobox(
-    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_scale, style= 'TCombobox', justify= 'center')
-    # execute_combobox_function(combobox= combobox_voltage_scale, combobox_var= strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
-    
-    # # voltage_offset
-    # button_voltage_offset = ttk.Button(
-    #     master= frame_scalearea_top, text= 'Voltage Offset (V)', width= button_width_scale_area,  padding= 1,
-    #     # style= 'normal_height.TButton',
-    #     # command= lambda: mxr.
-    #     )
-    
-    # strvar_voltage_offset= tk.StringVar()
-    # combobox_voltage_offset = ttk.Combobox(
-    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_voltage_offset, style= 'TCombobox', justify= 'center')
-    # execute_combobox_function(combobox= combobox_voltage_offset, combobox_var= strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
-    
-    # # timebase scale
-    # button_timebase_scale = ttk.Button(
-    #     master= frame_scalearea_top, text= 'Timebase Scale (sec)', width= button_width_scale_area, padding= 1,
-    #     # style= 'normal_height.TButton',
-    #     # command= lambda: mxr.
-    #     )
-    
-    # strvar_timebase_scale= tk.StringVar()
-    # entry_timebase_scale = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale, style= 'TEntry', justify= 'center')
-   
-    # strvar_timebase_scale_unit= tk.StringVar()
-    # combobox_timebase_scale_unit = ttk.Combobox(
-    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_scale_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
-
-    # # timebase offset
-    # button_timebase_offset= ttk.Button(
-    #     master= frame_scalearea_top, text= 'Timebase Offset (sec)', width= button_width_scale_area, padding= 1, 
-    #     # style= 'normal_height.TButton',
-    #     # command= lambda: mxr.
-    #     )
-    
-    # strvar_timebase_offset= tk.StringVar()
-    # entry_timebase_offset = ttk.Entry(master= frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset, style= 'TEntry', justify= 'center')
-   
-    # strvar_timebase_offset_unit= tk.StringVar()
-    # combobox_timebase_offset_unit = ttk.Combobox(
-    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_timebase_offset_unit, style= 'TCombobox', justify= 'center', values= ['ps', 'ns', 'us', 'ms'])
-
-    # # trigger channel
-    # button_trigger_channel = ttk.Button(
-    #     master= frame_scalearea_top, text= 'Trigger Channel', width= button_width_scale_area, padding= 1,
-    #     # style= 'normal_height.TButton',
-    #     # command= lambda: mxr.
-    #     )
-    
-    # strvar_trigger_channel= tk.StringVar()
-    # combobox_trigger_channel = ttk.Combobox(
-    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_trigger_channel, style= 'TCombobox', justify= 'center', values= ['1', '2', '3', '4'])
-   
-    # # trigger level
-    # button_trigger_level = ttk.Button(
-    #     master= frame_scalearea_top, text= 'Trigger Level (V)', width= button_width_scale_area, padding= 1, 
-    #     # style= 'normal_height.TButton', 
-    #     # command= lambda: mxr.
-    #     )
-    
-    # strvar_trigger_level= tk.StringVar()
-    # combobox_trigger_level = ttk.Combobox(
-    #     frame_scalearea_top, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_trigger_level, style= 'TCombobox', justify= 'center')
-    # execute_combobox_function(combobox= combobox_trigger_level, combobox_var= strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
-
-    # frame_scalearea_bottom= tk.Frame(master= labelframe_scale_offset_trigger, background= colors['labelframe'][0])
-    # # buttons
-    # button_trigger_mode = ttk.Button(
-    #     master= frame_scalearea_bottom, text= 'Trigger Mode', width= button_width_scale_area, padding= 2, 
-    #     style= 'double_height.TButton', 
-    #     # command= lambda: mxr.
-    #     )
-    # button_trigger_slope = ttk.Button(
-    #     master= frame_scalearea_bottom, text= 'Trigger Slope', width= button_width_scale_area, padding= 2, 
-    #     # style= 'double_height.TButton', 
-    #     # command= lambda: mxr.
-    #     )
-    # button_set_all = ttk.Button(
-    #     master= frame_scalearea_bottom, text= 'All Set', width= button_width_scale_area, padding= 2, 
-    #     # style= 'special.TButton', 
-    #     # command= lambda: mxr.
-    #     )
-    
     ################################################
     # Threshold  ===================================================================================================================================
     labelframe_threshold= tk.LabelFrame(master= frame_left, text= 'Threshold', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+
+    threshold_frame = ThresholdLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+
 
     # general threshold - value ######
     button_general_threshold_value = ttk.Button(
@@ -3282,30 +3189,12 @@ def main_window(scope_ip):
     frame_right_bottom_right.rowconfigure(2, weight= 3, uniform= 'row')  # load setup
     frame_right_bottom_right.columnconfigure(0, weight= 1, uniform= 'col')
 
-    ### scale/offset/trigger
-    # labelframe_scale_offset_trigger.rowconfigure(0, weight= 3, uniform= 'row')
-    # labelframe_scale_offset_trigger.rowconfigure(1, weight= 1, uniform= 'row')
-    # labelframe_scale_offset_trigger.columnconfigure(0, weight= 1, uniform= 'col')
-
-    # for i in range(4):
-    #     frame_scalearea_top.rowconfigure(i, weight= 1, uniform= 'row')
-    # frame_scalearea_top.columnconfigure(0, weight= 7, uniform= 'col')
-    # frame_scalearea_top.columnconfigure(1, weight= 3, uniform= 'col')
-    # frame_scalearea_top.columnconfigure(2, weight= 7, uniform= 'col')
-    # frame_scalearea_top.columnconfigure(3, weight= 3, uniform= 'col')
-    # frame_scalearea_top.columnconfigure(4, weight= 2, uniform= 'col')
-    
-    # frame_scalearea_bottom.rowconfigure(0, weight= 1, uniform= 'row')
-    # frame_scalearea_bottom.columnconfigure(0, weight= 2, uniform= 'col')
-    # frame_scalearea_bottom.columnconfigure(1, weight= 2, uniform= 'col')
-    # frame_scalearea_bottom.columnconfigure(2, weight= 1, uniform= 'col')
-    # frame_scalearea_bottom.columnconfigure(3, weight= 2, uniform= 'col')
     ###########################
     ### threshold
-    for i in range(7):
-        labelframe_threshold.rowconfigure(i, weight= 1, uniform= 'row')
-    for j in range(4):
-        labelframe_threshold.columnconfigure(j, weight= 1, uniform= 'col')    
+    # for i in range(7):
+    #     labelframe_threshold.rowconfigure(i, weight= 1, uniform= 'row')
+    # for j in range(4):
+    #     labelframe_threshold.columnconfigure(j, weight= 1, uniform= 'col')    
     ###########################
     ### channel
     for i in range(2):
@@ -3481,69 +3370,41 @@ def main_window(scope_ip):
     
     # Left Grid  ==============================================================================================================================================
     scale_frame.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    labelframe_threshold.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    threshold_frame.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # labelframe_threshold.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     labelframe_channel.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     labelframe_control.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     labelframe_acquisition.grid(row= 4, column= 0, padx= 2, pady= 2, sticky= 'nesw')
 
-    # ## Scale/Offset/Trigger  ==============================================================================================================================================
-    scale_frame.grid(row= 0, column= 0)
-    # frame_scalearea_top.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # frame_scalearea_bottom.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # ### top area
-    # button_voltage_scale.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    # combobox_voltage_scale.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    
-    # button_timebase_scale.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'ew')
-    # entry_timebase_scale.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    # combobox_timebase_scale_unit.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'ew')
-    
-    # button_voltage_offset.grid(row= 1, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    # combobox_voltage_offset.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    
-    # button_timebase_offset.grid(row= 1, column= 2, padx= 5, pady= 2, sticky= 'ew')
-    # entry_timebase_offset.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    # combobox_timebase_offset_unit.grid(row= 1, column= 4, padx= 2, pady= 2, sticky= 'ew')
-    
-    # button_trigger_channel.grid(row= 2, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    # combobox_trigger_channel.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    
-    # button_trigger_level.grid(row= 3, column= 0, padx= 5, pady= 2, sticky= 'ew')
-    # combobox_trigger_level.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    
-    # ### bottom area
-    # button_trigger_mode.grid(row= 0, column= 0, padx= 5, pady= 10, sticky= 'nsew')
-    # button_trigger_slope.grid(row= 0, column= 1, padx= 5, pady= 10, sticky= 'nsew')
-    # button_set_all.grid(row= 0, column= 3, padx= 20, pady= 10, sticky= 'nsew')
     ###########################
     ## Threshold  ==============================================================================================================================================
-    button_general_threshold_value.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
-    label_general_threshold_value_top.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_general_threshold_value_top.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    label_general_threshold_value_middle.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_general_threshold_value_middle.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    label_general_threshold_value_base.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_general_threshold_value_base.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # button_general_threshold_value.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
+    # label_general_threshold_value_top.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_general_threshold_value_top.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # label_general_threshold_value_middle.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_general_threshold_value_middle.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # label_general_threshold_value_base.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_general_threshold_value_base.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'ew')
 
-    button_general_threshold_percent.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
-    label_general_threshold_percent_top.grid(row= 1, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_general_threshold_percent_top.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    label_general_threshold_percent_middle.grid(row= 2, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_general_threshold_percent_middle.grid(row= 2, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    label_general_threshold_percent_base.grid(row= 3, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_general_threshold_percent_base.grid(row= 3, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    # button_general_threshold_percent.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
+    # label_general_threshold_percent_top.grid(row= 1, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_general_threshold_percent_top.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    # label_general_threshold_percent_middle.grid(row= 2, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_general_threshold_percent_middle.grid(row= 2, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    # label_general_threshold_percent_base.grid(row= 3, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_general_threshold_percent_base.grid(row= 3, column= 3, padx= 2, pady= 2, sticky= 'ew')
 
-    button_RF_threshold_value.grid(row= 4, column= 0, padx= 2, pady= 5, sticky= 'nesw', columnspan= 2)
-    label_RF_threshold_value_top.grid(row= 5, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_RF_threshold_value_top.grid(row= 5, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    label_RF_threshold_value_base.grid(row= 6, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_RF_threshold_value_base.grid(row= 6, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # button_RF_threshold_value.grid(row= 4, column= 0, padx= 2, pady= 5, sticky= 'nesw', columnspan= 2)
+    # label_RF_threshold_value_top.grid(row= 5, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_RF_threshold_value_top.grid(row= 5, column= 1, padx= 2, pady= 2, sticky= 'ew')
+    # label_RF_threshold_value_base.grid(row= 6, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_RF_threshold_value_base.grid(row= 6, column= 1, padx= 2, pady= 2, sticky= 'ew')
 
-    button_RF_threshold_percent.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
-    label_RF_threshold_percent_top.grid(row= 5, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_RF_threshold_percent_top.grid(row= 5, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    label_RF_threshold_percent_base.grid(row= 6, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    combobox_RF_threshold_percent_base.grid(row= 6, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    # button_RF_threshold_percent.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
+    # label_RF_threshold_percent_top.grid(row= 5, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_RF_threshold_percent_top.grid(row= 5, column= 3, padx= 2, pady= 2, sticky= 'ew')
+    # label_RF_threshold_percent_base.grid(row= 6, column= 2, padx= 2, pady= 2, sticky= 'nesw')
+    # combobox_RF_threshold_percent_base.grid(row= 6, column= 3, padx= 2, pady= 2, sticky= 'ew')
     ###########################
     ## Channel  ==============================================================================================================================================
     button_channel_1.grid(row= 0, column= 0, padx= 5, pady= 5, sticky= 'nesw')
