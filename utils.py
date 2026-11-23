@@ -34,8 +34,8 @@ def recall_combobox_option_from_inifile():
     config_initial.read(config_file, encoding='UTF-8')
     
     # Scale
-    VoltageScale_options = config_initial['Scale_Offset_Config'].get('VoltScale', '').split(',')
-    VoltageOffset_options = config_initial['Scale_Offset_Config'].get('VoltOffset', '').split(',')
+    VoltageScale_options = config_initial['Scale_Offset_Config'].get('VoltageScale', '').split(',')
+    VoltageOffset_options = config_initial['Scale_Offset_Config'].get('VoltageOffset', '').split(',')
     TriggerLevel_options = config_initial['Scale_Offset_Config'].get('TriggerLevel', '').split(',')
 
     # Threshold
@@ -57,8 +57,8 @@ def recall_combobox_option_from_inifile():
 
     # 從這裡返回值供其他部分調用
     return {
-        'VoltScale': VoltageScale_options, 
-        'VoltOffset': VoltageOffset_options, 
+        'VoltageScale': VoltageScale_options, 
+        'VoltageOffset': VoltageOffset_options, 
         'TriggerLevel': TriggerLevel_options, 
         'GeneralTopPercent': GeneralTopPercent_options,
         'GeneralMiddlePercent': GeneralMiddlePercent_options, 
@@ -77,8 +77,8 @@ def recall_combobox_option_from_inifile():
         'config_file': config_file,  # 儲存config文件路徑以便後續使用
 
         'selected_values': {
-            'VoltScale': config_initial['Scale_Offset_Selected_Values'].get('VoltScale', ''),
-            'VoltOffset': config_initial['Scale_Offset_Selected_Values'].get('VoltOffset', ''),
+            'VoltageScale': config_initial['Scale_Offset_Selected_Values'].get('VoltageScale', ''),
+            'VoltageOffset': config_initial['Scale_Offset_Selected_Values'].get('VoltageOffset', ''),
             'TriggerLevel': config_initial['Scale_Offset_Selected_Values'].get('TriggerLevel', ''),
             'GeneralTopPercent': config_initial['Threshold_Selected_Values'].get('GeneralTopPercent', ''),
             'GeneralMiddlePercent': config_initial['Threshold_Selected_Values'].get('GeneralMiddlePercent', ''),

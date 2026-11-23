@@ -20,7 +20,7 @@ class ScaleLabelFrame(tk.LabelFrame):
         self.strvar_voltage_scale= tk.StringVar(master= self)
         self.combobox_voltage_scale = ttk.Combobox(
             master= self.frame_scalearea_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_voltage_scale, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(combobox= self.combobox_voltage_scale, combobox_var= self.strvar_voltage_scale, ini_dict_key= 'VoltScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltScale', ini_selected_section= 'Scale_Offset_Selected_Values')
+        utils.execute_combobox_function(combobox= self.combobox_voltage_scale, combobox_var= self.strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
 
         # voltage_offset
         self.button_voltage_offset = ttk.Button(
@@ -32,7 +32,7 @@ class ScaleLabelFrame(tk.LabelFrame):
         self.strvar_voltage_offset= tk.StringVar()
         self.combobox_voltage_offset = ttk.Combobox(
             master= self.frame_scalearea_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_voltage_offset, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(combobox= self.combobox_voltage_offset, combobox_var= self.strvar_voltage_offset, ini_dict_key= 'VoltOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
+        utils.execute_combobox_function(combobox= self.combobox_voltage_offset, combobox_var= self.strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
 
         # timebase scale
         self.button_timebase_scale = ttk.Button(

@@ -1688,9 +1688,9 @@ def main_window(scope_ip):
 
     def close_window():
         if messagebox.askyesno('Message', 'Exit?'):
-            config = configparser.ConfigParser()
-            config.optionxform = str
-            config.read( os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='utf-8',)
+            # config = configparser.ConfigParser()
+            # config.optionxform = str
+            # config.read( os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='utf-8',)
             
             # config.set('Scale_Offset_Selected_Values', 'VoltageScale', strvar_voltage_scale.get())
             # config.set('Scale_Offset_Selected_Values', 'VoltageOffset', strvar_voltage_offset.get())
@@ -1750,10 +1750,12 @@ def main_window(scope_ip):
             # config.set('Load_WMemory_Setup_Config', 'SetupFileClass', strvar_setupfile_class.get())
             # config.set('Load_WMemory_Setup_Config', 'LoadSetup', strvar_setup.get())
 
-            config.write(open(os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), 'w'))
+            # config.write(open(os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), 'w'))
 
             # formatted_time= self.current_time()
             # print(f'\n{formatted_time} [GUI Message] Window Closed.')
+
+            settings.save()
             window.destroy()
             sys.exit()
 
