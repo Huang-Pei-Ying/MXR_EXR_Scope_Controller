@@ -121,8 +121,6 @@ def delete_combobox_option(combobox, combobox_value, options, config_file, secti
         combobox_value.set('')  # 清空當前選擇
         save_option_to_ini(config_file, section, key, options, selected_section, combobox.get())
 
-
-
 def move_mouse_entry_end(entry):
     """將 Entry 的內容視圖滾動到最後，並設置游標到最後一位"""
     entry.focus()           # 設置 Entry 欄位獲取焦點
