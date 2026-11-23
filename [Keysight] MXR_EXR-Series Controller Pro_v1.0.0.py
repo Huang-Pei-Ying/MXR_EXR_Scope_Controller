@@ -16,7 +16,7 @@ from tkinter import font
 from pathlib import Path
 
 from ini_setting import Settings
-from gui_frames import ScaleLabelFrame, ThresholdLabelFrame
+from gui_frames import ScaleLabelFrame, ThresholdLabelFrame, ChannelLabelFrame, ControlLabelFrame, AcquisitionLabelFrame, MeasurementLabelFrame, MarkerLabelFrame, LabelNameLabelFrame, SaveImageLabelFrame, SaveOthersLabelFrame, LoadWmemoryLabelFrame, LoadSetupLabelFrame
 
 
 
@@ -171,28 +171,6 @@ def main_window(scope_ip):
         config_initial.optionxform = str
         config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='UTF-8',)
 
-        # selected_VoltageScale = config_initial['Scale_Offset_Selected_Values']['VoltageScale']
-        # selected_VoltageOffset = config_initial['Scale_Offset_Selected_Values']['VoltageOffset']
-        # TimebaseScale = config_initial['Scale_Offset_Config']['TimebaseScale']
-        # TimebaseOffset = config_initial['Scale_Offset_Config']['TimebaseOffset']
-        # selected_TriggerLevel = config_initial['Scale_Offset_Selected_Values']['TriggerLevel']
-        # TriggerChannel = config_initial['Scale_Offset_Config']['TriggerChannel']
-
-        # selected_GeneralTopPercent = config_initial['Threshold_Selected_Values']['GeneralTopPercent']
-        # selected_GeneralMiddlePercent = config_initial['Threshold_Selected_Values']['GeneralMiddlePercent']
-        # selected_GeneralBasePercent = config_initial['Threshold_Selected_Values']['GeneralBasePercent']
-        # selected_GeneralTopValue = config_initial['Threshold_Selected_Values']['GeneralTopValue']
-        # selected_GeneralMiddleValue = config_initial['Threshold_Selected_Values']['GeneralMiddleValue']
-        # selected_GeneralBaseValue = config_initial['Threshold_Selected_Values']['GeneralBaseValue']
-        # selected_RFTopPercent = config_initial['Threshold_Selected_Values']['RFTopPercent']
-        # selected_RFBasePercent = config_initial['Threshold_Selected_Values']['RFBasePercent']
-        # selected_RFTopValue = config_initial['Threshold_Selected_Values']['RFTopValue']
-        # selected_RFBaseValue = config_initial['Threshold_Selected_Values']['RFBaseValue']
-        
-        SamplingRate = config_initial['Acquisition']['SamplingRate']
-        MemoryDepth = config_initial['Acquisition']['MemoryDepth']
-        WfmIntensity = config_initial['Acquisition']['WfmIntensity']
-
         ChannelTypeChoice = config_initial['Channel']['ChannelTypeChoice']
         ChannelSingle = config_initial['Channel']['ChannelSingle']
         ChannelDoubleStart = config_initial['Channel']['ChannelDoubleStart']
@@ -263,63 +241,6 @@ def main_window(scope_ip):
         for i in range(len(config_initial['Setupfile_Interface'])):
             setupfile_interface_list.append(config_initial['Setupfile_Interface'][f'Interface_{i}'])
 
-        # strvar_voltage_scale.set(value= select_VoltageScale)
-        # strvar_voltage_offset.set(value= select_VoltageOffset)
-        # strvar_timebase_scale.set(value= TimebaseScale)
-        # strvar_timebase_offset.set(value= TimebaseOffset)
-        # strvar_trigger_level.set(value= select_TriggerLevel)
-        # strvar_trigger_channel.set(value= TriggerChan)
-        # strvar_waveform_intensity.set(value= WfmIntensity)
-
-        # strvar_start_risefall.set(value= DeltaStartEdge)
-        # strvar_start_N_edge.set(value= DeltaStartNum)
-        # strvar_start_position.set(value= DeltaStartPosition)
-        # strvar_stop_risefall.set(value= DeltaStopEdge)
-        # strvar_stop_N_edge.set(value= DeltaStopNum)
-        # strvar_stop_position.set(value= DeltaStopPosition)
-
-        # strvar_general_percent_top.set(value= select_GeneralTopPercent)
-        # strvar_general_percent_middle.set(value= select_GeneralMiddlePercent)
-        # strvar_general_percent_base.set(value= select_GeneralBasePercent)
-        # strvar_general_value_top.set(value= select_GeneralTop)
-        # strvar_general_value_middle.set(value= select_GeneralMiddle)
-        # strvar_general_value_base.set(value= select_GeneralBase)
-        # strvar_risefall_percent_top.set(value= select_RFTopPercent)
-        # strvar_risefall_percent_base.set(value= select_RFBasePercent)
-        # strvar_risefall_value_top.set(value= select_RFTop)
-        # strvar_risefall_value_base.set(value= select_RFBase)
-        # strvar_sampling_rate.set(value= SamplingRate)
-        # strvar_memory_depth.set(value= MemoryDepth)
-
-        # strvar_label_1.set(value= ChanLabel1)
-        # strvar_label_2.set(value= ChanLabel2)
-        # strvar_label_3.set(value= ChanLabel3)
-        # strvar_label_4.set(value= ChanLabel4)
-        # strvar_label_5.set(value= WMeLabel1)
-        # strvar_label_6.set(value= WMeLabel2)
-        # strvar_label_7.set(value= WMeLabel3)
-        # strvar_label_8.set(value= WMeLabel4)
-
-        # intvar_channel_single.set(value= int(ChanSingle))
-        # intvar_channel_delta_start.set(value= int(ChanStart))
-        # intvar_channel_delta_stop.set(value= int(ChanStop))
-
-        # # str_image_folder.set(value= SaveImgFolder)
-        # # int_img_path_choice.set(value= SaveImgLocation)
-        # strvar_image_pc_folder.set(value= SaveImgPCFolder)
-        # strvar_image.set(value= SaveImgName)
-        # strvar_wmemory_folder.set(value= SaveWMeFolder)
-        # intvar_wmemory_path_choice.set(value= SaveWMeLocation)
-        # strvar_wmemory_pc_folder.set(value= SaveWMePCFolder)
-        # strvar_other_file.set(value= SaveWMeName)
-
-        # strvar_wmemory_1.set(value= LoadWMe1)
-        # strvar_wmemory_2.set(value= LoadWMe2)
-        # strvar_wmemory_3.set(value= LoadWMe3)
-        # strvar_wmemory_4.set(value= LoadWMe4)
-        # strvar_setupfile_interface.set(value= SetupFileInterface)
-        # strvar_setupfile_class.set(value= SetupFileClass)
-        # strvar_setup.set(value= LoadSetup)
         if LoadSetupFileInterface == '' or LoadSetupFileInterface == 'User':
             combobox_load_setup_standard_subfolder.config(state= 'disabled')
         combobox_load_setup_standard_interface.config(values= setupfile_interface_list)
@@ -1773,21 +1694,6 @@ def main_window(scope_ip):
         entry.icursor(tk.END)   # 將游標移動到文本的最後一位
         entry.xview_moveto(1)   # 滾動視圖到最後一部分，1 表比例最右邊
 
-    def on_mouse_wheel(event):
-        try:
-            value = int(entry_waveform_intensity.get())
-        except ValueError:
-            value = 0
-
-        if event.delta > 0:
-            value += waveform_intensity_step
-        else:
-            value -= waveform_intensity_step
-
-        value = max(waveform_intensity_min_value, min(waveform_intensity_max_value, value))
-        entry_waveform_intensity.delete(0, tk.END)
-        entry_waveform_intensity.insert(0, str(value))
-        update_intensity_color(value)
 
     def recall_combobox_option_from_inifile():
         config_initial = configparser.ConfigParser()
@@ -1964,40 +1870,11 @@ def main_window(scope_ip):
                     return disk
         return None
     
-    def set_to_fixty():
-        value = 50
-        entry_waveform_intensity.delete(0, tk.END)
-        entry_waveform_intensity.insert(0, str(value))
-        update_intensity_color(value)
-        # mxr.check_intensity_setting(intensity_value= 50)
-
     def switch_string(var_1, var_2):
         string_1= var_1.get()
         string_2= var_2.get()
         var_1.set(string_2)
         var_2.set(string_1)
-
-    def update_intensity_color(value):
-        """根據數值改變文字顏色"""
-        if value == 50:
-            entry_waveform_intensity.config(foreground= colors['entry'][1])
-        else:
-            entry_waveform_intensity.config(foreground= "red")
-
-    def validate_number(new_value):
-        """限制只能輸入數字 (允許空白)"""
-        if new_value == "":  # 空白允許
-            entry_waveform_intensity.config(foreground= "red")
-            return True
-        if new_value.isdigit():
-            num = int(new_value)
-            # 限制範圍
-            if waveform_intensity_min_value <= num <= waveform_intensity_max_value:
-                update_intensity_color(num)
-            else:
-                entry_waveform_intensity.config(foreground= "red")
-            return True
-        return False  # 阻擋非數字字元
 
 
 
@@ -2164,12 +2041,6 @@ def main_window(scope_ip):
     window.configure(bg= colors['window'][0])
     # window.resizable(True, True)
 
-    # 設定waveform intensity參數
-    waveform_intensity_step = 1
-    waveform_intensity_min_value = 0
-    waveform_intensity_max_value = 100
-
-
 
     # base_font_size= 7
 
@@ -2227,295 +2098,19 @@ def main_window(scope_ip):
 
     ################################################
     # Threshold  ===================================================================================================================================
-    labelframe_threshold= tk.LabelFrame(master= frame_left, text= 'Threshold', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
-
     threshold_frame = ThresholdLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-
-
-    # general threshold - value ######
-    button_general_threshold_value = ttk.Button(
-        master= labelframe_threshold, text= 'General - Value (V)', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    ## general threshold - value Top
-    label_general_threshold_value_top= tk.Label(
-        master= labelframe_threshold, text= 'Top (V)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_general_threshold_value_top= tk.StringVar()
-    combobox_general_threshold_value_top = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_value_top, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_general_threshold_value_top, combobox_var= strvar_general_threshold_value_top, ini_dict_key= 'GeneralTopValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopValue', ini_selected_section= 'Threshold_Selected_Values')
-    
-    ## general threshold - value Middle
-    label_general_threshold_value_middle= tk.Label(
-        master= labelframe_threshold, text= 'Middle (V)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_general_threshold_value_middle= tk.StringVar()
-    combobox_general_threshold_value_middle = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_value_middle, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_general_threshold_value_middle, combobox_var= strvar_general_threshold_value_middle, ini_dict_key= 'GeneralMiddleValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddleValue', ini_selected_section= 'Threshold_Selected_Values')
-    
-    ## general threshold - value Base
-    label_general_threshold_value_base= tk.Label(
-        master= labelframe_threshold, text= 'Base (V)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_general_threshold_value_base= tk.StringVar()
-    combobox_general_threshold_value_base = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_value_base, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_general_threshold_value_base, combobox_var= strvar_general_threshold_value_base, ini_dict_key= 'GeneralBaseValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBaseValue', ini_selected_section= 'Threshold_Selected_Values')
-
-    # general threshold - percent ######
-    button_general_threshold_percent = ttk.Button(
-        master= labelframe_threshold, text= 'General - Percentage (%)', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    ## general threshold - percent Top
-    label_general_threshold_percent_top= tk.Label(
-        master= labelframe_threshold, text= 'Top (%)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_general_threshold_percent_top= tk.StringVar()
-    combobox_general_threshold_percent_top = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_percent_top, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_general_threshold_percent_top, combobox_var= strvar_general_threshold_percent_top, ini_dict_key= 'GeneralTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralTopPercent', ini_selected_section= 'Threshold_Selected_Values')
-    
-    ## general threshold - percent Middle
-    label_general_threshold_percent_middle= tk.Label(
-        master= labelframe_threshold, text= 'Middle (%)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_general_threshold_percent_middle= tk.StringVar()
-    combobox_general_threshold_percent_middle = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_percent_middle, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_general_threshold_percent_middle, combobox_var= strvar_general_threshold_percent_middle, ini_dict_key= 'GeneralMiddlePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralMiddlePercent', ini_selected_section= 'Threshold_Selected_Values')
-    
-    ## general threshold - percent Base
-    label_general_threshold_percent_base= tk.Label(
-        master= labelframe_threshold, text= 'Base (%)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_general_threshold_percent_base= tk.StringVar()
-    combobox_general_threshold_percent_base = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_general_threshold_percent_base, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_general_threshold_percent_base, combobox_var= strvar_general_threshold_percent_base, ini_dict_key= 'GeneralBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'GeneralBasePercent', ini_selected_section= 'Threshold_Selected_Values')
-    
-    # Rise/Fall threshold - value ######
-    button_RF_threshold_value = ttk.Button(
-        master= labelframe_threshold, text= 'Ries/Fall - Value (V)', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    ## Rise/Fall threshold - value Top
-    label_RF_threshold_value_top= tk.Label(
-        master= labelframe_threshold, text= 'Top (V)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_RF_threshold_value_top= tk.StringVar()
-    combobox_RF_threshold_value_top = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_value_top, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_RF_threshold_value_top, combobox_var= strvar_RF_threshold_value_top, ini_dict_key= 'RFTopValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopValue', ini_selected_section= 'Threshold_Selected_Values')
-    
-    ## Rise/Fall threshold - value Base
-    label_RF_threshold_value_base= tk.Label(
-        master= labelframe_threshold, text= 'Base (V)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_RF_threshold_value_base= tk.StringVar()
-    combobox_RF_threshold_value_base = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_value_base, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_RF_threshold_value_base, combobox_var= strvar_RF_threshold_value_base, ini_dict_key= 'RFBaseValue', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBaseValue', ini_selected_section= 'Threshold_Selected_Values')
-
-    # Rise/Fall threshold - percent ######
-    button_RF_threshold_percent = ttk.Button(
-        master= labelframe_threshold, text= 'Ries/Fall - Percentage (%)', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    ## Rise/Fall threshold - percent Top
-    label_RF_threshold_percent_top= tk.Label(
-        master= labelframe_threshold, text= 'Top (%)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_RF_threshold_percent_top= tk.StringVar()
-    combobox_RF_threshold_percent_top = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_percent_top, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_RF_threshold_percent_top, combobox_var= strvar_RF_threshold_percent_top, ini_dict_key= 'RFTopPercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFTopPercent', ini_selected_section= 'Threshold_Selected_Values')
-    
-    ## Rise/Fall threshold - percent Base
-    label_RF_threshold_percent_base= tk.Label(
-        master= labelframe_threshold, text= 'Base (%)', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
-        )
-    strvar_RF_threshold_percent_base= tk.StringVar()
-    combobox_RF_threshold_percent_base = ttk.Combobox(
-        master= labelframe_threshold, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_RF_threshold_percent_base, style= 'TCombobox', justify= 'center')
-    execute_combobox_function(
-        combobox= combobox_RF_threshold_percent_base, combobox_var= strvar_RF_threshold_percent_base, ini_dict_key= 'RFBasePercent', ini_option_section= 'Threshold_Setup_Config', ini_option_key= 'RFBasePercent', ini_selected_section= 'Threshold_Selected_Values')
 
     ################################################
     # Channel  ===================================================================================================================================
-    labelframe_channel= tk.LabelFrame(master= frame_left, text= 'Channel', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+    channel_frame = ChannelLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
-    button_channel_1 = ttk.Button(
-        master= labelframe_channel, text= 'Channel 1', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_channel_2 = ttk.Button(
-        master= labelframe_channel, text= 'Channel 2', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_channel_3 = ttk.Button(
-        master= labelframe_channel, text= 'Channel 3', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_channel_4 = ttk.Button(
-        master= labelframe_channel, text= 'Channel 4', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_wmemory_1 = ttk.Button(
-        master= labelframe_channel, text= 'Wmemory 1', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_wmemory_2 = ttk.Button(
-        master= labelframe_channel, text= 'Wmemory 2', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_wmemory_3 = ttk.Button(
-        master= labelframe_channel, text= 'Wmemory 3', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_wmemory_4 = ttk.Button(
-        master= labelframe_channel, text= 'Wmemory 4', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-    
     ################################################
     # Control  ===================================================================================================================================
-    labelframe_control= tk.LabelFrame(master= frame_left, text= 'Control', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
-
-    button_control_run = ttk.Button(
-        master= labelframe_control, text= 'RUN', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_control_stop = ttk.Button(
-        master= labelframe_control, text= 'STOP', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_control_single = ttk.Button(
-        master= labelframe_control, text= 'Single', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_control_autoscale = ttk.Button(
-        master= labelframe_control, text= 'Auto Scale', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_control_default = ttk.Button(
-        master= labelframe_control, text= 'Default', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_control_clearwaveform = ttk.Button(
-        master= labelframe_control, text= 'Clear', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    button_disable_button = ttk.Button(
-        master= labelframe_control, text= 'Disable', width= button_width_scale_area,  padding= 2, 
-        # style= 'double_height.TButton',
-        # command= lambda: mxr.
-        )
+    control_frame = ControlLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
     ################################################
     # Acquisition  ===================================================================================================================================
-    labelframe_acquisition= tk.LabelFrame(master= frame_left, text= 'Acquisition', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
-
-    # sampling rate
-    button_smapling_rate = ttk.Button(
-        master= labelframe_acquisition, text= 'Sampling Rate (Sa/s)', width= button_width_scale_area,  padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    strvar_smapling_rate= tk.StringVar()
-    combobox_smapling_rate = ttk.Combobox(
-        master= labelframe_acquisition, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_smapling_rate, style= 'TCombobox', justify= 'center', 
-        values= ['16E+9', '8E+9', '4E+9', '2E+9']
-        )
-    button_smapling_rate_auto = ttk.Button(
-        master= labelframe_acquisition, text= 'Auto Mode', width= button_width_scale_area,  padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    # memory depth
-    button_memory_depth = ttk.Button(
-        master= labelframe_acquisition, text= 'Memory Depth (pts)', width= button_width_scale_area,  padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
-
-    strvar_memory_depth= tk.StringVar()
-    entry_memory_depth = ttk.Entry(
-        master= labelframe_acquisition, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_memory_depth, justify= 'center')
-    button_memory_depth_auto = ttk.Button(
-        master= labelframe_acquisition, text= 'Auto Mode', width= button_width_scale_area,  padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.
-        )
-    
-    # waveform intensity
-    button_waveform_intensity = ttk.Button(
-        master= labelframe_acquisition, text= 'Waveform Intensity (%)', width= button_width_scale_area,  padding= 1,
-        # style= 'normal_height.TButton',
-        # command= lambda: mxr.check_intensity_setting(intensity_value= strvar_waveform_intensity.get())
-        )
-
-    vcmd = (window.register(validate_number), "%P") # %P = 輸入後字串
-    strvar_waveform_intensity= tk.StringVar()
-    entry_waveform_intensity = ttk.Entry(
-        master= labelframe_acquisition, width= max(10, int(entry_width_scale_area*0.4)), textvariable= strvar_waveform_intensity, justify= 'center', validate="key", validatecommand= vcmd)
-    update_intensity_color(value= strvar_waveform_intensity.get())
-    button_set_to_fixty = ttk.Button(
-        master= labelframe_acquisition, text= 'Set 50%', width= button_width_scale_area,  padding= 1,
-        # style= 'normal_height.TButton',
-        command= set_to_fixty
-        )
-    entry_waveform_intensity.bind("<MouseWheel>", on_mouse_wheel)
-    entry_waveform_intensity.bind("<Button-4>", lambda e: on_mouse_wheel(type("Event", (), {"delta": 120})))
-    entry_waveform_intensity.bind("<Button-5>", lambda e: on_mouse_wheel(type("Event", (), {"delta": -120})))
+    acquisition_frame = AcquisitionLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
     ################################################
     # Right Area  ==============================================================================================================================================
@@ -3192,32 +2787,6 @@ def main_window(scope_ip):
     frame_right_bottom_right.columnconfigure(0, weight= 1, uniform= 'col')
 
     ###########################
-    ### threshold
-    # for i in range(7):
-    #     labelframe_threshold.rowconfigure(i, weight= 1, uniform= 'row')
-    # for j in range(4):
-    #     labelframe_threshold.columnconfigure(j, weight= 1, uniform= 'col')    
-    ###########################
-    ### channel
-    for i in range(2):
-        labelframe_channel.rowconfigure(i, weight= 1, uniform= 'row')
-    for j in range(4):
-        labelframe_channel.columnconfigure(j, weight= 1, uniform= 'col')    
-    ###########################
-    ### control
-    for i in range(2):
-        labelframe_control.rowconfigure(i, weight= 1, uniform= 'row')
-    for j in range(4):
-        labelframe_control.columnconfigure(j, weight= 1, uniform= 'col')    
-    ###########################
-    ### acquisition
-    labelframe_acquisition.rowconfigure(0, weight= 1, uniform= 'row')
-    labelframe_acquisition.rowconfigure(1, weight= 1, uniform= 'row')
-    labelframe_acquisition.rowconfigure(2, weight= 1, uniform= 'row')
-    labelframe_acquisition.columnconfigure(0, weight= 4, uniform= 'col')
-    labelframe_acquisition.columnconfigure(1, weight= 2, uniform= 'col')
-    labelframe_acquisition.columnconfigure(2, weight= 3, uniform= 'col')
-    ###########################
     ### measurement
     labelframe_measurement.rowconfigure(0, weight= 4, uniform= 'row')
     labelframe_measurement.rowconfigure(1, weight= 1, uniform= 'row')
@@ -3373,73 +2942,11 @@ def main_window(scope_ip):
     # Left Grid  ==============================================================================================================================================
     scale_frame.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
     threshold_frame.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # labelframe_threshold.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    labelframe_channel.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    labelframe_control.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    labelframe_acquisition.grid(row= 4, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    channel_frame.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    control_frame.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+    acquisition_frame.grid(row= 4, column= 0, padx= 2, pady= 2, sticky= 'nesw')
 
     ###########################
-    ## Threshold  ==============================================================================================================================================
-    # button_general_threshold_value.grid(row= 0, column= 0, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
-    # label_general_threshold_value_top.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_general_threshold_value_top.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    # label_general_threshold_value_middle.grid(row= 2, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_general_threshold_value_middle.grid(row= 2, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    # label_general_threshold_value_base.grid(row= 3, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_general_threshold_value_base.grid(row= 3, column= 1, padx= 2, pady= 2, sticky= 'ew')
-
-    # button_general_threshold_percent.grid(row= 0, column= 2, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
-    # label_general_threshold_percent_top.grid(row= 1, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_general_threshold_percent_top.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    # label_general_threshold_percent_middle.grid(row= 2, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_general_threshold_percent_middle.grid(row= 2, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    # label_general_threshold_percent_base.grid(row= 3, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_general_threshold_percent_base.grid(row= 3, column= 3, padx= 2, pady= 2, sticky= 'ew')
-
-    # button_RF_threshold_value.grid(row= 4, column= 0, padx= 2, pady= 5, sticky= 'nesw', columnspan= 2)
-    # label_RF_threshold_value_top.grid(row= 5, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_RF_threshold_value_top.grid(row= 5, column= 1, padx= 2, pady= 2, sticky= 'ew')
-    # label_RF_threshold_value_base.grid(row= 6, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_RF_threshold_value_base.grid(row= 6, column= 1, padx= 2, pady= 2, sticky= 'ew')
-
-    # button_RF_threshold_percent.grid(row= 4, column= 2, padx= 5, pady= 2, sticky= 'nesw', columnspan= 2)
-    # label_RF_threshold_percent_top.grid(row= 5, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_RF_threshold_percent_top.grid(row= 5, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    # label_RF_threshold_percent_base.grid(row= 6, column= 2, padx= 2, pady= 2, sticky= 'nesw')
-    # combobox_RF_threshold_percent_base.grid(row= 6, column= 3, padx= 2, pady= 2, sticky= 'ew')
-    ###########################
-    ## Channel  ==============================================================================================================================================
-    button_channel_1.grid(row= 0, column= 0, padx= 5, pady= 5, sticky= 'nesw')
-    button_channel_2.grid(row= 0, column= 1, padx= 5, pady= 5, sticky= 'nesw')
-    button_channel_3.grid(row= 0, column= 2, padx= 5, pady= 5, sticky= 'nesw')
-    button_channel_4.grid(row= 0, column= 3, padx= 5, pady= 5, sticky= 'nesw')
-    button_wmemory_1.grid(row= 1, column= 0, padx= 5, pady= 5, sticky= 'nesw')
-    button_wmemory_2.grid(row= 1, column= 1, padx= 5, pady= 5, sticky= 'nesw')
-    button_wmemory_3.grid(row= 1, column= 2, padx= 5, pady= 5, sticky= 'nesw')
-    button_wmemory_4.grid(row= 1, column= 3, padx= 5, pady= 5, sticky= 'nesw')
-    ###########################
-    ## Control  ==============================================================================================================================================
-    button_control_run.grid(row= 0, column= 0, padx= 5, pady= 5, sticky= 'nesw')
-    button_control_stop.grid(row= 0, column= 1, padx= 5, pady= 5, sticky= 'nesw')
-    button_control_single.grid(row= 0, column= 2, padx= 5, pady= 5, sticky= 'nes')
-
-    button_control_autoscale.grid(row= 1, column= 0, padx= 5, pady= 5, sticky= 'nesw')
-    button_control_default.grid(row= 1, column= 1, padx= 5, pady= 5, sticky= 'nesw')
-    button_control_clearwaveform.grid(row= 1, column= 2, padx= 5, pady= 5, sticky= 'nesw')
-    button_disable_button.grid(row= 1, column= 3, padx= 5, pady= 5, sticky= 'nesw')
-    ###########################
-    ### Acquisition ==============================================================================================================================================
-    button_smapling_rate.grid(row= 0, column= 0, padx= 10, pady= 5, sticky= 'nesw')
-    combobox_smapling_rate.grid(row= 0, column= 1, padx= 2, pady= 5, sticky= 'nesw')
-    button_smapling_rate_auto.grid(row= 0, column= 2, padx= 10, pady= 5, sticky= 'nesw')
-
-    button_memory_depth.grid(row= 1, column= 0, padx= 10, pady= 5, sticky= 'nesw')
-    entry_memory_depth.grid(row= 1, column= 1, padx= 2, pady= 5, sticky= 'nesw')
-    button_memory_depth_auto.grid(row= 1, column= 2, padx= 10, pady= 5, sticky= 'nesw')
-    
-    button_waveform_intensity.grid(row= 2, column= 0, padx= 10, pady= 5, sticky= 'nesw')
-    entry_waveform_intensity.grid(row= 2, column= 1, padx= 2, pady= 5, sticky= 'nesw')
-    button_set_to_fixty.grid(row= 2, column= 2, padx= 10, pady= 5, sticky= 'nesw')
     ###########################
 
 

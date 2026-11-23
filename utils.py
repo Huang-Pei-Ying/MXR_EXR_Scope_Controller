@@ -129,28 +129,6 @@ def move_mouse_entry_end(entry):
     entry.icursor(tk.END)   # 將游標移動到文本的最後一位
     entry.xview_moveto(1)   # 滾動視圖到最後一部分，1 表比例最右邊
 
-def on_mouse_wheel(event):
-
-    # 設定waveform intensity參數
-    waveform_intensity_step = 1
-    waveform_intensity_min_value = 0
-    waveform_intensity_max_value = 100
-
-    try:
-        value = int(entry_waveform_intensity.get())
-    except ValueError:
-        value = 0
-
-    if event.delta > 0:
-        value += waveform_intensity_step
-    else:
-        value -= waveform_intensity_step
-
-    value = max(waveform_intensity_min_value, min(waveform_intensity_max_value, value))
-    entry_waveform_intensity.delete(0, tk.END)
-    entry_waveform_intensity.insert(0, str(value))
-    update_intensity_color(value)
-
 def rgba_to_rgb_composite(in_path, out_path, background=(0, 0, 0)):
     img = Image.open(in_path)
     # 確保有 alpha 通道用 RGBA
@@ -238,11 +216,11 @@ def find_disk_segment(path):
                 return disk
     return None
 
-def set_to_fixty():
+def set_to_fixty(entry):
     value = 50
-    entry_waveform_intensity.delete(0, tk.END)
-    entry_waveform_intensity.insert(0, str(value))
-    update_intensity_color(value)
+    entry.delete(0, tk.END)
+    entry.insert(0, str(value))
+    update_intensity_color(value, entry= entry)
     # mxr.check_intensity_setting(intensity_value= 50)
 
 def switch_string(var_1, var_2):
@@ -251,28 +229,63 @@ def switch_string(var_1, var_2):
     var_1.set(string_2)
     var_2.set(string_1)
 
-def update_intensity_color(value):
+def on_mouse_wheel(event, entry):
+
+    # Windows/macOS 通常用 event.delta 判斷滾輪方向
+    step = 1 if event.delta > 0 else -1    # # 設定waveform intensity參數
+
+    change_intensity_by(entry, step)
+
+def change_intensity_by(entry, step):
+    """依 step 增減 Entry 的數值，並限制在 0–100。"""
+
+    min_value = 0
+    max_value = 100
+
+    # 讀取 Entry 目前的內容；空白或非整數時，從 0 開始
+    try:
+        value = int(entry.get())
+    except (ValueError, TypeError):
+        value = 0
+
+    # 加上或減去 step
+    value += step
+
+    # 限制數值不能低於 0，也不能高於 100
+    value = max(min_value, min(max_value, value))
+
+    # 將新數值寫回 Entry
+    entry.delete(0, "end")
+    entry.insert(0, str(value))
+
+    # 若有顏色更新函式，可在這裡呼叫
+    update_intensity_color(value, entry)
+
+def update_intensity_color(value, entry):
     """根據數值改變文字顏色"""
-    if value == 50:
-        entry_waveform_intensity.config(foreground= colors['entry'][1])
+    if int(value) == 50:
+        entry.config(foreground= '#0B3041')
     else:
-        entry_waveform_intensity.config(foreground= "red")
+        entry.config(foreground= "red")
 
-def validate_number(new_value):
-    """限制只能輸入數字 (允許空白)"""
-    if new_value == "":  # 空白允許
-        entry_waveform_intensity.config(foreground= "red")
-        return True
-    if new_value.isdigit():
-        num = int(new_value)
-        # 限制範圍
-        if waveform_intensity_min_value <= num <= waveform_intensity_max_value:
-            update_intensity_color(num)
-        else:
-            entry_waveform_intensity.config(foreground= "red")
-        return True
-    return False  # 阻擋非數字字元
+def validate_number(new_value, entry):
+    """限制只能輸入 0-100 的整數，並允許清空。"""
 
+    if new_value == "":
+        entry.config(foreground="red")
+        return True
+
+    if not new_value.isdigit():
+        return False
+
+    num = int(new_value)
+
+    if 0 <= num <= 100:
+        update_intensity_color(num, entry= entry)
+        return True
+
+    # entry.config(foreground="red")
+    return True
 
 def clear(string):
     string.set('')
