@@ -18,8 +18,6 @@ class SaveOthersLabelFrame(tk.LabelFrame):
         self.strvar_save_others_server_segment= tk.StringVar()
         self.combobox_save_others_server_segment= ttk.Combobox(
             master= self.frame_save_others_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_save_others_server_segment, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(
-            combobox= self.combobox_save_others_server_segment, combobox_var= self.strvar_save_others_server_segment, ini_dict_key= 'SaveOtherServerCode', ini_option_section= 'Save_Other_Setup_Config', ini_option_key= 'SaveOtherServerCode', ini_selected_section= 'Save_Other_Selected_Values')
         
         self.intvar_save_others_filetype= tk.IntVar()
         self.radiobutton_save_others_wfmfile= ttk.Radiobutton(
@@ -107,9 +105,17 @@ class SaveOthersLabelFrame(tk.LabelFrame):
         ## settings  ==============================================================================================================================================
         settings.apply('Save_Other_Setup_Config', {
             'SaveOtherLocation': self.intvar_save_others_savelocation, 
-            'SaveOtherServerCode': self.strvar_save_others_server_segment, 
             'SaveOtherFileType': self.intvar_save_others_filetype, 
             'SaveOtherFolder': self.strvar_save_others_scopefolder, 
             'SaveOtherChannel': self.strvar_save_others_channel, 
             'SaveOtherFileName': self.strvar_save_others_filename, 
         })
+        settings.apply('Save_Other_Selected_Values', {
+            'SaveOtherServerCode': self.strvar_save_others_server_segment, 
+        })
+
+        # combobox options
+        settings.setup_combobox(combobox= self.combobox_save_others_server_segment, combobox_var= self.strvar_save_others_server_segment, key= "SaveOtherServerCode",)
+
+        ## else  ==============================================================================================================================================
+        utils.move_mouse_entry_end(entry= self.entry_save_others_scopefolder)

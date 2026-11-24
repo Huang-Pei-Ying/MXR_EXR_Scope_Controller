@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import utils
+from pathlib import Path
 
 class LoadSetupLabelFrame(tk.LabelFrame):
     def __init__(self, master, settings, colors, button_width, entry_width):
@@ -13,9 +14,9 @@ class LoadSetupLabelFrame(tk.LabelFrame):
 
         self.intvar_load_setup_call_file_type= tk.IntVar()
         self.radiobutton_load_setup_user_defined= ttk.Radiobutton(
-            master= self.frame_load_setup_1, text= 'User-defined', value= 0, variable= self.intvar_load_setup_call_file_type, style= 'radiobutton_3.TRadiobutton')
+            master= self.frame_load_setup_1, text= 'User-defined', value= 0, variable= self.intvar_load_setup_call_file_type, style= 'radiobutton_3.TRadiobutton', )
         self.radiobutton_load_setup_standard= ttk.Radiobutton(
-            master= self.frame_load_setup_1, text= 'Standard', value= 1, variable= self.intvar_load_setup_call_file_type, style= 'radiobutton_3.TRadiobutton')
+            master= self.frame_load_setup_1, text= 'Standard', value= 1, variable= self.intvar_load_setup_call_file_type, style= 'radiobutton_3.TRadiobutton',)
 
         self.intvar_load_setup_loadlocation= tk.IntVar()
         self.radiobutton_load_setup_loacation_scope= ttk.Radiobutton(
@@ -25,8 +26,6 @@ class LoadSetupLabelFrame(tk.LabelFrame):
         self.strvar_load_setup_loacation_server= tk.StringVar()
         self.combobox_load_setup_loacation_server= ttk.Combobox(
             master= self.frame_load_setup_1, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_loacation_server, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(
-            combobox= self.combobox_load_setup_loacation_server, combobox_var= self.strvar_load_setup_loacation_server, ini_dict_key= 'LoadSetupFileServerCode', ini_option_section= 'Load_SetupFile_Setup_Config', ini_option_key= 'LoadSetupFileServerCode', ini_selected_section= 'Load_SetupFile_Selected_Values')
 
         self.label_load_setup_user_defined_folder= tk.Label(
             master= self.frame_load_setup_2, text= 'Folder', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -55,10 +54,10 @@ class LoadSetupLabelFrame(tk.LabelFrame):
         self.boolvar_modify_voltage= tk.BooleanVar()
         self.checkbutton_modify_voltage= ttk.Checkbutton(
             master= self.frame_load_setup_3, text= 'Voltage', variable= self.boolvar_modify_voltage, style= 'checkbutton_1.TCheckbutton')
-
+        
         self.strvar_load_setup_standard_interface= tk.StringVar()
         self.combobox_load_setup_standard_interface= ttk.Combobox(
-            master= self.frame_load_setup_4, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_standard_interface, style= 'TCombobox', justify= 'center')
+            master= self.frame_load_setup_4, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_standard_interface, style= 'TCombobox', justify= 'center', )
         
         self.strvar_load_setup_standard_subfolder= tk.StringVar()
         self.combobox_load_setup_standard_subfolder= ttk.Combobox(
@@ -68,11 +67,11 @@ class LoadSetupLabelFrame(tk.LabelFrame):
         self.combobox_load_setup_standard_files= ttk.Combobox(
             master= self.frame_load_setup_4, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_standard_files, style= 'TCombobox', justify= 'center')
 
-        # self.button_load_setup_standard_load= ttk.Button(
-        #     master= frame_load_setup_4, text= 'Load', width= button_width,  padding= 1,)
+        self.button_load_setup_standard_load= ttk.Button(
+            master= self.frame_load_setup_4, text= 'Load', width= button_width,  padding= 1,)
         ################################################
 
-        ### Weight        
+        ### Weight  ==============================================================================================================================================   
         self.rowconfigure(0, weight= 2, uniform= 'row')
         self.rowconfigure(1, weight= 2, uniform= 'row')
         self.rowconfigure(2, weight= 1, uniform= 'row')
@@ -131,14 +130,13 @@ class LoadSetupLabelFrame(tk.LabelFrame):
         self.combobox_load_setup_standard_interface.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'ew')
         self.combobox_load_setup_standard_subfolder.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew')
         self.combobox_load_setup_standard_files.grid(row= 0, column= 2, padx= 2, pady= 2, sticky= 'ew')
-        # self.button_load_setup_standard_load.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'ew')
+        self.button_load_setup_standard_load.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'ew')
         ###########################
 
         ## settings  ==============================================================================================================================================
         settings.apply('Load_SetupFile_Setup_Config', {
             'LoadSetupFile_Type': self.intvar_load_setup_call_file_type, 
             'LoadSetupFileLocation': self.intvar_load_setup_loadlocation, 
-            'LoadSetupFileServerCode': self.strvar_load_setup_loacation_server, 
             'LoadSetupFileFolder': self.strvar_load_setup_user_defined_folder, 
             'LoadSetupFileFileName': self.strvar_load_setup_user_defined_filename, 
             'LoadSetupFileSubLabel': self.boolvar_modify_label, 
@@ -148,3 +146,42 @@ class LoadSetupLabelFrame(tk.LabelFrame):
             'LoadSetupFileClass': self.strvar_load_setup_standard_subfolder, 
             'LoadSetupFileName': self.strvar_load_setup_standard_files,
         })
+        settings.apply('Load_SetupFile_Selected_Values', {
+            'LoadSetupFileServerCode': self.strvar_load_setup_loacation_server, 
+        })
+
+        # combobox options
+        settings.setup_combobox(combobox= self.combobox_load_setup_loacation_server, combobox_var= self.strvar_load_setup_loacation_server, key= "LoadSetupFileServerCode",)
+
+        ## else  ==============================================================================================================================================
+        user_defined_list= [
+            self.label_load_setup_user_defined_folder, 
+            self.label_load_setup_user_defined_filename, 
+            self.entry_load_setup_user_defined_folder, 
+            self.entry_load_setup_user_defined_filename, 
+            self.button_load_setup_user_defined_browse, 
+            self.button_load_setup_user_defined_load,
+        ]
+        standard_list= [
+            self.checkbutton_modify_label, 
+            self.checkbutton_modify_timebase, 
+            self.checkbutton_modify_voltage, 
+            self.combobox_load_setup_standard_interface, 
+            self.combobox_load_setup_standard_subfolder, 
+            self.combobox_load_setup_standard_files, 
+            self.button_load_setup_standard_load, 
+        ]      
+        
+        utils.block_by_choice(var_value= self.intvar_load_setup_call_file_type.get(), user_defined_list= user_defined_list, standard_list= standard_list)            
+        
+        self.radiobutton_load_setup_user_defined.config(command= lambda: utils.block_by_choice(var_value= self.intvar_load_setup_call_file_type.get(), user_defined_list= user_defined_list, standard_list= standard_list))
+        self.radiobutton_load_setup_standard.config(command= lambda: utils.block_by_choice(var_value= self.intvar_load_setup_call_file_type.get(), user_defined_list= user_defined_list, standard_list= standard_list)
+                                                        )
+        interface_options = utils.search_every_interface()
+        self.combobox_load_setup_standard_interface.config(values= interface_options)
+        
+        sub_options = utils.search_every_sub(interface= self.strvar_load_setup_standard_interface.get())
+        self.combobox_load_setup_standard_subfolder.config(values= sub_options)
+
+        setupfiles_options = utils.search_every_setupfiles(interface= self.strvar_load_setup_standard_interface.get(), sub= self.strvar_load_setup_standard_subfolder.get())
+        self.combobox_load_setup_standard_subfolder.config(values= setupfiles_options)

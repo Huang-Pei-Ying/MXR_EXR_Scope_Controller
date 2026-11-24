@@ -20,7 +20,6 @@ class ScaleLabelFrame(tk.LabelFrame):
         self.strvar_voltage_scale= tk.StringVar(master= self)
         self.combobox_voltage_scale = ttk.Combobox(
             master= self.frame_scalearea_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_voltage_scale, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(combobox= self.combobox_voltage_scale, combobox_var= self.strvar_voltage_scale, ini_dict_key= 'VoltageScale', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageScale', ini_selected_section= 'Scale_Offset_Selected_Values')
 
         # voltage_offset
         self.button_voltage_offset = ttk.Button(
@@ -32,7 +31,6 @@ class ScaleLabelFrame(tk.LabelFrame):
         self.strvar_voltage_offset= tk.StringVar()
         self.combobox_voltage_offset = ttk.Combobox(
             master= self.frame_scalearea_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_voltage_offset, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(combobox= self.combobox_voltage_offset, combobox_var= self.strvar_voltage_offset, ini_dict_key= 'VoltageOffset', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'VoltageOffset', ini_selected_section= 'Scale_Offset_Selected_Values')
 
         # timebase scale
         self.button_timebase_scale = ttk.Button(
@@ -75,7 +73,6 @@ class ScaleLabelFrame(tk.LabelFrame):
         self.strvar_trigger_level= tk.StringVar()
         self.combobox_trigger_level = ttk.Combobox(
             master= self.frame_scalearea_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_trigger_level, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(combobox= self.combobox_trigger_level, combobox_var= self.strvar_trigger_level, ini_dict_key= 'TriggerLevel', ini_option_section= 'Scale_Offset_Config', ini_option_key= 'TriggerLevel', ini_selected_section= 'Scale_Offset_Selected_Values')
 
         self.frame_scalearea_bottom= tk.Frame(master= self, background= colors['labelframe'][0])
         # buttons
@@ -97,7 +94,7 @@ class ScaleLabelFrame(tk.LabelFrame):
 
         ################################################
 
-        ### Weight        
+        ### Weight  ==============================================================================================================================================
         self.rowconfigure(0, weight= 3, uniform= 'row')
         self.rowconfigure(1, weight= 1, uniform= 'row')
         self.columnconfigure(0, weight= 1, uniform= 'col')
@@ -149,3 +146,8 @@ class ScaleLabelFrame(tk.LabelFrame):
             'TimebaseOffset': self.strvar_timebase_offset, 
             'TriggerChannel': self.strvar_trigger_channel, 
         })
+        
+        # combobox options
+        settings.setup_combobox(combobox= self.combobox_voltage_scale, combobox_var= self.strvar_voltage_scale, key= "VoltageScale",)
+        settings.setup_combobox(combobox= self.combobox_voltage_offset, combobox_var= self.strvar_voltage_offset, key= "VoltageOffset",)
+        settings.setup_combobox(combobox= self.combobox_trigger_level, combobox_var= self.strvar_trigger_level, key= "TriggerLevel",)

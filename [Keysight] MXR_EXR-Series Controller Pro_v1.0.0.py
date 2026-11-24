@@ -161,32 +161,6 @@ def show_main_window(old_scope_ips):
 # =====================================================================================================================================================
 def main_window(scope_ip):
 
-    def initialize():
-
-        eric_team_path = fr'#_Eric Team'
-        global disk_segment
-        disk_segment = find_disk_segment(path= eric_team_path)
-
-        config_initial = configparser.ConfigParser()
-        config_initial.optionxform = str
-        config_initial.read(os.path.join(os.path.dirname(__file__), 'InitConfig_setup_new.ini'), encoding='UTF-8',)
-
-        setupfile_interface_list = []
-        for i in range(len(config_initial['Setupfile_Interface'])):
-            setupfile_interface_list.append(config_initial['Setupfile_Interface'][f'Interface_{i}'])
-
-        if LoadSetupFileInterface == '' or LoadSetupFileInterface == 'User':
-            combobox_load_setup_standard_subfolder.config(state= 'disabled')
-        combobox_load_setup_standard_interface.config(values= setupfile_interface_list)
-        select_load_setup_standard_interface(event= combobox_load_setup_standard_interface.bind("<<ComboboxSelected>>"), pc_segment= disk_segment)
-        select_load_setup_standard_subfolder(event= combobox_load_setup_standard_subfolder.bind("<<ComboboxSelected>>"), pc_segment= disk_segment)
-
-        # move_mouse_entry_end(entry= entry_wmemory_folder)
-        # move_mouse_entry_end(entry= entry_wmemory_pc_folder)
-    
-        # return Segment
-
-
     class MXR:
         pass
 
@@ -1736,73 +1710,73 @@ def main_window(scope_ip):
 
         move_mouse_entry_end(entry= target_entry)
 
-    def select_load_setup_standard_subfolder(event, pc_segment):
+    # def select_load_setup_standard_subfolder(event, pc_segment):
 
-        target_interface_subfolder_files= []
+    #     target_interface_subfolder_files= []
 
-        strvar_load_setup_standard_files.set(value= '')
+    #     strvar_load_setup_standard_files.set(value= '')
 
-        # 示波器folder路徑
-        setupfile_class_folderpath = f'{strvar_load_setup_loacation_server.get()}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}\{strvar_load_setup_standard_subfolder.get()}'
-        # str_WMe_folder.set(value= setupfile_class_folderpath)
+    #     # 示波器folder路徑
+    #     setupfile_class_folderpath = f'{strvar_load_setup_loacation_server.get()}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}\{strvar_load_setup_standard_subfolder.get()}'
+    #     # str_WMe_folder.set(value= setupfile_class_folderpath)
 
-        # PC folder路徑
-        pc_setupfile_class_folderpath = fr'{pc_segment}#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}\{strvar_load_setup_standard_subfolder.get()}'
+    #     # PC folder路徑
+    #     pc_setupfile_class_folderpath = fr'{pc_segment}#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}\{strvar_load_setup_standard_subfolder.get()}'
 
-        # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
-        for root, dirs, files in os.walk(pc_setupfile_class_folderpath):
-            for file in files:
-                # 篩選.set
-                if file.endswith('.set'):
-                    # 取得設定檔的絕對路徑
-                    file_path = os.path.join(root, file)
-                    target_interface_subfolder_files.append((os.path.basename(file_path)).rstrip('.set'))
+    #     # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
+    #     for root, dirs, files in os.walk(pc_setupfile_class_folderpath):
+    #         for file in files:
+    #             # 篩選.set
+    #             if file.endswith('.set'):
+    #                 # 取得設定檔的絕對路徑
+    #                 file_path = os.path.join(root, file)
+    #                 target_interface_subfolder_files.append((os.path.basename(file_path)).rstrip('.set'))
 
-        combobox_load_setup_standard_files.config(values= target_interface_subfolder_files)
-        # adjust_entry(entry= e_WMe_folder)
+    #     combobox_load_setup_standard_files.config(values= target_interface_subfolder_files)
+    #     # adjust_entry(entry= e_WMe_folder)
 
-    def select_load_setup_standard_interface(event, pc_segment):
+    # def select_load_setup_standard_interface(event, pc_segment):
         
-        target_interface_subfolder= []
+    #     target_interface_subfolder= []
 
-        strvar_load_setup_standard_subfolder.set(value= '')
+    #     strvar_load_setup_standard_subfolder.set(value= '')
 
-        if strvar_load_setup_standard_interface.get() == 'User':
-            strvar_load_setup_standard_subfolder.set(value= '')
-            combobox_load_setup_standard_subfolder.config(state= 'disabled')
-        elif strvar_load_setup_standard_interface.get() == '':
-            strvar_load_setup_standard_subfolder.set(value= '')
-            combobox_load_setup_standard_subfolder.config(state= 'disabled')
-        else: 
-            combobox_load_setup_standard_subfolder.config(state= 'readonly')
+    #     if strvar_load_setup_standard_interface.get() == 'User':
+    #         strvar_load_setup_standard_subfolder.set(value= '')
+    #         combobox_load_setup_standard_subfolder.config(state= 'disabled')
+    #     elif strvar_load_setup_standard_interface.get() == '':
+    #         strvar_load_setup_standard_subfolder.set(value= '')
+    #         combobox_load_setup_standard_subfolder.config(state= 'disabled')
+    #     else: 
+    #         combobox_load_setup_standard_subfolder.config(state= 'readonly')
 
-            # 示波器folder路徑
-            setupfile_interface_folderpath = fr'{strvar_load_setup_standard_interface.get()}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}'
-            # str_WMe_folder.set(value= setupfile_interface_folderpath)
+    #         # 示波器folder路徑
+    #         setupfile_interface_folderpath = fr'{strvar_load_setup_standard_interface.get()}:\#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}'
+    #         # str_WMe_folder.set(value= setupfile_interface_folderpath)
 
-            # PC folder路徑
-            pc_setupfile_interface_folderpath = fr'{pc_segment}#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}'
+    #         # PC folder路徑
+    #         pc_setupfile_interface_folderpath = fr'{pc_segment}#_Eric Team\02_Penny\Setup_Files_Collection\{strvar_load_setup_standard_interface.get()}'
 
-            # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
-            for root, dirs, files in os.walk(pc_setupfile_interface_folderpath):
-                for dir_name in dirs:
-                    # 取得子資料夾的絕對路徑
-                    dir_path = os.path.join(root, dir_name)
-                    target_interface_subfolder.append(os.path.basename(dir_path))
+    #         # os.walk 會回傳 root (目前路徑), dirs (子資料夾名稱列表), files (檔案名稱列表)
+    #         for root, dirs, files in os.walk(pc_setupfile_interface_folderpath):
+    #             for dir_name in dirs:
+    #                 # 取得子資料夾的絕對路徑
+    #                 dir_path = os.path.join(root, dir_name)
+    #                 target_interface_subfolder.append(os.path.basename(dir_path))
 
-            combobox_load_setup_standard_subfolder.config(values= target_interface_subfolder)
-            # adjust_entry(entry= e_WMe_folder)
+    #         combobox_load_setup_standard_subfolder.config(values= target_interface_subfolder)
+    #         # adjust_entry(entry= e_WMe_folder)
     
-    def find_disk_segment(path):
-        for seg in string.ascii_uppercase:
-            disk = Path(f"{seg}:\\")
+    # def find_disk_segment(path):
+    #     for seg in string.ascii_uppercase:
+    #         disk = Path(f"{seg}:\\")
             
-            if disk.exists():
-                full_path = disk / path
+    #         if disk.exists():
+    #             full_path = disk / path
                 
-                if full_path.is_dir():
-                    return disk
-        return None
+    #             if full_path.is_dir():
+    #                 return disk
+    #     return None
     
     def switch_string(var_1, var_2):
         string_1= var_1.get()
@@ -2043,7 +2017,7 @@ def main_window(scope_ip):
     marker_frame= MarkerLabelFrame(master= frame_right_bottom_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
     labelname_frame= LabelNameLabelFrame(master= frame_right_bottom_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
     saveimage_frame= SaveImageLabelFrame(master= frame_right_bottom_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    saveothers_frame= SaveImageLabelFrame(master= frame_right_bottom_right, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    saveothers_frame= SaveOthersLabelFrame(master= frame_right_bottom_right, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
     loadwmemory_frame= LoadWmemoryLabelFrame(master= frame_right_bottom_right, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
     loadsetup_frame= LoadSetupLabelFrame(master= frame_right_bottom_right, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
@@ -2144,32 +2118,30 @@ def main_window(scope_ip):
     # ToolTip(text_result_minmax_7, '無條件捨去')
     # ToolTip(text_result_minmax_9, '芭樂綠茶')
     # ToolTip(text_result_mean_12, '多多檢查')
-
-    initialize()
     
 
-    button_load_setup_standard_load = ttk.Button(
-        master= frame_load_setup_4, text= 'Load', width= button_width_scale_area,  padding= 1, 
-        # command= lambda: mxr.load_setup(
-        #     folder= strvar_wmemory_folder.get(), 
-        #     setup_name= strvar_setup.get(), 
-        #     scope_segment= segment_list[0],
-        # # time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
-        #     choose_type= intvar_label_type.get(), 
-        #     file_path_choice = intvar_wmemory_path_choice.get(), 
-        # # volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
-        # # trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
-        #     g_top= combobox_general_value_top.get(), g_middle= combobox_general_value_middle.get(), g_base= combobox_general_value_base.get(), 
-        #     g_top_percent= combobox_general_percent_top.get(), g_middle_percent= combobox_general_percent_middle.get(), g_base_percent= combobox_general_percent_base.get(), 
-        #     rf_top= combobox_risefall_value_top.get(),  rf_base= combobox_risefall_value_base.get(), 
-        #     rf_top_percent= combobox_risefall_percent_top.get(), rf_base_percent= combobox_risefall_percent_base.get()
-        #     )
-        )
-    button_load_setup_standard_load.grid(row= 0, column= 3, padx= 5, pady= 2, sticky= 'ew')
+    # button_load_setup_standard_load = ttk.Button(
+    #     master= frame_load_setup_4, text= 'Load', width= button_width_scale_area,  padding= 1, 
+    #     # command= lambda: mxr.load_setup(
+    #     #     folder= strvar_wmemory_folder.get(), 
+    #     #     setup_name= strvar_setup.get(), 
+    #     #     scope_segment= segment_list[0],
+    #     # # time_scale= str_time_scale.get(), time_position= str_time_offset.get(), 
+    #     #     choose_type= intvar_label_type.get(), 
+    #     #     file_path_choice = intvar_wmemory_path_choice.get(), 
+    #     # # volt_scale= str_volt_scale.get(), volt_offset= str_volt_offset.get(), 
+    #     # # trig_chan= str_trigger_chan.get(), trig_level= str_trigger_level.get(),
+    #     #     g_top= combobox_general_value_top.get(), g_middle= combobox_general_value_middle.get(), g_base= combobox_general_value_base.get(), 
+    #     #     g_top_percent= combobox_general_percent_top.get(), g_middle_percent= combobox_general_percent_middle.get(), g_base_percent= combobox_general_percent_base.get(), 
+    #     #     rf_top= combobox_risefall_value_top.get(),  rf_base= combobox_risefall_value_base.get(), 
+    #     #     rf_top_percent= combobox_risefall_percent_top.get(), rf_base_percent= combobox_risefall_percent_base.get()
+    #     #     )
+    #     )
+    # button_load_setup_standard_load.grid(row= 0, column= 3, padx= 5, pady= 2, sticky= 'ew')
     
-    # cbb_setupfile_interface.config(values= setupfile_interface_list)
-    combobox_load_setup_standard_interface.bind("<<ComboboxSelected>>", lambda e: select_load_setup_standard_interface(e, pc_segment= disk_segment))
-    combobox_load_setup_standard_subfolder.bind("<<ComboboxSelected>>", lambda e: select_load_setup_standard_subfolder(e, pc_segment= disk_segment))
+    # # cbb_setupfile_interface.config(values= setupfile_interface_list)
+    # combobox_load_setup_standard_interface.bind("<<ComboboxSelected>>", lambda e: select_load_setup_standard_interface(e, pc_segment= disk_segment))
+    # combobox_load_setup_standard_subfolder.bind("<<ComboboxSelected>>", lambda e: select_load_setup_standard_subfolder(e, pc_segment= disk_segment))
 
     window.protocol('WM_DELETE_WINDOW', close_window)
 

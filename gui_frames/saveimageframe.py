@@ -53,3 +53,6 @@ class SaveImageLabelFrame(tk.LabelFrame):
             'SaveImgPCFolder': self.strvar_save_img_pcfolder, 
             'SaveImgName': self.strvar_save_img_name, 
         })
+
+        ## else  ==============================================================================================================================================
+        utils.move_mouse_entry_end(entry= self.entry_save_img_pcfolder)

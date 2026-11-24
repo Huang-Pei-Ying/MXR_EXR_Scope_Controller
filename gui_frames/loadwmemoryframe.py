@@ -18,8 +18,6 @@ class LoadWmemoryLabelFrame(tk.LabelFrame):
         self.strvar_load_waveform_server_segment= tk.StringVar()
         self.combobox_load_waveform_server_segment= ttk.Combobox(
             master= self.frame_load_waveform_top, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_waveform_server_segment, style= 'TCombobox', justify= 'center')
-        utils.execute_combobox_function(
-            combobox= self.combobox_load_waveform_server_segment, combobox_var= self.strvar_load_waveform_server_segment, ini_dict_key= 'LoadWMemoryServerCode', ini_option_section= 'Load_WMemory_Setup_Config', ini_option_key= 'LoadWMemoryServerCode', ini_selected_section= 'Load_WMemory_Selected_Values')
 
         self.label_load_waveform_scopefolder= tk.Label(
             master= self.frame_load_waveform_base, text= 'Folder', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -105,8 +103,13 @@ class LoadWmemoryLabelFrame(tk.LabelFrame):
         ## settings  ==============================================================================================================================================
         settings.apply('Load_WMemory_Setup_Config', {
             'LoadWMemoryLocation': self.intvar_load_waveform_savelocation, 
-            'LoadWMemoryServerCode': self.strvar_load_waveform_server_segment, 
             'LoadWMemoryFolder': self.strvar_load_waveform_scopefolder, 
             'LoadWMemoryChannel': self.strvar_load_waveform_wmemory, 
             'LoadWMemoryFileName': self.strvar_load_waveform_filename, 
         })
+        settings.apply('Load_WMemory_Selected_Values', {
+            'LoadWMemoryServerCode': self.strvar_load_waveform_server_segment, 
+        })
+
+        # combobox options
+        settings.setup_combobox(combobox= self.combobox_load_waveform_server_segment, combobox_var= self.strvar_load_waveform_server_segment, key= "LoadWMemoryServerCode",)
