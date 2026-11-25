@@ -1,5 +1,6 @@
 import pyvisa
 import time
+from decimal import Decimal
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 
@@ -349,21 +350,21 @@ class MXR:
             self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
             time.sleep(0.05)
 
-    def display_channel(self, channel, bookmark, choose_type):
+    def display_channel(self, channel):
         res= self.inst.query(f':CHANnel{channel}:DISPlay?')
         time.sleep(0.05)
         if res == '1\n':
             self.inst.write(f':CHANnel{channel}:DISPlay OFF')
             time.sleep(0.05)
-            try:
-                self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
-                time.sleep(0.05)
-            except:
-                pass
+            # try:
+            #     self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
+            #     time.sleep(0.05)
+            # except:
+            #     pass
         else:
             self.inst.write(f':CHANnel{channel}:DISPlay ON')
             time.sleep(0.05)
-            self.add_bookmark(choose_type= choose_type,bookmark= bookmark, channel= channel)
+            # self.add_bookmark(choose_type= choose_type,bookmark= bookmark, channel= channel)
 
     def delete_marker(self):
         tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -384,21 +385,21 @@ class MXR:
                 self.inst.write(f'MEASurement{i+1}:CLEar')
                 time.sleep(0.05)
 
-    def display_wmemory(self, channel, bookmark, choose_type):
-        res= self.inst.query(f':WMEMory{channel}:DISPlay?')
+    def display_wmemory(self, wmemory):
+        res= self.inst.query(f':WMEMory{wmemory}:DISPlay?')
         time.sleep(0.05)
         if res == '1\n':
-            self.inst.write(f':WMEMory{channel}:DISPlay OFF')
+            self.inst.write(f':WMEMory{wmemory}:DISPlay OFF')
             time.sleep(0.05)
-            try:
-                self.inst.write(f':DISPlay:BOOKmark{channel+4}:DELete')
-                time.sleep(0.05)
-            except:
-                pass
+            # try:
+            #     self.inst.write(f':DISPlay:BOOKmark{wmemory+4}:DELete')
+            #     time.sleep(0.05)
+            # except:
+            #     pass
         else:
-            self.inst.write(f':WMEMory{channel}:DISPlay ON')
+            self.inst.write(f':WMEMory{wmemory}:DISPlay ON')
             time.sleep(0.05)
-            self.add_bookmark(choose_type= choose_type, bookmark= bookmark, channel= channel+4)
+            # self.add_bookmark(choose_type= choose_type, bookmark= bookmark, channel= wmemory+4)
     
     def extract_result(self):
         meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
@@ -1176,71 +1177,71 @@ class MXR:
         self.inst.write(f':DISK:SAVE:IMAGe "{folder_total_path}/{image_name}",PNG,SCReen,OFF,NORMal,OFF')
         time.sleep(0.05)
 
-    def set_general_threshold(self, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent):
-        if intvar_general_threshold.get() == 1:
+    def set_general_numberic_threshold(self, numberic_dictionary: dict, combobox_dictionary: dict):
             do_the_judge= False
-            if float(g_top_percent) <= float(g_middle_percent):
-                g_top_percent= Decimal(g_middle_percent) + Decimal('0.1')
-                combobox_general_percent_top.config(foreground= 'red')
-                combobox_general_percent_middle.config(foreground= 'red')
+            if float(numberic_dictionary['top']) <= float(numberic_dictionary['middle']):
+                numberic_dictionary['top']= Decimal(numberic_dictionary['middle']) + Decimal('0.01')
+                combobox_dictionary['top'].config(foreground= 'red')
+                combobox_dictionary['middle'].config(foreground= 'red')
                 do_the_judge= True
-            if float(g_middle_percent) <= float(g_base_percent):
-                g_base_percent= Decimal(g_middle_percent) - Decimal('0.1')
-                combobox_general_percent_base.config(foreground= 'red')
-                combobox_general_percent_middle.config(foreground= 'red')
+            if float(numberic_dictionary['middle']) <= float(numberic_dictionary['base']):
+                numberic_dictionary['base']= Decimal(numberic_dictionary['middle']) - Decimal('0.01')
+                combobox_dictionary['base'].config(foreground= 'red')
+                combobox_dictionary['middle'].config(foreground= 'red')
                 do_the_judge= True
             if not do_the_judge:
-                combobox_general_percent_top.config(foreground= 'black')
-                combobox_general_percent_middle.config(foreground= 'black')
-                combobox_general_percent_base.config(foreground= 'black')
-
-            self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
-            time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{g_top_percent},{g_middle_percent},{g_base_percent}')
-            time.sleep(0.05)
-        elif intvar_general_threshold.get() == 2:
-            do_the_judge= False
-            if float(g_top) <= float(g_middle):
-                g_top= Decimal(g_middle) + Decimal('0.01')
-                combobox_general_value_top.config(foreground= 'red')
-                combobox_general_value_middle.config(foreground= 'red')
-                do_the_judge= True
-            if float(g_middle) <= float(g_base):
-                g_base= Decimal(g_middle) - Decimal('0.01')
-                combobox_general_value_base.config(foreground= 'red')
-                combobox_general_value_middle.config(foreground= 'red')
-                do_the_judge= True
-            if not do_the_judge:
-                combobox_general_value_top.config(foreground= 'black')
-                combobox_general_value_middle.config(foreground= 'black')
-                combobox_general_value_base.config(foreground= 'black')
+                combobox_dictionary['top'].config(foreground= 'black')
+                combobox_dictionary['middle'].config(foreground= 'black')
+                combobox_dictionary['base'].config(foreground= 'black')
 
             self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{g_top},{g_middle},{g_base}')
+            self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{numberic_dictionary['top']},{numberic_dictionary['middle']},{numberic_dictionary['base']}')
             time.sleep(0.05)
 
-    def set_risefall_threshold(self, rf_top, rf_base, rf_top_percent, rf_base_percent):
-        if intvar_risefall_threshold.get() == 1:
-            self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
+    def set_general_percentage_threshold(self, percentage_dictionary: dict, combobox_dictionary: dict):
+            do_the_judge= False
+            if float(percentage_dictionary['top']) <= float(percentage_dictionary['middle']):
+                percentage_dictionary['top']= Decimal(percentage_dictionary['middle']) + Decimal('0.1')
+                combobox_dictionary['top'].config(foreground= 'red')
+                combobox_dictionary['middle'].config(foreground= 'red')
+                do_the_judge= True
+            if float(percentage_dictionary['middle']) <= float(percentage_dictionary['base']):
+                percentage_dictionary['base']= Decimal(percentage_dictionary['middle']) - Decimal('0.1')
+                combobox_dictionary['base'].config(foreground= 'red')
+                combobox_dictionary['middle'].config(foreground= 'red')
+                do_the_judge= True
+            if not do_the_judge:
+                combobox_dictionary['top'].config(foreground= 'black')
+                combobox_dictionary['middle'].config(foreground= 'black')
+                combobox_dictionary['base'].config(foreground= 'black')
+
+            self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{rf_top_percent},{(float(rf_top_percent)+float(rf_base_percent))/2},{rf_base_percent}')
+            self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{percentage_dictionary['top']},{percentage_dictionary['middle']},{percentage_dictionary['base']}')
             time.sleep(0.05)
-        elif intvar_risefall_threshold.get() == 2:
+
+    def set_risefall_numberic_threshold(self, numberic_dictionary: dict):
             self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,ABSolute')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{rf_top},{(float(rf_top)+float(rf_base))/2},{rf_base}')
+            self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{numberic_dictionary['top']},{(float(numberic_dictionary['top'])+float(numberic_dictionary['base']))/2},{numberic_dictionary['base']}')
             time.sleep(0.05)
 
-    def set_timebase_offset(self, position): # 科學記號
-        self.inst.write(f':TIMebase:POSition {position}')
+    def set_risefall_percentage_threshold(self, percentage_dictionary: dict):
+            self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
+            time.sleep(0.05)
+            self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{percentage_dictionary['top']},{(float(percentage_dictionary['top'])+float(percentage_dictionary['base']))/2},{percentage_dictionary['base']}')
+            time.sleep(0.05)
+
+    def set_timebase_offset(self, timebase_position): # 科學記號
+        self.inst.write(f':TIMebase:POSition {timebase_position}')
         time.sleep(0.05)
 
-    def set_timebase_scale(self, scale): # 科學記號
-        self.inst.write(f':TIMebase:SCALe {scale}')
+    def set_timebase_scale(self, timebase_scale): # 科學記號
+        self.inst.write(f':TIMebase:SCALe {timebase_scale}')
         time.sleep(0.05)
 
-    def set_trigger_channel(self, channel):
+    def set_trigger_channel(self, trigger_channel):
         
         # 取得原Trigger channel & Trigger level
         current_channel= self.inst.query(f':TRIGger:EDGE:SOURce?')
@@ -1248,22 +1249,22 @@ class MXR:
         current_level= self.inst.query(f':TRIGger:LEVel? {current_channel}')
         time.sleep(0.05)
         
-        is_displayed= self.inst.query(f':CHANnel{channel}:DISPlay?')
+        is_displayed= self.inst.query(f':CHANnel{trigger_channel}:DISPlay?')
         time.sleep(0.05)
         if not is_displayed == '1\n':
-            self.inst.write(f':CHANnel{channel}:DISPlay ON')
+            self.inst.write(f':CHANnel{trigger_channel}:DISPlay ON')
             time.sleep(0.05)
 
-        self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{channel}')
+        self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{trigger_channel}')
         time.sleep(0.05)
-        self.inst.write(f':TRIGger:LEVel CHANnel{channel},{current_level}')
+        self.inst.write(f':TRIGger:LEVel CHANnel{trigger_channel},{current_level}')
         time.sleep(0.05)
 
         if not is_displayed == '1\n':
-            self.inst.write(f':CHANnel{channel}:DISPlay OFF')
+            self.inst.write(f':CHANnel{trigger_channel}:DISPlay OFF')
             time.sleep(0.05)
 
-    def set_trigger_level(self, level):
+    def set_trigger_level(self, trigger_level):
         
         # 取得原Trigger channel
         current_channel= self.inst.query(f':TRIGger:EDGE:SOURce?')
@@ -1277,9 +1278,9 @@ class MXR:
 
         self.inst.write(f':TRIGger:EDGE:SOURce {current_channel}')
         time.sleep(0.05)
-        self.inst.write(f':TRIGger:LEVel {current_channel},{level}')
+        self.inst.write(f':TRIGger:LEVel {current_channel},{trigger_level}')
         time.sleep(0.05)
-        
+
         if not is_displayed == '1\n':
             self.inst.write(f':{current_channel}:DISPlay OFF')
             time.sleep(0.05)
@@ -1294,7 +1295,7 @@ class MXR:
             self.inst.write(':TRIGger:EDGE:SLOPe POSitive')
             time.sleep(0.05)
     
-    def set_trigger_type(self):
+    def set_trigger_mode(self):
         res= self.inst.query(f':TRIGger:SWEep?')
         time.sleep(0.05)
         if res == 'AUTO\n':
@@ -1304,22 +1305,22 @@ class MXR:
             self.inst.write(':TRIGger:SWEep AUTO')
             time.sleep(0.05)
 
-    def set_voltage_scale(self, scale): 
+    def set_voltage_scale(self, voltage_scale): 
         display_dict= self.judge_channal_wmemory()
         for channel in display_dict['CHANnel']:
-            self.inst.write(f':CHANnel{channel}:SCALe {scale}')
+            self.inst.write(f':CHANnel{channel}:SCALe {voltage_scale}')
             time.sleep(0.05)
         for wme in display_dict['WMEMory']:
-            self.inst.write(f':WMEMory{wme}:YRANge {float(scale)*8}')
+            self.inst.write(f':WMEMory{wme}:YRANge {float(voltage_scale)*8}')
             time.sleep(0.05)
 
-    def set_voltage_offset(self, offset): # 科學記號
+    def set_voltage_offset(self, voltage_offset): # 科學記號
         display_dict= self.judge_channal_wmemory()
         for channel in display_dict['CHANnel']:
-            self.inst.write(f':CHANnel{channel}:OFFSet {offset}')
+            self.inst.write(f':CHANnel{channel}:OFFSet {voltage_offset}')
             time.sleep(0.05)
         for wme in display_dict['WMEMory']:
-            self.inst.write(f':WMEMory{wme}:YOFFset {offset}')
+            self.inst.write(f':WMEMory{wme}:YOFFset {voltage_offset}')
             time.sleep(0.05)
 
     def single(self):
@@ -1330,3 +1331,40 @@ class MXR:
         self.inst.write(':STOP')
         time.sleep(0.05)
 
+
+    ### 整合功能
+    def set_all_scale(self, voltage_scale, voltage_offset, timebase_scale, timebase_position, trigger_channel, trigger_level):
+        # Voltage
+        display_dict= self.judge_channal_wmemory()
+        for channel in display_dict['CHANnel']:
+            self.inst.write(f':CHANnel{channel}:SCALe {voltage_scale}')
+            time.sleep(0.05)
+            self.inst.write(f':CHANnel{channel}:OFFSet {voltage_offset}')
+            time.sleep(0.05)
+        for wme in display_dict['WMEMory']:
+            self.inst.write(f':WMEMory{wme}:YRANge {float(voltage_scale)*8}')
+            time.sleep(0.05)
+            self.inst.write(f':WMEMory{wme}:YOFFset {voltage_offset}')
+            time.sleep(0.05)
+        
+        # Timebase
+        self.inst.write(f':TIMebase:SCALe {timebase_scale}')
+        time.sleep(0.05)
+        self.inst.write(f':TIMebase:POSition {timebase_position}')
+        time.sleep(0.05)
+        
+        # Trigger
+        is_displayed= self.inst.query(f':{trigger_channel}:DISPlay?')
+        time.sleep(0.05)
+        if not is_displayed == '1\n':
+            self.inst.write(f':{trigger_channel}:DISPlay ON')
+            time.sleep(0.05)
+
+        self.inst.write(f':TRIGger:EDGE:SOURce {trigger_channel}')
+        time.sleep(0.05)
+        self.inst.write(f':TRIGger:LEVel {trigger_channel},{trigger_level}')
+        time.sleep(0.05)
+
+        if not is_displayed == '1\n':
+            self.inst.write(f':{trigger_channel}:DISPlay OFF')
+            time.sleep(0.05)
