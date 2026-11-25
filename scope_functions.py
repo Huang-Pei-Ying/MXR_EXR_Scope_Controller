@@ -9,7 +9,6 @@ class MXR:
 
     def __init__(self, scope_ip, visa_lib= r'C:\Windows\System32\visa64.dll'):
         rm = pyvisa.ResourceManager(visa_lib)
-        # self.inst = rm.open_resource(f'TCPIP0::KEYSIGH-{scope_id}::inst0::INSTR')
         try:
             self.inst = rm.open_resource(f'TCPIP0::{scope_ip}::inst0::INSTR')
             self.inst.timeout = 6000
@@ -18,12 +17,18 @@ class MXR:
             time.sleep(0.1)
             self.inst.write(f':ANALyze:AEDGes 0')
             time.sleep(0.05)
-        except:
-            warning_root = tk.Tk()
-            warning_root.withdraw()  # 隱藏主視窗
-            connection_fail = messagebox.showinfo("Error", f"Connection Failed.")
-            close_window()
-            # sys.exit()
+
+        except Exception as e:
+            raise ConnectionError(
+                f'無法連接儀器 {scope_ip}: {e}'
+            ) from e      
+              
+        # except:
+        #     warning_root = tk.Tk()
+        #     warning_root.withdraw()  # 隱藏主視窗
+        #     connection_fail = messagebox.showinfo("Error", f"Connection Failed.")
+        #     close_window()
+        #     # sys.exit()
 
     def acquire_sampling_rate(self, rate): # 科學記號
         self.inst.write(f':ACQuire:SRATe:ANALog {rate}')
@@ -33,17 +38,17 @@ class MXR:
         self.inst.write(f':ACQuire:POINts:ANALog {points_value}')
         time.sleep(0.05)
 
-    def add_bookmark(self, choose_type, bookmark, chan):
+    def add_bookmark(self, choose_type, bookmark, channel):
         if choose_type == 1:
             self.inst.write(f':DISPlay:BOOKmark:DELete:ALL')
             time.sleep(0.05)
-            self.add_label(chan= chan, label= bookmark)
+            self.add_label(channel= channel, label= bookmark)
             return
         else:
             self.inst.write(f':DISPlay:LABel OFF')
             time.sleep(0.05)
             if bookmark == '':
-                self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
 
             else:
                 display_dict= self.judge_channal_wmemory()    
@@ -62,31 +67,31 @@ class MXR:
                 bookmark_display_list= []
                 count= 0
                 for cha in display_dict['CHANnel']:
-                    if cha == chan:
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                    if cha == channel:
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
                         time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",CHANnel{chan},"",1')
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:SET NONE,"{bookmark}",CHANnel{channel},"",1')
                         time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:XPOSition {0.01}')
                         time.sleep(0.05)
                         bookmark_display_list.append(count)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:YPOSition {2+interval*count}E-02')
                         time.sleep(0.05)
                     count+=1
                 for wme in display_dict['WMEMory']:
-                    if wme == chan-4:
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                    if wme == channel-4:
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
                         time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:SET NONE,"{bookmark}",WMEMory{chan-4},"",1')
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:SET NONE,"{bookmark}",WMEMory{channel-4},"",1')
                         time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:XPOSition {0.01}')
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:XPOSition {0.01}')
                         time.sleep(0.05)
                         bookmark_display_list.append(count)
-                        self.inst.write(f':DISPlay:BOOKmark{chan}:YPOSition {2+interval*count}E-02')
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:YPOSition {2+interval*count}E-02')
                         time.sleep(0.05)
                     count+=1
 
-    def add_label(self, chan, label):
+    def add_label(self, channel, label):
         display_dict= self.judge_channal_wmemory()
         if label == '':
             self.inst.write(f':DISPlay:LABel OFF')
@@ -95,12 +100,12 @@ class MXR:
             self.inst.write(f':DISPlay:LABel ON')
             time.sleep(0.05)
             for cha in display_dict['CHANnel']:
-                if cha == chan:
-                    self.inst.write(f':CHANnel{chan}:LABel "{label}"')
+                if cha == channel:
+                    self.inst.write(f':CHANnel{channel}:LABel "{label}"')
                     time.sleep(0.05)
             for wme in display_dict['WMEMory']:
-                if wme == chan-4:
-                    self.inst.write(f':WMEMory{chan-4}:LABel "{label}"')
+                if wme == channel-4:
+                    self.inst.write(f':WMEMory{channel-4}:LABel "{label}"')
                     time.sleep(0.05)
 
     def add_marker(self):
@@ -117,7 +122,7 @@ class MXR:
             '#FFFFA8BD',  # 粉
             '#FF99DAE8',  # 淡藍
             '#FFC0C0C0',  # 灰
-            '#FF8FBC8F'  # 灰綠
+            '#FF8FBC8F',  # 灰綠
 
             '#FFFF8A00',  # 橘
             '#FFFDF5E6',  # 淡膚
@@ -132,7 +137,7 @@ class MXR:
             '#FFFF8A00',  # 橘
             '#FFFF8A00',  # 橘
             '#FFFF8A00',  # 橘
-            '#FFFF8A00'  # 橘
+            '#FFFF8A00',  # 橘
 
             '#FFFF8A00',  # 橘
             '#FFFF8A00',  # 橘
@@ -170,200 +175,165 @@ class MXR:
         self.inst.write(':AUToscale')
         time.sleep(0.05)
 
-    def call_measurement_delta_time(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, chan, chan_start, chan_stop, modify_name, timing_name):
+    def call_measurement_delta_time(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, channel, channel_start, channel_stop, modify_name, timing_name):
         displayed_dict= self.judge_channal_wmemory()
         for format in displayed_dict:
             for channel in displayed_dict[format]:
-                if chan_start == channel:
+                if channel_start == channel:
                     res_start= f'{format}'
-                if chan_stop == channel:
+                if channel_stop == channel:
                     res_stop= f'{format}'
 
-        if chan == 2:
+        if channel == 2:
             self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:DELTatime {res_start}{chan_start}, {res_stop}{chan_stop}')
+            self.inst.write(f':MEASure:DELTatime {res_start}{channel_start}, {res_stop}{channel_stop}')
             time.sleep(0.05)
             
             if modify_name:
                 if 'CHAN' in res_start and 'CHAN' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-{chan_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({channel_start}-{channel_stop})"')
                     time.sleep(0.05)
                 elif 'CHAN' in res_start and 'WMEM' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({chan_start}-m{chan_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({channel_start}-m{channel_stop})"')
                     time.sleep(0.05)
                 elif 'WMEM' in res_start and 'CHAN' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-{chan_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{channel_start}-{channel_stop})"')
                     time.sleep(0.05)
                 else:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{chan_start}-m{chan_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{channel_start}-m{channel_stop})"')
                     time.sleep(0.05)
             
         else:
             pass
 
-    def call_measurement_dutycycle(self, chan):
+    def call_measurement_dutycycle(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:DUTYcycle CHANnel{}',
             'WMEMory': ':MEASure:DUTYcycle WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)
+        self.call_measurement_function(channel= channel, command_templates= command_templates)
 
-    def call_measurement_frequency(self, chan):
+    def call_measurement_frequency(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:FREQuency CHANnel{}',
             'WMEMory': ':MEASure:FREQuency WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)
+        self.call_measurement_function(channel= channel, command_templates= command_templates)
 
-    def call_measurement_function(self, chan, command_templates: dict):
+    def call_measurement_function(self, channel, command_templates: dict):
         display_dict= self.judge_channal_wmemory()
         for key in command_templates:
-            if chan in display_dict[key]:
-                self.inst.write(command_templates[key].format(chan))
+            if channel in display_dict[key]:
+                self.inst.write(command_templates[key].format(channel))
                 time.sleep(0.05)            
     
-    def call_measurement_NCJitter(self, chan, direction):
+    def call_measurement_NCJitter(self, channel, direction):
         display_dict= self.judge_channal_wmemory()
         for cha in display_dict['CHANnel']:
-            if cha == chan:
+            if cha == channel:
                 self.inst.write(f':MEASure:NCJitter CHANnel{cha},{direction},1,1')
                 time.sleep(0.05)
         for wme in display_dict['WMEMory']:
-            if wme == chan:
+            if wme == channel:
                 self.inst.write(f':MEASure:NCJitter WMEMory{cha},{direction},1,1')
                 time.sleep(0.05)
 
-    def call_measurement_period(self, chan):
+    def call_measurement_period(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:PERiod CHANnel{}',
             'WMEMory': ':MEASure:PERiod WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)
+        self.call_measurement_function(channel= channel, command_templates= command_templates)
 
-    def call_measurement_slewrate(self, chan, direction):
+    def call_measurement_slewrate(self, channel, direction):
         display_dict= self.judge_channal_wmemory()
         for cha in display_dict['CHANnel']:
-            if cha == chan:
+            if cha == channel:
                 self.inst.write(f':MEASure:SLEWrate CHANnel{cha},{direction}')
                 time.sleep(0.05)
                 self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate({cha})"')
                 time.sleep(0.05)
         for wme in display_dict['WMEMory']:
-            if wme == chan:
+            if wme == channel:
                 self.inst.write(f':MEASure:SLEWrate WMEMory{wme},{direction}')
                 time.sleep(0.05)
                 self.inst.write(f':MEASure:NAME MEAS1,"{direction} Slew Rate(m{wme})"')
                 time.sleep(0.05)
 
-    def call_measurement_tH(self, chan):
+    def call_measurement_tH(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:PWIDth CHANnel{}',
             'WMEMory': ':MEASure:PWIDth WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)  
+        self.call_measurement_function(channel= channel, command_templates= command_templates)  
 
-    def call_measurement_tL(self, chan):
+    def call_measurement_tL(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:NWIDth CHANnel{}',
             'WMEMory': ':MEASure:NWIDth WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)  
+        self.call_measurement_function(channel= channel, command_templates= command_templates)  
 
-    def call_measurement_tR(self, chan):
+    def call_measurement_tR(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:RISetime CHANnel{}',
             'WMEMory': ':MEASure:RISetime WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)              
+        self.call_measurement_function(channel= channel, command_templates= command_templates)              
 
-    def call_measurement_tF(self, chan):
+    def call_measurement_tF(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:FALLtime CHANnel{}',
             'WMEMory': ':MEASure:FALLtime WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)              
+        self.call_measurement_function(channel= channel, command_templates= command_templates)              
 
-    def call_measurement_VIH(self, chan):
+    def call_measurement_VIH(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:VTOP CHANnel{}',
             'WMEMory': ':MEASure:VTOP WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)              
+        self.call_measurement_function(channel= channel, command_templates= command_templates)              
 
-    def call_measurement_VIL(self, chan):
+    def call_measurement_VIL(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:VBASe CHANnel{}',
             'WMEMory': ':MEASure:VBASe WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)              
+        self.call_measurement_function(channel= channel, command_templates= command_templates)              
 
-    def call_measurement_VPP(self, chan):
+    def call_measurement_VPP(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:VPP CHANnel{}',
             'WMEMory': ':MEASure:VPP WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)   
+        self.call_measurement_function(channel= channel, command_templates= command_templates)   
 
-    def call_measurement_VMAX(self, chan):
+    def call_measurement_VMAX(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:VMAX CHANnel{}',
             'WMEMory': ':MEASure:VMAX WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)   
+        self.call_measurement_function(channel= channel, command_templates= command_templates)   
         
-    def call_measurement_VMIN(self, chan):
+    def call_measurement_VMIN(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:VMIN CHANnel{}',
             'WMEMory': ':MEASure:VMIN WMEMory{}'
         }            
-        self.call_measurement_function(chan= chan, command_templates= command_templates)   
+        self.call_measurement_function(channel= channel, command_templates= command_templates)   
         
     def check_intensity_setting(self, intensity_value):
         self.inst.write(f'SYSTem:CONTrol "WaveformBrt -1 {intensity_value}"')
         time.sleep(0.05)
 
-    def check_timebase_offset(self, position): # 科學記號
-        self.inst.write(f':TIMebase:POSition {position}')
-        time.sleep(0.05)
-
-    def check_timebase_scale(self, scale): # 科學記號
-        self.inst.write(f':TIMebase:SCALe {scale}')
-        time.sleep(0.05)
-
-    def check_trigger_setting(self, chan, level):
-        res= self.inst.query(f':CHANnel{chan}:DISPlay?')
-        time.sleep(0.05)
-        if not res == '1\n':
-            self.inst.write(f':CHANnel{chan}:DISPlay ON')
-            time.sleep(0.05)
-        self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{chan}')
-        time.sleep(0.05)
-        self.inst.write(f':TRIGger:LEVel CHANnel{chan},{level}')
-        time.sleep(0.05)
-        if not res == '1\n':
-            self.inst.write(f':CHANnel{chan}:DISPlay OFF')
-            time.sleep(0.05)
-
-    def check_voltage(self, scale, offset): # 科學記號
-        display_dict= self.judge_channal_wmemory()
-        for chan in display_dict['CHANnel']:
-            self.inst.write(f':CHANnel{chan}:SCALe {scale}')
-            time.sleep(0.05)
-            self.inst.write(f':CHANnel{chan}:OFFSet {offset}')
-            time.sleep(0.05)
-        for wme in display_dict['WMEMory']:
-            self.inst.write(f':WMEMory{wme}:YRANge {float(scale)*8}')
-            time.sleep(0.05)
-            self.inst.write(f':WMEMory{wme}:YOFFset {offset}')
-            time.sleep(0.05)
-
     def clear_diaplay(self):
         self.inst.write(':CDISplay')
         time.sleep(0.05)
 
-    def clear_wmemory(self, chan, string):
-        self.inst.write(f':WMEMory{chan}:CLEar')
+    def clear_wmemory(self, channel, string):
+        self.inst.write(f':WMEMory{channel}:CLEar')
         time.sleep(0.05)
         string.set('')
 
@@ -371,29 +341,29 @@ class MXR:
         self.inst.write(':SYSTem:PRESet DEFault')
         time.sleep(0.05)
 
-    def delete_bookmark(self, chan, choose_type):
+    def delete_bookmark(self, channel, choose_type):
         if choose_type == 1:
             self.inst.write(f':DISPlay:LABel OFF')
             time.sleep(0.05)
         else:
-            self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+            self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
             time.sleep(0.05)
 
-    def display_channel(self, chan, bookmark, choose_type):
-        res= self.inst.query(f':CHANnel{chan}:DISPlay?')
+    def display_channel(self, channel, bookmark, choose_type):
+        res= self.inst.query(f':CHANnel{channel}:DISPlay?')
         time.sleep(0.05)
         if res == '1\n':
-            self.inst.write(f':CHANnel{chan}:DISPlay OFF')
+            self.inst.write(f':CHANnel{channel}:DISPlay OFF')
             time.sleep(0.05)
             try:
-                self.inst.write(f':DISPlay:BOOKmark{chan}:DELete')
+                self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
                 time.sleep(0.05)
             except:
                 pass
         else:
-            self.inst.write(f':CHANnel{chan}:DISPlay ON')
+            self.inst.write(f':CHANnel{channel}:DISPlay ON')
             time.sleep(0.05)
-            self.add_bookmark(choose_type= choose_type,bookmark= bookmark, chan= chan)
+            self.add_bookmark(choose_type= choose_type,bookmark= bookmark, channel= channel)
 
     def delete_marker(self):
         tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
@@ -414,21 +384,21 @@ class MXR:
                 self.inst.write(f'MEASurement{i+1}:CLEar')
                 time.sleep(0.05)
 
-    def display_wmemory(self, chan, bookmark, choose_type):
-        res= self.inst.query(f':WMEMory{chan}:DISPlay?')
+    def display_wmemory(self, channel, bookmark, choose_type):
+        res= self.inst.query(f':WMEMory{channel}:DISPlay?')
         time.sleep(0.05)
         if res == '1\n':
-            self.inst.write(f':WMEMory{chan}:DISPlay OFF')
+            self.inst.write(f':WMEMory{channel}:DISPlay OFF')
             time.sleep(0.05)
             try:
-                self.inst.write(f':DISPlay:BOOKmark{chan+4}:DELete')
+                self.inst.write(f':DISPlay:BOOKmark{channel+4}:DELete')
                 time.sleep(0.05)
             except:
                 pass
         else:
-            self.inst.write(f':WMEMory{chan}:DISPlay ON')
+            self.inst.write(f':WMEMory{channel}:DISPlay ON')
             time.sleep(0.05)
-            self.add_bookmark(choose_type= choose_type, bookmark= bookmark, chan= chan+4)
+            self.add_bookmark(choose_type= choose_type, bookmark= bookmark, channel= channel+4)
     
     def extract_result(self):
         meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
@@ -645,18 +615,18 @@ class MXR:
     def judge_channal_wmemory(self):
         display_dict= {'CHANnel': [],'WMEMory': []}
         for i in range(1, 5):
-            chan_res= self.inst.query(f':CHANnel{i}:DISPlay?')
+            channel_res= self.inst.query(f':CHANnel{i}:DISPlay?')
             time.sleep(0.05)
             wme_res= self.inst.query(f':WMEMory{i}:DISPlay?')
             time.sleep(0.05)
 
-            if chan_res == '1\n' and not wme_res == '1\n':
+            if channel_res == '1\n' and not wme_res == '1\n':
                 display_dict['CHANnel'].append(i)
                 # return 'CHANnel'
-            if not chan_res == '1\n' and wme_res == '1\n':
+            if not channel_res == '1\n' and wme_res == '1\n':
                 display_dict['WMEMory'].append(i)
                 # return 'WMEMory'
-            if chan_res == '1\n' and wme_res == '1\n':
+            if channel_res == '1\n' and wme_res == '1\n':
                 display_dict['CHANnel'].append(i)
                 display_dict['WMEMory'].append(i)
 
@@ -807,13 +777,13 @@ class MXR:
         temp_voltscale_dict= {}
         temp_voltoffset_dict= {}
         display_dict= self.judge_channal_wmemory()
-        for chan in display_dict['CHANnel']:
-            volt_scale= self.inst.query(f':CHANnel{chan}:SCALe?')
+        for channel in display_dict['CHANnel']:
+            volt_scale= self.inst.query(f':CHANnel{channel}:SCALe?')
             time.sleep(0.05)
-            temp_voltscale_dict[chan]= volt_scale
-            volt_offset= self.inst.query(f':CHANnel{chan}:OFFSet?')
+            temp_voltscale_dict[channel]= volt_scale
+            volt_offset= self.inst.query(f':CHANnel{channel}:OFFSet?')
             time.sleep(0.05)
-            temp_voltoffset_dict[chan]= volt_offset
+            temp_voltoffset_dict[channel]= volt_offset
         for wme in display_dict['WMEMory']:
             volt_scale= self.inst.query(f':WMEMory{wme}:YRANge?').rstrip('\n')
             time.sleep(0.05)
@@ -823,10 +793,10 @@ class MXR:
             temp_voltoffset_dict[wme]= volt_offset
 
         # 記錄示波器trigger設定
-        trig_chan= self.inst.query(f':TRIGger:EDGE:SOURce?').rstrip('\n')
+        trig_channel= self.inst.query(f':TRIGger:EDGE:SOURce?').rstrip('\n')
         time.sleep(0.05)
-        trig_chan= trig_chan.lstrip("CHAN")
-        trig_level= self.inst.query(f':TRIGger:LEVel? CHANnel{trig_chan}').rstrip('\n')
+        trig_channel= trig_channel.lstrip("CHAN")
+        trig_level= self.inst.query(f':TRIGger:LEVel? CHANnel{trig_channel}').rstrip('\n')
         time.sleep(0.05)
 
         # 呼叫設定檔
@@ -841,10 +811,10 @@ class MXR:
         if boolvar_setup_volt.get() == True:
             display_dict= self.judge_channal_wmemory()
             # 依照示波器畫面的Voltage
-            for chan in display_dict['CHANnel']:
-                self.inst.write(f':CHANnel{chan}:SCALe {temp_voltscale_dict[chan]}')
+            for channel in display_dict['CHANnel']:
+                self.inst.write(f':CHANnel{channel}:SCALe {temp_voltscale_dict[channel]}')
                 time.sleep(0.05)
-                self.inst.write(f':CHANnel{chan}:OFFSet {temp_voltoffset_dict[chan]}')
+                self.inst.write(f':CHANnel{channel}:OFFSet {temp_voltoffset_dict[channel]}')
                 time.sleep(0.05)
             for wme in display_dict['WMEMory']:
                 self.inst.write(f':WMEMory{wme}:YRANge {float(temp_voltscale_dict[wme])*8}')
@@ -853,21 +823,21 @@ class MXR:
                 time.sleep(0.05)
 
             # 依照示波器畫面的trigger
-            res= self.inst.query(f':CHANnel{trig_chan}:DISPlay?')
+            res= self.inst.query(f':CHANnel{trig_channel}:DISPlay?')
             time.sleep(0.05)
             if not res == '1\n':
-                self.inst.write(f':CHANnel{trig_chan}:DISPlay ON')
+                self.inst.write(f':CHANnel{trig_channel}:DISPlay ON')
                 time.sleep(0.05)
-            self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{trig_chan}')
+            self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{trig_channel}')
             time.sleep(0.05)
-            self.inst.write(f':TRIGger:LEVel CHANnel{trig_chan},{trig_level}')
+            self.inst.write(f':TRIGger:LEVel CHANnel{trig_channel},{trig_level}')
             time.sleep(0.05)
             if not res == '1\n':
-                self.inst.write(f':CHANnel{trig_chan}:DISPlay OFF')
+                self.inst.write(f':CHANnel{trig_channel}:DISPlay OFF')
                 time.sleep(0.05)
 
             # self.volt_check(scale= volt_scale, offset= volt_offset)
-            # self.trig_check(chan= trig_chan, level= trig_level)
+            # self.trig_check(channel= trig_channel, level= trig_level)
             
             # 依照GUI的threshold
             self.set_general_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
@@ -880,9 +850,9 @@ class MXR:
                 strvar_label_5, strvar_label_6, strvar_label_7, strvar_label_8, 
                 ]
             for i in range(8):
-                self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), chan= i+1)
+                self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), channel= i+1)
 
-    def load_wmemory(self, chan, folder, wme_name, file_path_choice):
+    def load_wmemory(self, channel, folder, wme_name, file_path_choice):
         self.inst.write(f':WMEMory:TIETimebase 1')
         time.sleep(0.05)
         self.inst.write(f':DISPlay:SCOLor WMEMory1,17,100,100')
@@ -899,7 +869,7 @@ class MXR:
         else:
             total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
 
-        self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{chan},OFF')
+        self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{channel},OFF')
         time.sleep(0.05)
 
     def measure_all_edge(self):
@@ -1042,7 +1012,7 @@ class MXR:
         with open(f"{pc_folder}/{file_name}.{ext}", 'wb') as f:
             f.write(data)
 
-    def save_scope_file(self, chan, folder, current_file_name, ext_type, path_choice):
+    def save_scope_file(self, channel, folder, current_file_name, ext_type, path_choice):
         # 清空狀態
         self.inst.write('*CLS')
         time.sleep(0.05)
@@ -1103,7 +1073,7 @@ class MXR:
             # 使用正則表達式來匹配所有 .h5 檔案名稱
             files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
             ext= 'h5'
-            command= f':DISK:SAVE:WAVeform CHANnel{chan},"{folder_total_path}/{current_file_name}",H5,OFF'
+            command= f':DISK:SAVE:WAVeform CHANnel{channel},"{folder_total_path}/{current_file_name}",H5,OFF'
         else:
             # 使用正則表達式來匹配所有 .set 檔案名稱
             files = re.findall(r'\b[\w-]+\.(?:set)\b', folder_content)
@@ -1262,14 +1232,56 @@ class MXR:
             self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{rf_top},{(float(rf_top)+float(rf_base))/2},{rf_base}')
             time.sleep(0.05)
 
-    def set_trigger_type(self):
-        res= self.inst.query(f':TRIGger:SWEep?')
+    def set_timebase_offset(self, position): # 科學記號
+        self.inst.write(f':TIMebase:POSition {position}')
         time.sleep(0.05)
-        if res == 'AUTO\n':
-            self.inst.write(':TRIGger:SWEep TRIGgered')
+
+    def set_timebase_scale(self, scale): # 科學記號
+        self.inst.write(f':TIMebase:SCALe {scale}')
+        time.sleep(0.05)
+
+    def set_trigger_channel(self, channel):
+        
+        # 取得原Trigger channel & Trigger level
+        current_channel= self.inst.query(f':TRIGger:EDGE:SOURce?')
+        time.sleep(0.05)
+        current_level= self.inst.query(f':TRIGger:LEVel? {current_channel}')
+        time.sleep(0.05)
+        
+        is_displayed= self.inst.query(f':CHANnel{channel}:DISPlay?')
+        time.sleep(0.05)
+        if not is_displayed == '1\n':
+            self.inst.write(f':CHANnel{channel}:DISPlay ON')
             time.sleep(0.05)
-        else:
-            self.inst.write(':TRIGger:SWEep AUTO')
+
+        self.inst.write(f':TRIGger:EDGE:SOURce CHANnel{channel}')
+        time.sleep(0.05)
+        self.inst.write(f':TRIGger:LEVel CHANnel{channel},{current_level}')
+        time.sleep(0.05)
+
+        if not is_displayed == '1\n':
+            self.inst.write(f':CHANnel{channel}:DISPlay OFF')
+            time.sleep(0.05)
+
+    def set_trigger_level(self, level):
+        
+        # 取得原Trigger channel
+        current_channel= self.inst.query(f':TRIGger:EDGE:SOURce?')
+        time.sleep(0.05)
+
+        is_displayed= self.inst.query(f':{current_channel}:DISPlay?')
+        time.sleep(0.05)
+        if not is_displayed == '1\n':
+            self.inst.write(f':{current_channel}:DISPlay ON')
+            time.sleep(0.05)
+
+        self.inst.write(f':TRIGger:EDGE:SOURce {current_channel}')
+        time.sleep(0.05)
+        self.inst.write(f':TRIGger:LEVel {current_channel},{level}')
+        time.sleep(0.05)
+        
+        if not is_displayed == '1\n':
+            self.inst.write(f':{current_channel}:DISPlay OFF')
             time.sleep(0.05)
 
     def set_trigger_slope(self):
@@ -1282,6 +1294,34 @@ class MXR:
             self.inst.write(':TRIGger:EDGE:SLOPe POSitive')
             time.sleep(0.05)
     
+    def set_trigger_type(self):
+        res= self.inst.query(f':TRIGger:SWEep?')
+        time.sleep(0.05)
+        if res == 'AUTO\n':
+            self.inst.write(':TRIGger:SWEep TRIGgered')
+            time.sleep(0.05)
+        else:
+            self.inst.write(':TRIGger:SWEep AUTO')
+            time.sleep(0.05)
+
+    def set_voltage_scale(self, scale): 
+        display_dict= self.judge_channal_wmemory()
+        for channel in display_dict['CHANnel']:
+            self.inst.write(f':CHANnel{channel}:SCALe {scale}')
+            time.sleep(0.05)
+        for wme in display_dict['WMEMory']:
+            self.inst.write(f':WMEMory{wme}:YRANge {float(scale)*8}')
+            time.sleep(0.05)
+
+    def set_voltage_offset(self, offset): # 科學記號
+        display_dict= self.judge_channal_wmemory()
+        for channel in display_dict['CHANnel']:
+            self.inst.write(f':CHANnel{channel}:OFFSet {offset}')
+            time.sleep(0.05)
+        for wme in display_dict['WMEMory']:
+            self.inst.write(f':WMEMory{wme}:YOFFset {offset}')
+            time.sleep(0.05)
+
     def single(self):
         self.inst.write(':SINGLE')
         time.sleep(0.05)

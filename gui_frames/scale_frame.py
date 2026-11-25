@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-import utils
 
 class ScaleLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Scale/Offset/Trigger', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
                 
         self.frame_scalearea_top= tk.Frame(master= self, background= colors['labelframe'][0])
@@ -14,7 +13,7 @@ class ScaleLabelFrame(tk.LabelFrame):
             width= button_width,  
             padding= 1, 
             style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            command= lambda: mxr.set_voltage_scale(voltage_scale= self.strvar_voltage_scale.get())
             )
 
         self.strvar_voltage_scale= tk.StringVar(master= self)
@@ -24,8 +23,8 @@ class ScaleLabelFrame(tk.LabelFrame):
         # voltage_offset
         self.button_voltage_offset = ttk.Button(
             master= self.frame_scalearea_top, text= 'Voltage Offset (V)', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.set_voltage_offset(voltage_offset= self.strvar_voltage_offset.get())
             )
 
         self.strvar_voltage_offset= tk.StringVar()
@@ -35,8 +34,8 @@ class ScaleLabelFrame(tk.LabelFrame):
         # timebase scale
         self.button_timebase_scale = ttk.Button(
             master= self.frame_scalearea_top, text= 'Timebase Scale (sec)', width= button_width, padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.set_timebase_scale(timebase_scale= self.strvar_timebase_scale.get())
             )
 
         self.strvar_timebase_scale= tk.StringVar()
@@ -45,8 +44,8 @@ class ScaleLabelFrame(tk.LabelFrame):
         # timebase offset
         self.button_timebase_offset= ttk.Button(
             master= self.frame_scalearea_top, text= 'Timebase Offset (sec)', width= button_width, padding= 1, 
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.set_timebase_offset(timebase_position= self.strvar_timebase_offset.get())
             )
 
         self.strvar_timebase_offset= tk.StringVar()
@@ -55,8 +54,8 @@ class ScaleLabelFrame(tk.LabelFrame):
         # trigger channel
         self.button_trigger_channel = ttk.Button(
             master= self.frame_scalearea_top, text= 'Trigger Channel', width= button_width, padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.set_trigger_channel(trigger_channel= self.strvar_trigger_channel.get())
             )
 
         self.strvar_trigger_channel= tk.StringVar()
@@ -66,8 +65,8 @@ class ScaleLabelFrame(tk.LabelFrame):
         # trigger level
         self.button_trigger_level = ttk.Button(
             master= self.frame_scalearea_top, text= 'Trigger Level (V)', width= button_width, padding= 1, 
-            # style= 'normal_height.TButton', 
-            # command= lambda: mxr.
+            style= 'normal_height.TButton', 
+            command= lambda: mxr.set_trigger_level(trigger_level= self.strvar_trigger_level.get())
             )
 
         self.strvar_trigger_level= tk.StringVar()
@@ -78,19 +77,25 @@ class ScaleLabelFrame(tk.LabelFrame):
         # buttons
         self.button_trigger_mode = ttk.Button(
             master= self.frame_scalearea_bottom, text= 'Trigger Mode', width= button_width, padding= 2, 
-            # style= 'double_height.TButton', 
-            # command= lambda: mxr.
+            style= 'double_height.TButton', 
+            command= lambda: mxr.set_trigger_mode()
             )
         self.button_trigger_slope = ttk.Button(
             master= self.frame_scalearea_bottom, text= 'Trigger Slope', width= button_width, padding= 2, 
-            # style= 'double_height.TButton', 
-            # command= lambda: mxr.
+            style= 'double_height.TButton', 
+            command= lambda: mxr.set_trigger_slope()
             )
         self.button_set_all = ttk.Button(
             master= self.frame_scalearea_bottom, text= 'All Set', width= button_width, padding= 2, 
-            # style= 'special.TButton', 
-            # command= lambda: mxr.
-            )
+            style= 'special.TButton', 
+            command= lambda: mxr.set_all_scale(
+                voltage_scale= self.strvar_voltage_scale.get(), 
+                voltage_offset= self.strvar_voltage_offset.get(), 
+                timebase_scale= self.strvar_timebase_scale.get(), 
+                timebase_position= self.strvar_timebase_offset.get(), 
+                trigger_channel= self.strvar_trigger_channel.get(), 
+                trigger_level= self.strvar_trigger_level.get()
+            ))
 
         ################################################
 

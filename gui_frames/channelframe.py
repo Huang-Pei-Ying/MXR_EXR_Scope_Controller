@@ -1,51 +1,50 @@
 import tkinter as tk
 from tkinter import ttk
-import utils
 
 class ChannelLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Channel', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
 
         self.button_channel_1 = ttk.Button(
             master= self, text= 'Channel 1', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_channel(channel= 1)
             )
         self.button_channel_2 = ttk.Button(
             master= self, text= 'Channel 2', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_channel(channel= 2)
             )
         self.button_channel_3 = ttk.Button(
             master= self, text= 'Channel 3', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_channel(channel= 3)
             )
         self.button_channel_4 = ttk.Button(
             master= self, text= 'Channel 4', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_channel(channel= 4)
             )
         self.button_wmemory_1 = ttk.Button(
             master= self, text= 'Wmemory 1', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_wmemory(wmemory= 1)
             )
         self.button_wmemory_2 = ttk.Button(
             master= self, text= 'Wmemory 2', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_wmemory(wmemory= 2)
             )
         self.button_wmemory_3 = ttk.Button(
             master= self, text= 'Wmemory 3', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_wmemory(wmemory= 3)
             )
         self.button_wmemory_4 = ttk.Button(
             master= self, text= 'Wmemory 4', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.display_wmemory(wmemory= 4)
             )
         ################################################
 

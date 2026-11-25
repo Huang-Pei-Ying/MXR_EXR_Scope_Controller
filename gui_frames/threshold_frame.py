@@ -1,18 +1,27 @@
 import tkinter as tk
 from tkinter import ttk
-import utils
 
 class ThresholdLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Threshold', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
 
         # general threshold - value ######
         self.button_general_threshold_value = ttk.Button(
             master= self, text= 'General - Value (V)', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.set_general_numberic_threshold(
+                numberic_dictionary= {
+                    'top': self.strvar_general_threshold_value_top.get(), 
+                    'middle': self.strvar_general_threshold_value_middle.get(), 
+                    'base': self.strvar_general_threshold_value_base.get()
+                }, 
+                combobox_dictionary= {
+                    'top': self.combobox_general_threshold_value_top, 
+                    'middle': self.combobox_general_threshold_value_middle, 
+                    'base': self.combobox_general_threshold_value_base
+                }
+            ))
         
         ## general threshold - value Top
         self.label_general_threshold_value_top= tk.Label(
@@ -41,9 +50,19 @@ class ThresholdLabelFrame(tk.LabelFrame):
         # general threshold - percent ######
         self.button_general_threshold_percent = ttk.Button(
             master= self, text= 'General - Percentage (%)', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.set_general_percentage_threshold(
+                percentage_dictionary= {
+                    'top': self.strvar_general_threshold_percent_top.get(), 
+                    'middle': self.strvar_general_threshold_percent_middle.get(), 
+                    'base': self.strvar_general_threshold_percent_base.get()
+                }, 
+                combobox_dictionary= {
+                    'top': self.combobox_general_threshold_percent_top, 
+                    'middle': self.combobox_general_threshold_percent_middle, 
+                    'base': self.combobox_general_threshold_percent_base
+                }
+            ))
         
         ## general threshold - percent Top
         self.label_general_threshold_percent_top= tk.Label(
@@ -72,9 +91,13 @@ class ThresholdLabelFrame(tk.LabelFrame):
         # Rise/Fall threshold - value ######
         self.button_RF_threshold_value = ttk.Button(
             master= self, text= 'Ries/Fall - Value (V)', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.set_risefall_numberic_threshold(
+                numberic_dictionary= {
+                    'top': self.strvar_RF_threshold_value_top.get(), 
+                    'base': self.strvar_RF_threshold_value_base.get()
+                }
+            ))
         
         ## Rise/Fall threshold - value Top
         self.label_RF_threshold_value_top= tk.Label(
@@ -95,9 +118,13 @@ class ThresholdLabelFrame(tk.LabelFrame):
         # Rise/Fall threshold - percent ######
         self.button_RF_threshold_percent = ttk.Button(
             master= self, text= 'Ries/Fall - Percentage (%)', width= button_width,  padding= 2, 
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.set_risefall_percentage_threshold(
+                percentage_dictionary= {
+                    'top': self.strvar_RF_threshold_percent_top.get(), 
+                    'base': self.strvar_RF_threshold_percent_base.get()
+                }
+            ))
         
         ## Rise/Fall threshold - percent Top
         self.label_RF_threshold_percent_top= tk.Label(
