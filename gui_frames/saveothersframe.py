@@ -3,7 +3,7 @@ from tkinter import ttk
 import utils
 
 class SaveOthersLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Save Others - in Scope', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
         self.frame_save_others_top= tk.Frame(master= self, background= colors['labelframe'][0])
@@ -33,8 +33,8 @@ class SaveOthersLabelFrame(tk.LabelFrame):
             master= self.frame_save_others_base, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_save_others_scopefolder)
         self.button_save_others_browse_scopefolder= ttk.Button(
             master= self.frame_save_others_base, text= 'Browse', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: utils.browse_folder(entry_var= self.strvar_save_others_scopefolder, target_entry= self.entry_save_others_scopefolder)
             )
 
         self.label_save_others_channel= tk.Label(
@@ -54,8 +54,14 @@ class SaveOthersLabelFrame(tk.LabelFrame):
             master= self.frame_save_others_base, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_save_others_filename)
         self.button_save_others_filename_save= ttk.Button(
             master= self.frame_save_others_base, text= 'Save', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.save_scope_file(
+                location_choice= self.intvar_save_others_savelocation.get(), 
+                folder_path= self.strvar_save_others_scopefolder.get(), 
+                channel= self.strvar_save_others_channel.get(), 
+                ext_type= self.intvar_save_others_filetype.get(),
+                current_file_name= self.strvar_save_others_filename.get()
+            )
             )
         ################################################
 

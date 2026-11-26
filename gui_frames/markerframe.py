@@ -1,27 +1,26 @@
 import tkinter as tk
 from tkinter import ttk
-import utils
 
 class MarkerLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
-        super().__init__(master, text= 'Marker', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
+        super().__init__(master, text= 'Measurement / Marker', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
         self.frame_marker_left= tk.Frame(master= self, background= colors['labelframe'][0])
         self.frame_marker_right= tk.Frame(master= self, background= colors['labelframe'][0])
         self.button_delete_measurement= ttk.Button(
             master= self.frame_marker_left, text= 'Delete Measurement', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.delete_measurement(tuple_measurement_index= tuple_measurement_index)
             )
         self.button_add_marker= ttk.Button(
             master= self.frame_marker_left, text= 'Add Marker', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.add_marker(is_multi_colors= self.boolvar_multi_color_marker.get(), tuple_marker= tuple_measurement_index)
             )
         self.button_delete_marker= ttk.Button(
             master= self.frame_marker_left, text= 'Delete Marker', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.delete_marker(tuple_marker= tuple_measurement_index)
             )
         self.boolvar_multi_color_marker= tk.BooleanVar()
         self.checkbutton_multi_color_marker= ttk.Checkbutton(
@@ -131,3 +130,18 @@ class MarkerLabelFrame(tk.LabelFrame):
             'Measurement_11': self.boolvar_measurement_11, 
             'Measurement_12': self.boolvar_measurement_12, 
         })
+
+        tuple_measurement_index= (
+            self.boolvar_measurement_1, 
+            self.boolvar_measurement_2, 
+            self.boolvar_measurement_3, 
+            self.boolvar_measurement_4, 
+            self.boolvar_measurement_5, 
+            self.boolvar_measurement_6, 
+            self.boolvar_measurement_7, 
+            self.boolvar_measurement_8, 
+            self.boolvar_measurement_9, 
+            self.boolvar_measurement_10, 
+            self.boolvar_measurement_11, 
+            self.boolvar_measurement_12, 
+        )

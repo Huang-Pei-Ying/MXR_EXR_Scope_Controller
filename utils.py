@@ -1,7 +1,8 @@
 from PIL import Image
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from pathlib import Path
+import os
 
 
 def move_mouse_entry_end(entry):
@@ -46,6 +47,47 @@ def switch_string(var_1, var_2):
 
 def clear(string):
     string.set('')
+
+def asking_is_cover_imgfile(folder_path, img_name):
+    if os.path.exists(f"{folder_path}/{img_name}.png"):
+        res= asking_window(content= '檔案已經存在，是否覆蓋？')
+        if not res: 
+            return False
+        else:
+            return True
+    else: 
+        return True
+
+def asking_is_folder_exist(folder_path):
+    if not os.path.exists(folder_path):
+        res= asking_window(content= '資料夾不存在，是否新增？')
+        if not res: 
+            return False
+        else:
+            os.mkdir(folder_path) 
+            return True
+    else:
+        return True
+
+def asking_window(content: str):
+    ask_scp_root = tk.Tk()
+    ask_scp_root.withdraw()  # 隱藏主視窗
+    ask_scp_result = messagebox.askyesno("Warning", f"{content}")
+    ask_scp_root.destroy()
+    
+    if not ask_scp_result:
+        ask_scp_root = tk.Tk()
+        ask_scp_root.withdraw()  # 隱藏主視窗
+        messagebox.showinfo("Warning", f'檔案未儲存')
+        # print("檔案未保存。")
+        return False
+
+def switch_button_state(button_list: list):
+    for button in button_list:
+        if button["state"] == 'normal':
+            button.config(state="disabled")
+        else:
+            button.config(state="normal")
 
 ### 調整顏色密度
 def on_mouse_wheel(event, entry):

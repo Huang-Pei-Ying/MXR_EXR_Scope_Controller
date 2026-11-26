@@ -3,7 +3,12 @@ import time
 from decimal import Decimal
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
-
+import numpy as np
+import os
+import re
+import random
+import string
+import utils
 
 
 class MXR:
@@ -31,89 +36,76 @@ class MXR:
         #     close_window()
         #     # sys.exit()
 
-    def acquire_sampling_rate(self, rate): # 科學記號
-        self.inst.write(f':ACQuire:SRATe:ANALog {rate}')
+    def acquire_sampling_rate(self, sampling_rate: str): # 科學記號
+        self.inst.write(f':ACQuire:SRATe:ANALog {sampling_rate}')
         time.sleep(0.05)
 
     def acquire_memory_depth(self, points_value: int):
         self.inst.write(f':ACQuire:POINts:ANALog {points_value}')
         time.sleep(0.05)
 
-    def add_bookmark(self, choose_type, bookmark, channel):
-        if choose_type == 1:
-            self.inst.write(f':DISPlay:BOOKmark:DELete:ALL')
-            time.sleep(0.05)
-            self.add_label(channel= channel, label= bookmark)
-            return
-        else:
-            self.inst.write(f':DISPlay:LABel OFF')
-            time.sleep(0.05)
-            if bookmark == '':
-                self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
-
-            else:
-                display_dict= self.judge_channal_wmemory()    
-                try:
-                    is_meas_area= self.inst.query(':MEASure:NAME? MEAS1') 
-                    time.sleep(0.05)
-                except:
-                    is_meas_area= 0
-                is_marker_area= self.inst.query(':MARKer1:ENABle?') 
-                time.sleep(0.05)
-                if not is_meas_area == '"no meas"\n' or is_marker_area == '1\n':
-                    interval= 5
-                else:
-                    interval= 3.5
-                    
-                bookmark_display_list= []
-                count= 0
-                for cha in display_dict['CHANnel']:
-                    if cha == channel:
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:SET NONE,"{bookmark}",CHANnel{channel},"",1')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:XPOSition {0.01}')
-                        time.sleep(0.05)
-                        bookmark_display_list.append(count)
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:YPOSition {2+interval*count}E-02')
-                        time.sleep(0.05)
-                    count+=1
-                for wme in display_dict['WMEMory']:
-                    if wme == channel-4:
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:SET NONE,"{bookmark}",WMEMory{channel-4},"",1')
-                        time.sleep(0.05)
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:XPOSition {0.01}')
-                        time.sleep(0.05)
-                        bookmark_display_list.append(count)
-                        self.inst.write(f':DISPlay:BOOKmark{channel}:YPOSition {2+interval*count}E-02')
-                        time.sleep(0.05)
-                    count+=1
-
-    def add_label(self, channel, label):
+    def add_labelname(self, label_type: int, channel: int, content: str):
+        
         display_dict= self.judge_channal_wmemory()
-        if label == '':
-            self.inst.write(f':DISPlay:LABel OFF')
-            time.sleep(0.05)
-        else:
+        
+        if label_type == 0: # label
             self.inst.write(f':DISPlay:LABel ON')
             time.sleep(0.05)
             for cha in display_dict['CHANnel']:
-                if cha == channel:
-                    self.inst.write(f':CHANnel{channel}:LABel "{label}"')
+                if channel == cha:
+                    if content == '':
+                        self.inst.write(f':CHANnel{channel}:LABel "{channel}"')
+                    else:    
+                        self.inst.write(f':CHANnel{channel}:LABel "{content}"')
                     time.sleep(0.05)
             for wme in display_dict['WMEMory']:
                 if wme == channel-4:
-                    self.inst.write(f':WMEMory{channel-4}:LABel "{label}"')
+                    if content == '':
+                        self.inst.write(f':WMEMory{channel-4}:LABel "m{channel-4}"')
+                    else:    
+                        self.inst.write(f':WMEMory{channel-4}:LABel "{content}"')
                     time.sleep(0.05)
 
-    def add_marker(self):
-        tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
-                        boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
-                        )
-        
+            self.inst.write(f':DISPlay:BOOKmark:DELete:ALL')
+            time.sleep(0.05)
+
+        elif label_type == 1: # bookmark
+            interval= 5
+            count= 0
+            for cha in display_dict['CHANnel']:
+                if cha == channel:
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
+                    time.sleep(0.05)
+                    if content == '':
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
+                    else:
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:SET NONE,"{content}",CHANnel{channel},"",1')
+                    time.sleep(0.05)
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:XPOSition {0.01}')
+                    time.sleep(0.05)
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:YPOSition {2+interval*count}E-02')
+                    time.sleep(0.05)
+                count+=1
+            for wme in display_dict['WMEMory']:
+                if wme == channel-4:
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
+                    time.sleep(0.05)
+                    if content == '':
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
+                    else:
+                        self.inst.write(f':DISPlay:BOOKmark{channel}:SET NONE,"{content}",WMEMory{channel-4},"",1')
+                    time.sleep(0.05)
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:XPOSition {0.01}')
+                    time.sleep(0.05)
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:YPOSition {2+interval*count}E-02')
+                    time.sleep(0.05)
+                count+=1    
+    
+            self.inst.write(f':DISPlay:LABel OFF')
+            time.sleep(0.05)
+            
+    def add_marker(self, is_multi_colors: bool, tuple_measurement_index: tuple):
+
         # ans= self.inst.query(':MARKer2:COLor?')
         # print(ans)
         
@@ -148,17 +140,17 @@ class MXR:
             '#FFFF8A00',  # 橘
         ]
 
-        if boolvar_marker_color.get() == True:
+        if is_multi_colors == True:
             color_list= multe_color_list
         else:
             color_list= single_color_list
 
-        for i, boolvar in enumerate(tuple_marker):
+        for i, boolvar in enumerate(tuple_measurement_index):
             self.inst.write(f':MARKer:MEASurement:MEASurement MEAS{i+1},OFF')
             time.sleep(0.05)
 
         c=0
-        for i, boolvar in enumerate(tuple_marker):
+        for i, boolvar in enumerate(tuple_measurement_index):
             if boolvar.get():
                 self.inst.write(f"SYSTem:CONTrol 'MeasSetupSrc1EdgeByRef -{i+1} on'")
                 time.sleep(0.05)
@@ -176,38 +168,35 @@ class MXR:
         self.inst.write(':AUToscale')
         time.sleep(0.05)
 
-    def call_measurement_delta_time(self, edge_1, num_1, pos_1, edge_2, num_2, pos_2, channel, channel_start, channel_stop, modify_name, timing_name):
+    def call_measurement_delta_time(self, is_double_channel: int, delta_start: dict, delta_stop: dict, is_modify_name: bool, timing_name: str):
         displayed_dict= self.judge_channal_wmemory()
         for format in displayed_dict:
             for channel in displayed_dict[format]:
-                if channel_start == channel:
+                if channel == delta_start['channel']:
                     res_start= f'{format}'
-                if channel_stop == channel:
+                if channel == delta_stop['channel']:
                     res_stop= f'{format}'
 
-        if channel == 2:
-            self.inst.write(f':MEASure:DELTatime:DEFine {edge_1},{num_1},{pos_1},{edge_2},{num_2},{pos_2}')
+        if is_double_channel == 2:
+            self.inst.write(f':MEASure:DELTatime:DEFine {delta_start['transition']},{delta_start['number']},{delta_start['position']},{delta_stop['transition']},{delta_stop['number']},{delta_stop['position']}')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:DELTatime {res_start}{channel_start}, {res_stop}{channel_stop}')
+            self.inst.write(f':MEASure:DELTatime {res_start}{delta_start['channel']}, {res_stop}{delta_stop['channel']}')
             time.sleep(0.05)
             
-            if modify_name:
+            if is_modify_name:
                 if 'CHAN' in res_start and 'CHAN' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({channel_start}-{channel_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({delta_start['channel']}-{delta_stop['channel']})"')
                     time.sleep(0.05)
                 elif 'CHAN' in res_start and 'WMEM' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({channel_start}-m{channel_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({delta_start['channel']}-m{delta_stop['channel']})"')
                     time.sleep(0.05)
                 elif 'WMEM' in res_start and 'CHAN' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{channel_start}-{channel_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{delta_start['channel']}-{delta_stop['channel']})"')
                     time.sleep(0.05)
                 else:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{channel_start}-m{channel_stop})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{delta_start['channel']}-m{delta_stop['channel']})"')
                     time.sleep(0.05)
             
-        else:
-            pass
-
     def call_measurement_dutycycle(self, channel):
         command_templates = {
             'CHANnel': ':MEASure:DUTYcycle CHANnel{}',
@@ -325,10 +314,6 @@ class MXR:
         }            
         self.call_measurement_function(channel= channel, command_templates= command_templates)   
         
-    def check_intensity_setting(self, intensity_value):
-        self.inst.write(f'SYSTem:CONTrol "WaveformBrt -1 {intensity_value}"')
-        time.sleep(0.05)
-
     def clear_diaplay(self):
         self.inst.write(':CDISplay')
         time.sleep(0.05)
@@ -342,13 +327,22 @@ class MXR:
         self.inst.write(':SYSTem:PRESet DEFault')
         time.sleep(0.05)
 
-    def delete_bookmark(self, channel, choose_type):
-        if choose_type == 1:
+    def delete_labelname(self, label_type, channel):
+        
+        display_dict= self.judge_channal_wmemory()
+        
+        if label_type == 1: # label
             self.inst.write(f':DISPlay:LABel OFF')
             time.sleep(0.05)
-        else:
-            self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
-            time.sleep(0.05)
+        else: # bookmark
+            for cha in display_dict['CHANnel']:
+                if cha == channel:
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
+                    time.sleep(0.05)
+            for wme in display_dict['WMEMory']:
+                if wme == channel-4:
+                    self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
+                    time.sleep(0.05)
 
     def display_channel(self, channel):
         res= self.inst.query(f':CHANnel{channel}:DISPlay?')
@@ -356,50 +350,33 @@ class MXR:
         if res == '1\n':
             self.inst.write(f':CHANnel{channel}:DISPlay OFF')
             time.sleep(0.05)
-            # try:
-            #     self.inst.write(f':DISPlay:BOOKmark{channel}:DELete')
-            #     time.sleep(0.05)
-            # except:
-            #     pass
         else:
             self.inst.write(f':CHANnel{channel}:DISPlay ON')
             time.sleep(0.05)
-            # self.add_bookmark(choose_type= choose_type,bookmark= bookmark, channel= channel)
+        
+        return res
 
-    def delete_marker(self):
-        tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
-                        boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
-                        )
-    
-        for i, boolvar in enumerate(tuple_marker):
+    def delete_marker(self, tuple_measurement_index: tuple):  
+        for i, boolvar in enumerate(tuple_measurement_index):
             if boolvar.get():
                 self.inst.write(f':MARKer:MEASurement:MEASurement MEASurement{i+1},OFF')
                 time.sleep(0.05)
 
-    def delete_measurement(self):
-        tuple_marker = (boolvar_marker_1, boolvar_marker_2, boolvar_marker_3, boolvar_marker_4, boolvar_marker_5, boolvar_marker_6, 
-                        boolvar_marker_7, boolvar_marker_8, boolvar_marker_9, boolvar_marker_10, boolvar_marker_11, boolvar_marker_12, 
-                        )
-        for i, boolvar in enumerate(tuple_marker):
+    def delete_measurement(self, tuple_measurement_index: tuple):
+        for i, boolvar in enumerate(tuple_measurement_index):
             if boolvar.get():
                 self.inst.write(f'MEASurement{i+1}:CLEar')
                 time.sleep(0.05)
 
     def display_wmemory(self, wmemory):
-        res= self.inst.query(f':WMEMory{wmemory}:DISPlay?')
+        res= self.inst.query(f':WMEMory{wmemory-4}:DISPlay?')
         time.sleep(0.05)
         if res == '1\n':
-            self.inst.write(f':WMEMory{wmemory}:DISPlay OFF')
+            self.inst.write(f':WMEMory{wmemory-4}:DISPlay OFF')
             time.sleep(0.05)
-            # try:
-            #     self.inst.write(f':DISPlay:BOOKmark{wmemory+4}:DELete')
-            #     time.sleep(0.05)
-            # except:
-            #     pass
         else:
-            self.inst.write(f':WMEMory{wmemory}:DISPlay ON')
+            self.inst.write(f':WMEMory{wmemory-4}:DISPlay ON')
             time.sleep(0.05)
-            # self.add_bookmark(choose_type= choose_type, bookmark= bookmark, channel= wmemory+4)
     
     def extract_result(self):
         meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
@@ -889,36 +866,17 @@ class MXR:
         self.inst.write(':RUN')
         time.sleep(0.05)
 
-    def save_pc_image(self, pc_folder, file_name):
+    def save_pc_image(self, pc_folder_path: str, img_name: str):
         screen_data = np.array(self.inst.query_binary_values(":DISPlay:DATA? PNG", datatype = 's', container = bytes))
         time.sleep(0.05)
 
-        if not os.path.exists(pc_folder):
-            ask_root = tk.Tk()
-            ask_root.withdraw()  # 隱藏主視窗
-            ask_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
-            ask_root.destroy()
-            
-            if not ask_result:
-                ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗
-                messagebox.showinfo("Warning", f'檔案未儲存')
-                # print("檔案未保存。")
-                return     
-            os.mkdir(pc_folder) 
+        is_save= utils.asking_is_folder_exist(folder_path= pc_folder_path)
+        if not is_save:
+            return
+        is_save= utils.asking_is_cover_imgfile(folder_path= pc_folder_path, img_name= img_name)   
+        if not is_save:
+            return
 
-        if os.path.exists(f"{pc_folder}/{file_name}.png"):
-            ask_root = tk.Tk()
-            ask_root.withdraw()  # 隱藏主視窗
-            ask_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
-            ask_root.destroy()
-            
-            if not ask_result:
-                # print("檔案未保存。")
-                ask_root = tk.Tk()
-                ask_root.withdraw()  # 隱藏主視窗
-                messagebox.showinfo("Warning", f'檔案未儲存')
-                return     
         temp_img_name= ''.join(random.choices(string.ascii_letters + string.digits, k=8))
 
         temp_folder= fr'{os.path.dirname(__file__)}/Temp'
@@ -929,7 +887,7 @@ class MXR:
         f_img.write(bytearray(screen_data))
         f_img.close()
 
-        rgba_to_rgb_composite(f"{temp_folder}/{temp_img_name}.png", f"{pc_folder}/{file_name}.png", background=(0,0,0))
+        utils.rgba_to_rgb_composite(f"{temp_folder}/{temp_img_name}.png", f"{pc_folder_path}/{img_name}.png", background=(0,0,0))
 
     def save_pc_waveform(self, folder, pc_folder, file_name):            
 
@@ -1013,7 +971,7 @@ class MXR:
         with open(f"{pc_folder}/{file_name}.{ext}", 'wb') as f:
             f.write(data)
 
-    def save_scope_file(self, channel, folder, current_file_name, ext_type, path_choice):
+    def save_scope_file(self, location_choice: int, folder_path: str, channel: str, ext_type: int, current_file_name: str):
         # 清空狀態
         self.inst.write('*CLS')
         time.sleep(0.05)
@@ -1025,10 +983,10 @@ class MXR:
             # -420 Query UNTERMINATED
             # 0 No error
 
-        if path_choice == 2:
-            folder_total_path = folder
-        else:
-            folder_total_path = f"C:/Users/Administrator/Desktop/{folder}"
+        if location_choice == 1: # Server
+            folder_total_path = folder_path
+        else: # Scope
+            folder_total_path = f"C:/Users/Administrator/Desktop/{folder_path}"
 
         # 資料夾是否存在
         self.inst.query(f':DISK:DIRectory? "{folder_total_path}"')
@@ -1037,17 +995,9 @@ class MXR:
         time.sleep(0.05)
         # print(error_messenge)
         if error_messenge == '-256\n' or error_messenge == '113\n' or error_messenge == '-257\n':
-            ask_scp_root = tk.Tk()
-            ask_scp_root.withdraw()  # 隱藏主視窗
-            ask_scp_result = messagebox.askyesno("Warning", f"資料夾不存在，是否新增？")
-            ask_scp_root.destroy()
-            
-            if not ask_scp_result:
-                ask_scp_root = tk.Tk()
-                ask_scp_root.withdraw()  # 隱藏主視窗
-                messagebox.showinfo("Warning", f'檔案未儲存')
-                # print("檔案未保存。")
-                return     
+            res= utils.asking_window(content= '資料夾不存在，是否新增？')
+            if not res:
+                return
             # 新建資料夾
             folder_total_path= folder_total_path.replace("/", "\\")
             # print(folder_total_path)
@@ -1070,7 +1020,7 @@ class MXR:
         time.sleep(0.05)
 
         # 判斷存.h5或.set
-        if ext_type == 1:
+        if ext_type == 0:
             # 使用正則表達式來匹配所有 .h5 檔案名稱
             files = re.findall(r'\b[\w-]+\.(?:h5)\b', folder_content)
             ext= 'h5'
@@ -1083,17 +1033,9 @@ class MXR:
 
         for file_name in files:
             if f'{current_file_name}.{ext}' == file_name:
-                ask_scp_root = tk.Tk()
-                ask_scp_root.withdraw()  # 隱藏主視窗
-                ask_scp_result = messagebox.askyesno("Warning", f"檔案已經存在，是否覆蓋？")
-                ask_scp_root.destroy()
-                
-                if not ask_scp_result:
-                    # print("檔案未保存。")
-                    ask_scp_root = tk.Tk()
-                    ask_scp_root.withdraw()  # 隱藏主視窗
-                    messagebox.showinfo("Warning", f'檔案未儲存')
-                    return     
+                res= utils.asking_window(content= '檔案已經存在，是否覆蓋？')
+                if not res:
+                    return
 
         self.inst.write(command)
         time.sleep(0.05)
@@ -1221,6 +1163,10 @@ class MXR:
             self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{percentage_dictionary['top']},{percentage_dictionary['middle']},{percentage_dictionary['base']}')
             time.sleep(0.05)
 
+    def set_intensity_setting(self, intensity_value):
+        self.inst.write(f'SYSTem:CONTrol "WaveformBrt -1 {intensity_value}"')
+        time.sleep(0.05)
+
     def set_risefall_numberic_threshold(self, numberic_dictionary: dict):
             self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,ABSolute')
             time.sleep(0.05)
@@ -1333,7 +1279,7 @@ class MXR:
 
 
     ### 整合功能
-    def set_all_scale(self, voltage_scale, voltage_offset, timebase_scale, timebase_position, trigger_channel, trigger_level):
+    def set_all_scale(self, voltage_scale: str, voltage_offset: str, timebase_scale: str, timebase_position: str, trigger_channel: str, trigger_level: str):
         # Voltage
         display_dict= self.judge_channal_wmemory()
         for channel in display_dict['CHANnel']:
@@ -1368,3 +1314,28 @@ class MXR:
         if not is_displayed == '1\n':
             self.inst.write(f':{trigger_channel}:DISPlay OFF')
             time.sleep(0.05)
+
+    def call_channel_and_label(self, root, channel: int):
+        
+        display_dict= self.judge_channal_wmemory()
+
+        for cha in display_dict['CHANnel']:
+            if cha == channel:
+                res= self.display_channel(channel= cha)
+                if res == '1\n':
+                    try:
+                        self.delete_labelname(label_type= root.labelnameframe.LabelNameLabelFrame.get_value()[0], channel= channel)
+                    except:
+                        pass
+                else: 
+                    self.add_labelname(label_type= root.labelnameframe.LabelNameLabelFrame.get_value()[0], channel= channel, content= root.labelnameframe.LabelNameLabelFrame.get_value()[1][channel-1])
+        for wme in display_dict['WMEMory']:
+            if wme == channel-4:
+                res= self.display_wmemory(wmemory= wme)
+                if res == '1\n':
+                    try:
+                        self.delete_labelname(label_type= root.labelnameframe.LabelNameLabelFrame.get_value()[0], channel= channel)
+                    except:
+                        pass
+                else: 
+                    self.add_labelname(label_type= root.labelnameframe.LabelNameLabelFrame.get_value()[0], channel= channel, content= root.labelnameframe.LabelNameLabelFrame.get_value()[1][channel-1])

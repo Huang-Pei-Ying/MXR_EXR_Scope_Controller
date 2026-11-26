@@ -3,7 +3,7 @@ from tkinter import ttk
 import utils
 
 class SaveImageLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Save Image - in PC', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
         self.label_save_img_pcfolder= tk.Label(
@@ -14,8 +14,8 @@ class SaveImageLabelFrame(tk.LabelFrame):
             master= self, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_save_img_pcfolder)
         self.button_browse_img_pcfolder= ttk.Button(
             master= self, text= 'Browse', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: utils.browse_folder(entry_var= self.strvar_save_img_pcfolder, target_entry= self.entry_save_img_pcfolder)
             )
         self.label_save_img_name= tk.Label(
             master= self, text= 'File Name', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -25,8 +25,8 @@ class SaveImageLabelFrame(tk.LabelFrame):
             master= self, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_save_img_name)
         self.button_save_img_name= ttk.Button(
             master= self, text= 'Save', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.save_pc_image(pc_folder_path= self.strvar_save_img_pcfolder.get(), img_name= self.strvar_save_img_name.get())
             )
         ################################################
 

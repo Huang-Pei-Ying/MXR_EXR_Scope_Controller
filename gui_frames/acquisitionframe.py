@@ -3,14 +3,14 @@ from tkinter import ttk
 import utils
 
 class AcquisitionLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Acquisition', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
         # sampling rate
         self.button_smapling_rate = ttk.Button(
             master= self, text= 'Sampling Rate (Sa/s)', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.acquire_sampling_rate(sampling_rate= self.strvar_smapling_rate.get())
             )
 
         self.strvar_smapling_rate= tk.StringVar()
@@ -20,28 +20,28 @@ class AcquisitionLabelFrame(tk.LabelFrame):
             )
         self.button_smapling_rate_auto = ttk.Button(
             master= self, text= 'Auto Mode', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.acquire_sampling_rate(rate= 'AUTO')
             )
         # memory depth
         self.button_memory_depth = ttk.Button(
             master= self, text= 'Memory Depth (pts)', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.acquire_memory_depth(points_value= self.strvar_memory_depth.get())
             )
         self.strvar_memory_depth= tk.StringVar()
         self.entry_memory_depth = ttk.Entry(
             master= self, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_memory_depth, justify= 'center')
         self.button_memory_depth_auto = ttk.Button(
             master= self, text= 'Auto Mode', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.acquire_memory_depth(points_value= 'AUTO')
             )
         # waveform intensity
         self.button_waveform_intensity = ttk.Button(
             master= self, text= 'Waveform Intensity (%)', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.check_intensity_setting(intensity_value= strvar_waveform_intensity.get())
+            style= 'normal_height.TButton',
+            command= lambda: mxr.check_intensity_setting(intensity_value= self.strvar_waveform_intensity.get())
             )
         self.strvar_waveform_intensity= tk.StringVar()
         self.entry_waveform_intensity = ttk.Entry(
@@ -51,7 +51,7 @@ class AcquisitionLabelFrame(tk.LabelFrame):
 
         self.button_set_to_fixty = ttk.Button(
             master= self, text= 'Set 50%', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
+            style= 'normal_height.TButton',
             command= lambda: utils.set_to_fixty(entry= self.entry_waveform_intensity)
             )
         self.entry_waveform_intensity.bind("<MouseWheel>", lambda event: utils.on_mouse_wheel(event, self.entry_waveform_intensity))

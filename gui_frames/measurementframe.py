@@ -3,8 +3,8 @@ from tkinter import ttk
 import utils
 
 class MeasurementLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
-        super().__init__(master, text= 'Measurement', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
+        super().__init__(master, text= 'Test items', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
         self.frame_measurement_top= tk.Frame(master= self, background= colors['labelframe'][0])
         self.frame_measurement_middle= tk.Frame(master= self, background= colors['labelframe'][0])
@@ -39,78 +39,78 @@ class MeasurementLabelFrame(tk.LabelFrame):
         
         self.button_measurement_frequency= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Frequency', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_frequency(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_period= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Period', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_period(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_dutycycle= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Duty Cycle', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_dutycycle(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_tH= ttk.Button(
             master= self.frame_measurement_top_right, text= 'High time', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_tH(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_tL= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Low time', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_tL(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_tR= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Rising time', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_tR(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_tF= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Falling time', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_tF(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_slewR= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Slew Rate-Falling', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_slewrate(channel= self.strvar_measurement_single_channel.get(), 
+                                                           direction= 'RISing'))
         self.button_measurement_slewF= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Slew Rate-Rising', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_slewrate(channel= self.strvar_measurement_single_channel.get(), 
+                                                           direction= 'FALLing'))
         self.button_measurement_perper= ttk.Button(
             master= self.frame_measurement_top_right, text= '1 per-per', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_NCJitter(channel= self.strvar_measurement_single_channel.get(), 
+                                                           direction= 'RISing'))
         self.button_measurement_VIH= ttk.Button(
             master= self.frame_measurement_top_right, text= 'VIH', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_VIH(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_VIL= ttk.Button(
             master= self.frame_measurement_top_right, text= 'VIL', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_VIL(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_VPP= ttk.Button(
             master= self.frame_measurement_top_right, text= 'VPP', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_VPP(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_Vmax= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Vmax', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_VMAX(channel= self.strvar_measurement_single_channel.get())
             )
         self.button_measurement_Vmin= ttk.Button(
             master= self.frame_measurement_top_right, text= 'Vmin', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_VMIN(channel= self.strvar_measurement_single_channel.get())
             )
 
         self.label_delta_setting= tk.Label(
@@ -154,7 +154,7 @@ class MeasurementLabelFrame(tk.LabelFrame):
             )
         self.button_deita_channel_switch= ttk.Button(
             master= self.frame_measurement_base_middle, text= 'Switch', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
+            style= 'normal_height.TButton',
             command= lambda: utils.switch_string(var_1= self.strvar_delta_channel_start, var_2= self.strvar_delta_channel_stop)
             )
         self.label_delta_transition= tk.Label(
@@ -175,26 +175,26 @@ class MeasurementLabelFrame(tk.LabelFrame):
             )
         self.button_deita_transition_switch= ttk.Button(
             master= self.frame_measurement_base_middle, text= 'Switch', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
+            style= 'normal_height.TButton',
             command= lambda: utils.switch_string(var_1= self.strvar_delta_transition_start, var_2= self.strvar_delta_transition_stop)
             )
         
         self.label_delta_edge= tk.Label(
             master= self.frame_measurement_base_middle, text= 'Edge No.', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
             ) 
-        self.intvar_delta_edge_start= tk.IntVar()
-        self.entry_delta_edge_start = ttk.Entry(
-            master= self.frame_measurement_base_middle, width= max(10, int(entry_width*0.4)), textvariable= self.intvar_delta_edge_start, justify= 'center')
+        self.intvar_delta_edgenum_start= tk.IntVar()
+        self.entry_delta_edgenum_start = ttk.Entry(
+            master= self.frame_measurement_base_middle, width= max(10, int(entry_width*0.4)), textvariable= self.intvar_delta_edgenum_start, justify= 'center')
         self.label_delta_edge_arrow= tk.Label(
             master= self.frame_measurement_base_middle, text= '↓', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
             ) 
-        self.intvar_delta_edge_stop= tk.IntVar()
-        self.entry_delta_edge_stop = ttk.Entry(
-            master= self.frame_measurement_base_middle, width= max(10, int(entry_width*0.4)), textvariable= self.intvar_delta_edge_stop, justify= 'center')
-        self.button_deita_edge_switch= ttk.Button(
+        self.intvar_delta_edgenum_stop= tk.IntVar()
+        self.entry_delta_edgenum_stop = ttk.Entry(
+            master= self.frame_measurement_base_middle, width= max(10, int(entry_width*0.4)), textvariable= self.intvar_delta_edgenum_stop, justify= 'center')
+        self.button_deita_edgenum_switch= ttk.Button(
             master= self.frame_measurement_base_middle, text= 'Switch', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            command= lambda: utils.switch_string(var_1= self.intvar_delta_edge_start, var_2= self.intvar_delta_edge_stop)
+            style= 'normal_height.TButton',
+            command= lambda: utils.switch_string(var_1= self.intvar_delta_edgenum_start, var_2= self.intvar_delta_edgenum_stop)
             )
         self.label_delta_position= tk.Label(
             master= self.frame_measurement_base_middle, text= 'Position', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -214,14 +214,29 @@ class MeasurementLabelFrame(tk.LabelFrame):
             )
         self.button_deita_position_switch= ttk.Button(
             master= self.frame_measurement_base_middle, text= 'Switch', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
+            style= 'normal_height.TButton',
             command= lambda: utils.switch_string(var_1= self.strvar_delta_position_start, var_2= self.strvar_delta_position_stop)
             )
         self.button_measurement_deltatime= ttk.Button(
             master= self.frame_measurement_base_right, text= 'Delta time', width= button_width,  padding= 2,
-            # style= 'double_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'double_height.TButton',
+            command= lambda: mxr.call_measurement_delta_time(
+                is_double_channel= self.intvar_measurement_channel.get(), 
+                delta_start= {
+                    'channel': self.strvar_delta_channel_start.get(), 
+                    'transition': self.strvar_delta_transition_start.get(), 
+                    'number': self.intvar_delta_edgenum_start.get(), 
+                    'position': self.strvar_delta_position_start.get(), 
+                }, 
+                delta_stop= {
+                    'channel': self.strvar_delta_channel_stop.get(), 
+                    'transition': self.strvar_delta_transition_stop.get(), 
+                    'number': self.intvar_delta_edgenum_stop.get(), 
+                    'position': self.strvar_delta_position_stop.get(), 
+                }, 
+                is_modify_name= self.boolvar_modify_delta_name.get(), 
+                timing_name= self.strvar_modify_delta_name.get()
+            ))
         ################################################
 
         ### Weight      
@@ -322,10 +337,10 @@ class MeasurementLabelFrame(tk.LabelFrame):
         self.button_deita_transition_switch.grid(row= 4, column= 2, padx= 5, pady= 5, sticky= 'nesw')
 
         self.label_delta_edge.grid(row= 0, column= 3, padx= 2, pady= 2, sticky= 'nesw')
-        self.entry_delta_edge_start.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'nesw')
+        self.entry_delta_edgenum_start.grid(row= 1, column= 3, padx= 2, pady= 2, sticky= 'nesw')
         self.label_delta_edge_arrow.grid(row= 2, column= 3, padx= 2, pady= 2, sticky= 'nesw')
-        self.entry_delta_edge_stop.grid(row= 3, column= 3, padx= 2, pady= 2, sticky= 'nesw')
-        self.button_deita_edge_switch.grid(row= 4, column= 3, padx= 5, pady= 5, sticky= 'nesw')
+        self.entry_delta_edgenum_stop.grid(row= 3, column= 3, padx= 2, pady= 2, sticky= 'nesw')
+        self.button_deita_edgenum_switch.grid(row= 4, column= 3, padx= 5, pady= 5, sticky= 'nesw')
 
         self.label_delta_position.grid(row= 0, column= 4, padx= 2, pady= 2, sticky= 'nesw')
         self.combobox_delta_position_start.grid(row= 1, column= 4, padx= 2, pady= 2, sticky= 'nesw')
@@ -346,10 +361,10 @@ class MeasurementLabelFrame(tk.LabelFrame):
             'DeltaChannelName': self.strvar_modify_delta_name, 
             'DeltaStartChannel': self.strvar_delta_channel_start, 
             'DeltaStartEdge': self.strvar_delta_transition_start, 
-            'DeltaStartNum': self.intvar_delta_edge_start, 
+            'DeltaStartNum': self.intvar_delta_edgenum_start, 
             'DeltaStartPosition': self.strvar_delta_position_start, 
             'DeltaStopChannel': self.strvar_delta_channel_stop, 
             'DeltaStopEdge': self.strvar_delta_transition_stop, 
-            'DeltaStopNum': self.intvar_delta_edge_stop, 
+            'DeltaStopNum': self.intvar_delta_edgenum_stop, 
             'DeltaStopPosition': self.strvar_delta_position_stop, 
         })
