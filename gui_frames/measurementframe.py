@@ -2,9 +2,14 @@ import tkinter as tk
 from tkinter import ttk
 import utils
 
+from gui_frames.resultwindow import ResultsWindow
+
 class MeasurementLabelFrame(tk.LabelFrame):
     def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Test items', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+
+        self.master= master
+        self.mxr= mxr
 
         self.frame_measurement_top= tk.Frame(master= self, background= colors['labelframe'][0])
         self.frame_measurement_middle= tk.Frame(master= self, background= colors['labelframe'][0])
@@ -19,8 +24,8 @@ class MeasurementLabelFrame(tk.LabelFrame):
         
         self.button_show_result_table= ttk.Button(
             master= self.frame_measurement_top_left, text= 'Show Results Table', width= button_width,  padding= 2,
-            # style= 'special.TButton',
-            # command= lambda: mxr.
+            style= 'special.TButton',
+            command= self.show_results_window
             )
 
         self.intvar_measurement_channel= tk.IntVar()
@@ -368,3 +373,8 @@ class MeasurementLabelFrame(tk.LabelFrame):
             'DeltaStopNum': self.intvar_delta_edgenum_stop, 
             'DeltaStopPosition': self.strvar_delta_position_stop, 
         })
+            ###########################
+
+        ## settings  ==============================================================================================================================================
+    def show_results_window(self):
+        ResultsWindow(self.master, self.mxr)

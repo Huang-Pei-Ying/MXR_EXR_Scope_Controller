@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 import utils
-from pathlib import Path
 
 class LoadSetupLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, root, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Load Setup File', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
+
+        self.root = root
 
         self.frame_load_setup_1= tk.Frame(master= self, background= colors['labelframe'][0])
         self.frame_load_setup_2= tk.Frame(master= self, background= colors['labelframe'][0])
@@ -19,13 +20,13 @@ class LoadSetupLabelFrame(tk.LabelFrame):
             master= self.frame_load_setup_1, text= 'Standard', value= 1, variable= self.intvar_load_setup_call_file_type, style= 'radiobutton_3.TRadiobutton',)
 
         self.intvar_load_setup_loadlocation= tk.IntVar()
-        self.radiobutton_load_setup_loacation_scope= ttk.Radiobutton(
+        self.radiobutton_load_setup_location_scope= ttk.Radiobutton(
             master= self.frame_load_setup_1, text= 'Scope Desktop', value= 0, variable= self.intvar_load_setup_loadlocation, style= 'radiobutton_2.TRadiobutton')
-        self.radiobutton_load_setup_loacation_server= ttk.Radiobutton(
+        self.radiobutton_load_setup_location_server= ttk.Radiobutton(
             master= self.frame_load_setup_1, text= 'Server', value= 1, variable= self.intvar_load_setup_loadlocation, style= 'radiobutton_2.TRadiobutton')
-        self.strvar_load_setup_loacation_server= tk.StringVar()
-        self.combobox_load_setup_loacation_server= ttk.Combobox(
-            master= self.frame_load_setup_1, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_loacation_server, style= 'TCombobox', justify= 'center')
+        self.strvar_load_setup_location_server= tk.StringVar()
+        self.combobox_load_setup_location_server= ttk.Combobox(
+            master= self.frame_load_setup_1, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_location_server, style= 'TCombobox', justify= 'center')
 
         self.label_load_setup_user_defined_folder= tk.Label(
             master= self.frame_load_setup_2, text= 'Folder', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -34,7 +35,10 @@ class LoadSetupLabelFrame(tk.LabelFrame):
         self.entry_load_setup_user_defined_folder= ttk.Entry(
             master= self.frame_load_setup_2, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_user_defined_folder)
         self.button_load_setup_user_defined_browse= ttk.Button(
-            master= self.frame_load_setup_2, text= 'Browse', width= button_width,  padding= 1,)
+            master= self.frame_load_setup_2, text= 'Browse', width= button_width,  padding= 1,
+            style= 'normal_height.TButton',
+            command= lambda: utils.browse_folder(entry_var= self.strvar_load_setup_user_defined_folder, target_entry= self.entry_load_setup_user_defined_folder)
+            )
 
         self.label_load_setup_user_defined_filename= tk.Label(
             master= self.frame_load_setup_2, text= 'File Name', background= colors['label'][0], fg= colors['label'][1], font= ('Candara', 11,),
@@ -43,7 +47,21 @@ class LoadSetupLabelFrame(tk.LabelFrame):
         self.entry_load_setup_user_defined_filename= ttk.Entry(
             master= self.frame_load_setup_2, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_user_defined_filename)
         self.button_load_setup_user_defined_load= ttk.Button(
-            master= self.frame_load_setup_2, text= 'Load', width= button_width,  padding= 1,)
+            master= self.frame_load_setup_2, text= 'Load', width= button_width,  padding= 1,
+            style= 'normal_height.TButton',
+            command= lambda: mxr.load_setup(
+                root= self.root, 
+                user_choice= self.intvar_load_setup_call_file_type.get(), 
+                location_choice= self.intvar_load_setup_loadlocation.get(), 
+                server_code= self.strvar_load_setup_location_server.get(), 
+                interface= self.strvar_load_setup_standard_interface.get(), 
+                sub= self.strvar_load_setup_standard_subfolder.get(), 
+                folder_path= self.strvar_load_setup_user_defined_folder.get(), 
+                setup_name= self.strvar_load_setup_user_defined_filename.get(), 
+                is_keep_timebase= self.boolvar_modify_timebase.get(), 
+                is_keep_voltage= self.boolvar_modify_voltage.get(), 
+                is_keep_labelname= self.boolvar_modify_label.get(), 
+            ))
 
         self.boolvar_modify_label= tk.BooleanVar()
         self.checkbutton_modify_label= ttk.Checkbutton(
@@ -68,7 +86,21 @@ class LoadSetupLabelFrame(tk.LabelFrame):
             master= self.frame_load_setup_4, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_setup_standard_files, style= 'TCombobox', justify= 'center')
 
         self.button_load_setup_standard_load= ttk.Button(
-            master= self.frame_load_setup_4, text= 'Load', width= button_width,  padding= 1,)
+            master= self.frame_load_setup_4, text= 'Load', width= button_width,  padding= 1,
+            style= 'normal_height.TButton',
+            command= lambda: mxr.load_setup(
+                root= self.root, 
+                user_choice= self.intvar_load_setup_call_file_type.get(), 
+                location_choice= self.intvar_load_setup_loadlocation.get(), 
+                server_code= self.strvar_load_setup_location_server.get(), 
+                interface= self.strvar_load_setup_standard_interface.get(), 
+                sub= self.strvar_load_setup_standard_subfolder.get(), 
+                folder_path= self.strvar_load_setup_user_defined_folder.get(), 
+                setup_name= self.strvar_load_setup_standard_files.get(), 
+                is_keep_timebase= self.boolvar_modify_timebase.get(), 
+                is_keep_voltage= self.boolvar_modify_voltage.get(), 
+                is_keep_labelname= self.boolvar_modify_label.get(), 
+            ))
         ################################################
 
         ### Weight  ==============================================================================================================================================   
@@ -111,9 +143,9 @@ class LoadSetupLabelFrame(tk.LabelFrame):
         self.radiobutton_load_setup_user_defined.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
         self.radiobutton_load_setup_standard.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'nesw', columnspan= 2)
 
-        self.radiobutton_load_setup_loacation_scope.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
-        self.radiobutton_load_setup_loacation_server.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'nesw')
-        self.combobox_load_setup_loacation_server.grid(row= 1, column= 2, padx= 2, pady= 2, sticky= 'w')
+        self.radiobutton_load_setup_location_scope.grid(row= 1, column= 0, padx= 2, pady= 2, sticky= 'nesw')
+        self.radiobutton_load_setup_location_server.grid(row= 1, column= 1, padx= 2, pady= 2, sticky= 'nesw')
+        self.combobox_load_setup_location_server.grid(row= 1, column= 2, padx= 2, pady= 2, sticky= 'w')
 
         self.label_load_setup_user_defined_folder.grid(row= 0, column= 0, padx= 2, pady= 2, sticky= 'nesw')
         self.entry_load_setup_user_defined_folder.grid(row= 0, column= 1, padx= 2, pady= 2, sticky= 'ew')
@@ -147,11 +179,11 @@ class LoadSetupLabelFrame(tk.LabelFrame):
             'LoadSetupFileName': self.strvar_load_setup_standard_files,
         })
         settings.apply('Load_SetupFile_Selected_Values', {
-            'LoadSetupFileServerCode': self.strvar_load_setup_loacation_server, 
+            'LoadSetupFileServerCode': self.strvar_load_setup_location_server, 
         })
 
         # combobox options
-        settings.setup_combobox(combobox= self.combobox_load_setup_loacation_server, combobox_var= self.strvar_load_setup_loacation_server, key= "LoadSetupFileServerCode",)
+        settings.setup_combobox(combobox= self.combobox_load_setup_location_server, combobox_var= self.strvar_load_setup_location_server, key= "LoadSetupFileServerCode",)
 
         ## else  ==============================================================================================================================================
         user_defined_list= [
@@ -163,9 +195,9 @@ class LoadSetupLabelFrame(tk.LabelFrame):
             self.button_load_setup_user_defined_load,
         ]
         standard_list= [
-            self.checkbutton_modify_label, 
-            self.checkbutton_modify_timebase, 
-            self.checkbutton_modify_voltage, 
+            # self.checkbutton_modify_label, 
+            # self.checkbutton_modify_timebase, 
+            # self.checkbutton_modify_voltage, 
             self.combobox_load_setup_standard_interface, 
             self.combobox_load_setup_standard_subfolder, 
             self.combobox_load_setup_standard_files, 
@@ -185,3 +217,5 @@ class LoadSetupLabelFrame(tk.LabelFrame):
 
         setupfiles_options = utils.search_every_setupfiles(interface= self.strvar_load_setup_standard_interface.get(), sub= self.strvar_load_setup_standard_subfolder.get())
         self.combobox_load_setup_standard_subfolder.config(values= setupfiles_options)
+
+        utils.move_mouse_entry_end(entry= self.entry_load_setup_user_defined_folder)

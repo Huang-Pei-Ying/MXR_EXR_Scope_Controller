@@ -10,3 +10,4 @@ from .saveimageframe import SaveImageLabelFrame
 from .saveothersframe import SaveOthersLabelFrame
 from .loadwmemoryframe import LoadWmemoryLabelFrame
 from .loadsetupframe import LoadSetupLabelFrame
+from .resultwindow import ResultsWindow

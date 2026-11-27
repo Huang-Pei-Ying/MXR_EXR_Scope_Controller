@@ -178,23 +178,23 @@ class MXR:
                     res_stop= f'{format}'
 
         if is_double_channel == 2:
-            self.inst.write(f':MEASure:DELTatime:DEFine {delta_start['transition']},{delta_start['number']},{delta_start['position']},{delta_stop['transition']},{delta_stop['number']},{delta_stop['position']}')
+            self.inst.write(f":MEASure:DELTatime:DEFine {delta_start['transition']},{delta_start['number']},{delta_start['position']},{delta_stop['transition']},{delta_stop['number']},{delta_stop['position']}")
             time.sleep(0.05)
-            self.inst.write(f':MEASure:DELTatime {res_start}{delta_start['channel']}, {res_stop}{delta_stop['channel']}')
+            self.inst.write(f":MEASure:DELTatime {res_start}{delta_start['channel']}, {res_stop}{delta_stop['channel']}")
             time.sleep(0.05)
             
             if is_modify_name:
                 if 'CHAN' in res_start and 'CHAN' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({delta_start['channel']}-{delta_stop['channel']})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({delta_start["channel"]}-{delta_stop["channel"]})"')
                     time.sleep(0.05)
                 elif 'CHAN' in res_start and 'WMEM' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({delta_start['channel']}-m{delta_stop['channel']})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}({delta_start["channel"]}-m{delta_stop["channel"]})"')
                     time.sleep(0.05)
                 elif 'WMEM' in res_start and 'CHAN' in res_stop:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{delta_start['channel']}-{delta_stop['channel']})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{delta_start["channel"]}-{delta_stop["channel"]})"')
                     time.sleep(0.05)
                 else:
-                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{delta_start['channel']}-m{delta_stop['channel']})"')
+                    self.inst.write(f':MEASure:NAME MEAS1,"{timing_name}(m{delta_start["channel"]}-m{delta_stop["channel"]})"')
                     time.sleep(0.05)
             
     def call_measurement_dutycycle(self, channel):
@@ -318,10 +318,10 @@ class MXR:
         self.inst.write(':CDISplay')
         time.sleep(0.05)
 
-    def clear_wmemory(self, channel, string):
+    def clear_wmemory(self, channel: str):
         self.inst.write(f':WMEMory{channel}:CLEar')
         time.sleep(0.05)
-        string.set('')
+        # string.set('')
 
     def default(self):
         self.inst.write(':SYSTem:PRESet DEFault')
@@ -378,217 +378,103 @@ class MXR:
             self.inst.write(f':WMEMory{wmemory-4}:DISPlay ON')
             time.sleep(0.05)
     
-    def extract_result(self):
-        meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
-        result1= ['', '', '', '', '', '', '', '', '', '', '', '']
-        result2= ['', '', '', '', '', '', '', '', '', '', '', '']
-        all_results= self.inst.query(f':MEASure:RESults?')
-        time.sleep(0.05)
-        for index, value in enumerate(all_results.split(',')):
-            if divmod(index, 7)[1] == 0:
-                try:
-                    meas_name[divmod(index, 7)[0]]= value
-                except:
-                    # l_meas_name_1.config(text=f'484超過3個??')
-                    continue
-                if value[0] == 'V':  # 0: Voltage, 1: Time, 2: Slew Rate, 3: Frequency, 4: Duty cycle
-                    measurement_type = 0 
-                elif 'Slew Rate' in value:
-                    measurement_type = 2
-                elif 'Freq' in value:
-                    measurement_type = 3
-                elif 'Duty cycle' in value:
-                    measurement_type = 4
-                elif value == '\n':
-                    meas_name[divmod(index, 7)[0]] = ''
-                    continue
-                else:
-                    measurement_type = 1
+    def extract_results(self):
+
+        return [
+            ("Measurement 1", "12.5", "12.3", "11.8", "13.1", "20"),
+            ("Measurement 2", "8.2", "8.5", "7.9", "9.0", "20"),
+            ("Measurement 3", "25.1", "24.8", "23.5", "26.2", "20"),
+        ]        
+        # meas_name= ['', '', '', '', '', '', '', '', '', '', '', '']
+        # result1= ['', '', '', '', '', '', '', '', '', '', '', '']
+        # result2= ['', '', '', '', '', '', '', '', '', '', '', '']
+        # all_results= self.inst.query(f':MEASure:RESults?')
+        # time.sleep(0.05)
+        # for index, value in enumerate(all_results.split(',')):
+        #     if divmod(index, 7)[1] == 0:
+        #         try:
+        #             meas_name[divmod(index, 7)[0]]= value
+        #         except:
+        #             # l_meas_name_1.config(text=f'484超過3個??')
+        #             continue
+        #         if value[0] == 'V':  # 0: Voltage, 1: Time, 2: Slew Rate, 3: Frequency, 4: Duty cycle
+        #             measurement_type = 0 
+        #         elif 'Slew Rate' in value:
+        #             measurement_type = 2
+        #         elif 'Freq' in value:
+        #             measurement_type = 3
+        #         elif 'Duty cycle' in value:
+        #             measurement_type = 4
+        #         elif value == '\n':
+        #             meas_name[divmod(index, 7)[0]] = ''
+        #             continue
+        #         else:
+        #             measurement_type = 1
             
-            if intvar_result_type.get() == 1:  # 選擇Mean Value
-                if divmod(index, 7)[1] == 4:
-                    if measurement_type == 0:
-                        final_result_1= self.judge_unit_voltage(value= value)
-                        final_result_2= ''
-                    elif measurement_type == 1:
-                        slew= False
-                        final_result_1= self.judge_unit_time(value= value, slew= slew)
-                        final_result_2= ''
-                    elif measurement_type == 2:
-                        slew= True
-                        final_result_1= self.judge_unit_time(value= value, slew= slew)
-                        final_result_2= ''
-                    elif measurement_type == 3:
-                        final_result_1= self.judge_unit_frequency(value= value)
-                        final_result_2= ''
-                    elif measurement_type == 4:
-                        final_result_1 = f"{float(value):.3f}"+' %'
-                        final_result_2= ''
+        #     if intvar_result_type.get() == 1:  # 選擇Mean Value
+        #         if divmod(index, 7)[1] == 4:
+        #             if measurement_type == 0:
+        #                 final_result_1= self.judge_unit_voltage(value= value)
+        #                 final_result_2= ''
+        #             elif measurement_type == 1:
+        #                 slew= False
+        #                 final_result_1= self.judge_unit_time(value= value, slew= slew)
+        #                 final_result_2= ''
+        #             elif measurement_type == 2:
+        #                 slew= True
+        #                 final_result_1= self.judge_unit_time(value= value, slew= slew)
+        #                 final_result_2= ''
+        #             elif measurement_type == 3:
+        #                 final_result_1= self.judge_unit_frequency(value= value)
+        #                 final_result_2= ''
+        #             elif measurement_type == 4:
+        #                 final_result_1 = f"{float(value):.3f}"+' %'
+        #                 final_result_2= ''
 
-                    try:
-                        result1[divmod(index, 7)[0]]= final_result_1
-                        result2[divmod(index, 7)[0]]= final_result_2
-                    except:
-                        continue
+        #             try:
+        #                 result1[divmod(index, 7)[0]]= final_result_1
+        #                 result2[divmod(index, 7)[0]]= final_result_2
+        #             except:
+        #                 continue
 
-            elif intvar_result_type.get() == 2:  # 選擇Min & Max Value
-                if divmod(index, 7)[1] == 2:
-                    if measurement_type == 0:
-                        final_result_1= self.judge_unit_voltage(value= value)
-                    elif measurement_type == 1:
-                        slew= False
-                        final_result_1= self.judge_unit_time(value= value, slew= slew)
-                    elif measurement_type == 2:
-                        slew= True
-                        final_result_1= self.judge_unit_time(value= value, slew= slew)
-                    elif measurement_type == 3:
-                        final_result_1= self.judge_unit_frequency(value= value)
-                    elif measurement_type == 4:
-                        final_result_1 = f"{float(value):.3f}"+' %'
+        #     elif intvar_result_type.get() == 2:  # 選擇Min & Max Value
+        #         if divmod(index, 7)[1] == 2:
+        #             if measurement_type == 0:
+        #                 final_result_1= self.judge_unit_voltage(value= value)
+        #             elif measurement_type == 1:
+        #                 slew= False
+        #                 final_result_1= self.judge_unit_time(value= value, slew= slew)
+        #             elif measurement_type == 2:
+        #                 slew= True
+        #                 final_result_1= self.judge_unit_time(value= value, slew= slew)
+        #             elif measurement_type == 3:
+        #                 final_result_1= self.judge_unit_frequency(value= value)
+        #             elif measurement_type == 4:
+        #                 final_result_1 = f"{float(value):.3f}"+' %'
 
-                    try:
-                        result1[divmod(index, 7)[0]]= final_result_1
-                    except:
-                        continue
+        #             try:
+        #                 result1[divmod(index, 7)[0]]= final_result_1
+        #             except:
+        #                 continue
 
-                if divmod(index, 7)[1] == 3:
-                    if measurement_type == 0:
-                        final_result_2= self.judge_unit_voltage(value= value)
-                    elif measurement_type == 1:
-                        slew= False
-                        final_result_2= self.judge_unit_time(value= value, slew= slew)
-                    elif measurement_type == 2:
-                        slew= True
-                        final_result_2= self.judge_unit_time(value= value, slew= slew)
-                    elif measurement_type == 3:
-                        final_result_2= self.judge_unit_frequency(value= value)
-                    elif measurement_type == 4:
-                        final_result_2 = f"{float(value):.3f}"+' %'
+        #         if divmod(index, 7)[1] == 3:
+        #             if measurement_type == 0:
+        #                 final_result_2= self.judge_unit_voltage(value= value)
+        #             elif measurement_type == 1:
+        #                 slew= False
+        #                 final_result_2= self.judge_unit_time(value= value, slew= slew)
+        #             elif measurement_type == 2:
+        #                 slew= True
+        #                 final_result_2= self.judge_unit_time(value= value, slew= slew)
+        #             elif measurement_type == 3:
+        #                 final_result_2= self.judge_unit_frequency(value= value)
+        #             elif measurement_type == 4:
+        #                 final_result_2 = f"{float(value):.3f}"+' %'
 
-                    try:
-                        result2[divmod(index, 7)[0]]= final_result_2
-                    except:
-                        continue
-
-        label_measurement_name_1.config(text=f'{meas_name[0]}')
-        text_result_mean_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_1.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_1.insert(tk.END, f"{result1[0]}")
-        text_result_mean_1.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_1.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_1.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_1.insert(tk.END, f"{result2[0]}")
-        text_result_minmax_1.config(state=tk.DISABLED)  # 設置為只讀狀態
-
-        label_measurement_name_2.config(text=f'{meas_name[1]}')
-        text_result_mean_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_2.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_2.insert(tk.END, f"{result1[1]}")
-        text_result_mean_2.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_2.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_2.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_2.insert(tk.END, f"{result2[1]}")
-        text_result_minmax_2.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_3.config(text=f'{meas_name[2]}')
-        text_result_mean_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_3.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_3.insert(tk.END, f"{result1[2]}")
-        text_result_mean_3.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_3.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_3.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_3.insert(tk.END, f"{result2[2]}")
-        text_result_minmax_3.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_4.config(text=f'{meas_name[3]}')
-        text_result_mean_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_4.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_4.insert(tk.END, f"{result1[3]}")
-        text_result_mean_4.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_4.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_4.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_4.insert(tk.END, f"{result2[3]}")
-        text_result_minmax_4.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_5.config(text=f'{meas_name[4]}')
-        text_result_mean_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_5.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_5.insert(tk.END, f"{result1[4]}")
-        text_result_mean_5.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_5.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_5.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_5.insert(tk.END, f"{result2[4]}")
-        text_result_minmax_5.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_6.config(text=f'{meas_name[5]}')
-        text_result_mean_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_6.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_6.insert(tk.END, f"{result1[5]}")
-        text_result_mean_6.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_6.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_6.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_6.insert(tk.END, f"{result2[5]}")
-        text_result_minmax_6.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_7.config(text=f'{meas_name[6]}')
-        text_result_mean_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_7.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_7.insert(tk.END, f"{result1[6]}")
-        text_result_mean_7.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_7.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_7.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_7.insert(tk.END, f"{result2[6]}")
-        text_result_minmax_7.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_8.config(text=f'{meas_name[7]}')
-        text_result_mean_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_8.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_8.insert(tk.END, f"{result1[7]}")
-        text_result_mean_8.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_8.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_8.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_8.insert(tk.END, f"{result2[7]}")
-        text_result_minmax_8.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_9.config(text=f'{meas_name[8]}')
-        text_result_mean_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_9.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_9.insert(tk.END, f"{result1[8]}")
-        text_result_mean_9.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_9.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_9.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_9.insert(tk.END, f"{result2[8]}")
-        text_result_minmax_9.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_10.config(text=f'{meas_name[9]}')
-        text_result_mean_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_10.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_10.insert(tk.END, f"{result1[9]}")
-        text_result_mean_10.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_10.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_10.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_10.insert(tk.END, f"{result2[9]}")
-        text_result_minmax_10.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_11.config(text=f'{meas_name[10]}')
-        text_result_mean_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_11.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_11.insert(tk.END, f"{result1[10]}")
-        text_result_mean_11.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_11.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_11.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_11.insert(tk.END, f"{result2[10]}")
-        text_result_minmax_11.config(state=tk.DISABLED)  # 設置為只讀狀態
-        
-        label_measurement_name_12.config(text=f'{meas_name[11]}')
-        text_result_mean_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_mean_12.delete(1.0, tk.END)  # 清空當前內容
-        text_result_mean_12.insert(tk.END, f"{result1[11]}")
-        text_result_mean_12.config(state=tk.DISABLED)  # 設置為只讀狀態
-        text_result_minmax_12.config(state=tk.NORMAL)  # 先啟用Text小部件的編輯狀態
-        text_result_minmax_12.delete(1.0, tk.END)  # 清空當前內容
-        text_result_minmax_12.insert(tk.END, f"{result2[11]}")
-        text_result_minmax_12.config(state=tk.DISABLED)  # 設置為只讀狀態
+        #             try:
+        #                 result2[divmod(index, 7)[0]]= final_result_2
+        #             except:
+        #                 continue
         
     def judge_channal_wmemory(self):
         display_dict= {'CHANnel': [],'WMEMory': []}
@@ -731,62 +617,62 @@ class MXR:
             # 如果指数不在指定的范围内，返回原始文本
             return f"{base} V"
 
-    def load_setup(self, folder, scope_segment, setup_name, choose_type, file_path_choice, g_top, g_middle, g_base, g_top_percent, g_middle_percent, g_base_percent, rf_top, rf_base, rf_top_percent, rf_base_percent):
+    def load_setup(self, root, user_choice: int, location_choice: int, server_code: str, interface: str, sub: str, folder_path: str, setup_name: str, is_keep_timebase: bool, is_keep_voltage: bool, is_keep_labelname: bool):
         
-        if file_path_choice == 2: # Server
-            
-            if strvar_setupfile_interface.get() == 'User':
-                total_folder_path = folder
-            elif strvar_setupfile_interface.get() == '':
-                total_folder_path = folder
-            else: 
-                total_folder_path = f'{scope_segment}:/#_Eric Team/02_Penny/Setup_Files_Collection/{strvar_setupfile_interface.get()}/{strvar_setupfile_class.get()}'
+        if user_choice == 0:  # User defined
+            if location_choice == 1: # Server
+                path = fr'{folder_path}'
+                total_folder_path= f"{server_code}:" + path[2:]
+            else: # Desktop
+                total_folder_path = f"C:/Users/Administrator/Desktop/{folder_path}"
+        else:  # standard
+            total_folder_path = f'{server_code}:/#_Eric Team/02_Penny/Setup_Files_Collection/{interface}/{sub}'
 
-        else: # Desktop
-            total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
+        if is_keep_timebase:
+            # 記錄示波器timebase設定
+            time_position= self.inst.query(':TIMebase:POSition?').rstrip('\n')
+            time.sleep(0.05)
+            time_scale= self.inst.query(':TIMebase:SCALe?').rstrip('\n')
+            time.sleep(0.05)
 
-        # 記錄示波器timebase設定
-        time_position= self.inst.query(':TIMebase:POSition?').rstrip('\n')
-        time.sleep(0.05)
-        time_scale= self.inst.query(':TIMebase:SCALe?').rstrip('\n')
-        time.sleep(0.05)
+        if is_keep_voltage:
+            # 記錄示波器voltage設定
+            temp_voltscale_dict= {}
+            temp_voltoffset_dict= {}
+            display_dict= self.judge_channal_wmemory()
+            for channel in display_dict['CHANnel']:
+                volt_scale= self.inst.query(f':CHANnel{channel}:SCALe?')
+                time.sleep(0.05)
+                temp_voltscale_dict[channel]= volt_scale
+                volt_offset= self.inst.query(f':CHANnel{channel}:OFFSet?')
+                time.sleep(0.05)
+                temp_voltoffset_dict[channel]= volt_offset
+            for wme in display_dict['WMEMory']:
+                volt_scale= self.inst.query(f':WMEMory{wme}:YRANge?').rstrip('\n')
+                time.sleep(0.05)
+                temp_voltscale_dict[wme]= float(volt_scale)/8
+                volt_offset= self.inst.query(f':WMEMory{wme}:YOFFset?').rstrip('\n')
+                time.sleep(0.05)
+                temp_voltoffset_dict[wme]= volt_offset
 
-        # 記錄示波器voltage設定
-        temp_voltscale_dict= {}
-        temp_voltoffset_dict= {}
-        display_dict= self.judge_channal_wmemory()
-        for channel in display_dict['CHANnel']:
-            volt_scale= self.inst.query(f':CHANnel{channel}:SCALe?')
+            # 記錄示波器trigger設定
+            trig_channel= self.inst.query(f':TRIGger:EDGE:SOURce?').rstrip('\n')
             time.sleep(0.05)
-            temp_voltscale_dict[channel]= volt_scale
-            volt_offset= self.inst.query(f':CHANnel{channel}:OFFSet?')
+            trig_channel= trig_channel.lstrip("CHAN")
+            trig_level= self.inst.query(f':TRIGger:LEVel? CHANnel{trig_channel}').rstrip('\n')
             time.sleep(0.05)
-            temp_voltoffset_dict[channel]= volt_offset
-        for wme in display_dict['WMEMory']:
-            volt_scale= self.inst.query(f':WMEMory{wme}:YRANge?').rstrip('\n')
-            time.sleep(0.05)
-            temp_voltscale_dict[wme]= float(volt_scale)/8
-            volt_offset= self.inst.query(f':WMEMory{wme}:YOFFset?').rstrip('\n')
-            time.sleep(0.05)
-            temp_voltoffset_dict[wme]= volt_offset
-
-        # 記錄示波器trigger設定
-        trig_channel= self.inst.query(f':TRIGger:EDGE:SOURce?').rstrip('\n')
-        time.sleep(0.05)
-        trig_channel= trig_channel.lstrip("CHAN")
-        trig_level= self.inst.query(f':TRIGger:LEVel? CHANnel{trig_channel}').rstrip('\n')
-        time.sleep(0.05)
 
         # 呼叫設定檔
         self.inst.write(f':DISK:LOAD "{total_folder_path}/{setup_name}.set"')
         time.sleep(0.05)
 
         # 依據勾選狀態修改數值
-        if boolvar_setup_timebase.get() == True:
+        if is_keep_timebase:
             # 依照示波器畫面的timebase
-            self.check_timebase_scale(scale= time_scale)
-            self.check_timebase_offset(position= time_position)
-        if boolvar_setup_volt.get() == True:
+            self.set_timebase_scale(timebase_scale= time_scale)
+            self.set_timebase_offset(timebase_position= time_position)
+
+        if is_keep_voltage:
             display_dict= self.judge_channal_wmemory()
             # 依照示波器畫面的Voltage
             for channel in display_dict['CHANnel']:
@@ -813,24 +699,23 @@ class MXR:
             if not res == '1\n':
                 self.inst.write(f':CHANnel{trig_channel}:DISPlay OFF')
                 time.sleep(0.05)
-
-            # self.volt_check(scale= volt_scale, offset= volt_offset)
-            # self.trig_check(channel= trig_channel, level= trig_level)
             
             # 依照GUI的threshold
-            self.set_general_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
-            self.set_risefall_threshold(rf_top= rf_top, rf_base= rf_base, rf_top_percent= rf_top_percent, rf_base_percent= rf_base_percent)
+            # self.set_general_threshold(g_top= g_top, g_middle= g_middle, g_base= g_base, g_top_percent= g_top_percent, g_middle_percent= g_middle_percent, g_base_percent= g_base_percent)
+            # self.set_risefall_threshold(rf_top= rf_top, rf_base= rf_base, rf_top_percent= rf_top_percent, rf_base_percent= rf_base_percent)
 
-        if boolvar_setup_label.get() == True:
+        label_type= root.labelnameframe.LabelNameLabelFrame.get_value()[0]
+        label_content= root.labelnameframe.LabelNameLabelFrame.get_value()[1]
+        if is_keep_labelname == True:
             # 依照GUI的label
-            label_content = [
-                strvar_label_1, strvar_label_2, strvar_label_3, strvar_label_4, 
-                strvar_label_5, strvar_label_6, strvar_label_7, strvar_label_8, 
-                ]
             for i in range(8):
-                self.add_bookmark(choose_type= choose_type, bookmark= label_content[i].get().rstrip('\n'), channel= i+1)
+                self.add_labelname(
+                    label_type= label_type, 
+                    channel= i+1, 
+                    content= label_content[i].rstrip('\n')
+                )
 
-    def load_wmemory(self, channel, folder, wme_name, file_path_choice):
+    def load_wmemory(self, location_choice: int, server_code: str, folder_path: str, channel: str, wme_name: str):
         self.inst.write(f':WMEMory:TIETimebase 1')
         time.sleep(0.05)
         self.inst.write(f':DISPlay:SCOLor WMEMory1,17,100,100')
@@ -842,23 +727,23 @@ class MXR:
         self.inst.write(f':DISPlay:SCOLor WMEMory4,94,100,100')
         time.sleep(0.05)
         
-        if file_path_choice == 2:
-            total_folder_path = folder
+        if location_choice == 1:
+            total_folder_path = f"{server_code}:" + folder_path[2:]
         else:
-            total_folder_path = f"C:/Users/Administrator/Desktop/{folder}"
+            total_folder_path = f"C:/Users/Administrator/Desktop/{folder_path}"
 
         self.inst.write(f':DISK:LOAD "{total_folder_path}/{wme_name}.h5",WMEMory{channel},OFF')
         time.sleep(0.05)
 
-    def measure_all_edge(self):
+    def measure_all_edge(self, button):
         ans= self.inst.query(':ANALyze:AEDGes?')
         time.sleep(0.05)
         if ans == '0\n':
-            button_measure_all_edge['text'] = "Meas All Edge: ON"
+            button['text'] = "Meas All Edge: ON"
             self.inst.write(f':ANALyze:AEDGes 1')
             time.sleep(0.05)
         else:
-            button_measure_all_edge['text'] = "Meas All Edge: OFF"
+            button['text'] = "Meas All Edge: OFF"
             self.inst.write(f':ANALyze:AEDGes 0')
             time.sleep(0.05)
     
@@ -1138,7 +1023,7 @@ class MXR:
 
             self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,ABSolute')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{numberic_dictionary['top']},{numberic_dictionary['middle']},{numberic_dictionary['base']}')
+            self.inst.write(f':MEASure:THResholds:GENeral:ABSolute ALL,{numberic_dictionary["top"]},{numberic_dictionary["middle"]},{numberic_dictionary["base"]}')
             time.sleep(0.05)
 
     def set_general_percentage_threshold(self, percentage_dictionary: dict, combobox_dictionary: dict):
@@ -1160,7 +1045,7 @@ class MXR:
 
             self.inst.write(f':MEASure:THResholds:GENeral:METHod ALL,PERCent')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{percentage_dictionary['top']},{percentage_dictionary['middle']},{percentage_dictionary['base']}')
+            self.inst.write(f':MEASure:THResholds:GENeral:PERCent ALL,{percentage_dictionary["top"]},{percentage_dictionary["middle"]},{percentage_dictionary["base"]}')
             time.sleep(0.05)
 
     def set_intensity_setting(self, intensity_value):
@@ -1170,13 +1055,13 @@ class MXR:
     def set_risefall_numberic_threshold(self, numberic_dictionary: dict):
             self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,ABSolute')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{numberic_dictionary['top']},{(float(numberic_dictionary['top'])+float(numberic_dictionary['base']))/2},{numberic_dictionary['base']}')
+            self.inst.write(f':MEASure:THResholds:RFALl:ABSolute ALL,{numberic_dictionary["top"]},{(float(numberic_dictionary["top"])+float(numberic_dictionary["base"]))/2},{numberic_dictionary["base"]}')
             time.sleep(0.05)
 
     def set_risefall_percentage_threshold(self, percentage_dictionary: dict):
             self.inst.write(f':MEASure:THResholds:RFALl:METHod ALL,PERCent')
             time.sleep(0.05)
-            self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{percentage_dictionary['top']},{(float(percentage_dictionary['top'])+float(percentage_dictionary['base']))/2},{percentage_dictionary['base']}')
+            self.inst.write(f':MEASure:THResholds:RFALl:PERCent ALL,{percentage_dictionary["top"]},{(float(percentage_dictionary["top"])+float(percentage_dictionary["base"]))/2},{percentage_dictionary["base"]}')
             time.sleep(0.05)
 
     def set_timebase_offset(self, timebase_position): # 科學記號

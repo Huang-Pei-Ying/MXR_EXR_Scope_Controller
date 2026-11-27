@@ -1,18 +1,10 @@
-import pyvisa
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 import configparser
 import os
-import re
-import time
 import sys
-import numpy as np
-from PIL import Image
-import random
-import string
 import ctypes
 from tkinter import font
-from pathlib import Path
 
 from ini_setting import Settings
 from gui_frames import ScaleLabelFrame, ThresholdLabelFrame, ChannelLabelFrame, ControlLabelFrame, AcquisitionLabelFrame, MeasurementLabelFrame, MarkerLabelFrame, LabelNameLabelFrame, SaveImageLabelFrame, SaveOthersLabelFrame, LoadWmemoryLabelFrame, LoadSetupLabelFrame
@@ -159,9 +151,6 @@ def show_main_window(old_scope_ips):
 
 # =====================================================================================================================================================
 def main_window(scope_ip):
-
-    def clear(string):
-        string.set('')
 
     def close_window():
         if messagebox.askyesno('Message', 'Exit?'):
@@ -337,24 +326,24 @@ def main_window(scope_ip):
     entry_width_scale_area= set_entry_width(base_entry_width= 20)
     button_width_scale_area, button_height_scale_area= set_button_size(base_btn_w= 20, base_btn_h= 1)
 
-    scale_frame = ScaleLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    threshold_frame = ThresholdLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    channel_frame = ChannelLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    control_frame = ControlLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    acquisition_frame = AcquisitionLabelFrame(master= frame_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    scale_frame = ScaleLabelFrame(master= frame_left, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    threshold_frame = ThresholdLabelFrame(master= frame_left, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    channel_frame = ChannelLabelFrame(master= frame_left, root= window, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    control_frame = ControlLabelFrame(master= frame_left, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    acquisition_frame = AcquisitionLabelFrame(master= frame_left, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
     # Right Area  ==============================================================================================================================================
     frame_right_top= tk.Frame(master= frame_right, background= colors['window'][0])
     frame_right_bottom_left= tk.Frame(master= frame_right, background= colors['window'][0])
     frame_right_bottom_right= tk.Frame(master= frame_right, background= colors['window'][0])
 
-    measurement_frame= MeasurementLabelFrame(master= frame_right_top, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    marker_frame= MarkerLabelFrame(master= frame_right_bottom_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    labelname_frame= LabelNameLabelFrame(master= frame_right_bottom_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    saveimage_frame= SaveImageLabelFrame(master= frame_right_bottom_left, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    saveothers_frame= SaveOthersLabelFrame(master= frame_right_bottom_right, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    loadwmemory_frame= LoadWmemoryLabelFrame(master= frame_right_bottom_right, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
-    loadsetup_frame= LoadSetupLabelFrame(master= frame_right_bottom_right, settings= settings, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    measurement_frame= MeasurementLabelFrame(master= frame_right_top, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    marker_frame= MarkerLabelFrame(master= frame_right_bottom_left, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    labelname_frame= LabelNameLabelFrame(master= frame_right_bottom_left, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    saveimage_frame= SaveImageLabelFrame(master= frame_right_bottom_left, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    saveothers_frame= SaveOthersLabelFrame(master= frame_right_bottom_right, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    loadwmemory_frame= LoadWmemoryLabelFrame(master= frame_right_bottom_right, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
+    loadsetup_frame= LoadSetupLabelFrame(master= frame_right_bottom_right, root= window, settings= settings, mxr= mxr, colors= colors, button_width= button_width_scale_area, entry_width= entry_width_scale_area)
 
     ################################################
     # Weight  ==============================================================================================================================================
@@ -483,7 +472,7 @@ def main_window(scope_ip):
     # mxr= MXR(scope_ip= scope_ip)
 
     try:
-        scope = MXR(scope_ip= scope_ip)
+        mxr = MXR(scope_ip= scope_ip)
     except ConnectionError as e:
         messagebox.showerror('Error', str(e), parent= window)
         close_window()

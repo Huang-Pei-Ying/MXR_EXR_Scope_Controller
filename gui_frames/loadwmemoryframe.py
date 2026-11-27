@@ -3,7 +3,7 @@ from tkinter import ttk
 import utils
 
 class LoadWmemoryLabelFrame(tk.LabelFrame):
-    def __init__(self, master, settings, colors, button_width, entry_width):
+    def __init__(self, master, settings, mxr, colors, button_width, entry_width):
         super().__init__(master, text= 'Load Wmemory', background= colors['labelframe'][0], fg= colors['labelframe'][1], font= ('Candara', 10, 'bold'),)
 
         self.frame_load_waveform_top= tk.Frame(master= self, background= colors['labelframe'][0])
@@ -27,8 +27,8 @@ class LoadWmemoryLabelFrame(tk.LabelFrame):
             master= self.frame_load_waveform_base, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_waveform_scopefolder)
         self.button_load_waveform_browse_scopefolder= ttk.Button(
             master= self.frame_load_waveform_base, text= 'Browse', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: utils.browse_folder(entry_var= self.strvar_load_waveform_scopefolder, target_entry= self.entry_load_waveform_scopefolder)
             )
 
         self.label_load_waveform_wmemory= tk.Label(
@@ -48,13 +48,18 @@ class LoadWmemoryLabelFrame(tk.LabelFrame):
             master= self.frame_load_waveform_base, width= max(10, int(entry_width*0.4)), textvariable= self.strvar_load_waveform_filename)
         self.button_load_waveform_filename_load= ttk.Button(
             master= self.frame_load_waveform_base, text= 'Load', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
-            )
+            style= 'normal_height.TButton',
+            command= lambda: mxr.load_wmemory(
+                location_choice= self.intvar_load_waveform_savelocation.get(), 
+                server_code= self.strvar_load_waveform_server_segment.get(), 
+                folder_path= self.strvar_load_waveform_scopefolder.get(), 
+                channel= self.strvar_load_waveform_wmemory.get(), 
+                wme_name= self.strvar_load_waveform_wmemory.get()
+            ))
         self.button_load_waveform_filename_clear= ttk.Button(
             master= self.frame_load_waveform_base, text= 'Clear', width= button_width,  padding= 1,
-            # style= 'normal_height.TButton',
-            # command= lambda: mxr.
+            style= 'normal_height.TButton',
+            command= lambda: mxr.clear_wmemory(channel= self.strvar_load_waveform_wmemory.get())
             )
         ################################################
 
@@ -113,3 +118,6 @@ class LoadWmemoryLabelFrame(tk.LabelFrame):
 
         # combobox options
         settings.setup_combobox(combobox= self.combobox_load_waveform_server_segment, combobox_var= self.strvar_load_waveform_server_segment, key= "LoadWMemoryServerCode",)
+
+        ## else  ==============================================================================================================================================
+        utils.move_mouse_entry_end(entry= self.entry_load_waveform_scopefolder)
